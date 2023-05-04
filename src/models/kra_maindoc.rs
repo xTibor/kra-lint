@@ -126,6 +126,15 @@ pub struct KraMainDocLayer {
     #[xml(attr = "y")]
     pub y: isize,
 
+    #[xml(attr = "clonetype")]
+    pub clone_type: Option<usize>,
+
+    #[xml(attr = "clonefrom")]
+    pub clone_from: Option<String>,
+
+    #[xml(attr = "clonefromuuid")]
+    pub clone_from_uuid: Option<String>,
+
     #[xml(attr = "source")]
     pub source: Option<String>,
 

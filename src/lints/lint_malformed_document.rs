@@ -37,6 +37,31 @@ impl LintPass for LintPassMalformedDocument {
             }
         }
 
+        // Sub-pass #3
+        {
+            for layer in kra_archive.all_layers() {
+                if layer.node_type == "clonelayer" {
+                    if let Some(clone_from_uuid) =
+                        layer.clone_from_uuid.as_ref()
+                    {
+                        if !kra_archive.all_layers().any(|target_layer| {
+                            &target_layer.uuid == clone_from_uuid
+                        }) {
+                            results.push(format!(
+                                "Malformed document (Missing clone layer target layer, layer: \"{}\", Bug 414699)",
+                                layer.name
+                            ));
+                        }
+                    } else {
+                        results.push(format!(
+                            "Malformed document (Missing clone layer target field, layer: \"{}\")",
+                            layer.name
+                        ));
+                    }
+                }
+            }
+        }
+
         results
     }
 }
