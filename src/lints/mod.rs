@@ -38,6 +38,7 @@ pub struct LintConfig {
     pub lint_document_resolution:      Option<lint_document_resolution     ::LintPassDocumentResolution    >,
     pub lint_document_size:            Option<lint_document_size           ::LintPassDocumentSize          >,
     pub lint_hidden_surface:           Option<lint_hidden_surface          ::LintPassHiddenSurface         >,
+    pub lint_layer_styles:             Option<lint_layer_styles            ::LintPassLayerStyles           >,
     pub lint_malformed_document:       Option<lint_malformed_document      ::LintPassMalformedDocument     >,
     pub lint_non_default_blending:     Option<lint_non_default_blending    ::LintPassNonDefaultBlending    >,
     pub lint_prohibit_custom_palettes: Option<lint_prohibit_custom_palettes::LintPassProhibitCustomPalettes>,
@@ -45,7 +46,6 @@ pub struct LintConfig {
     pub lint_prohibit_surface_names:   Option<lint_prohibit_surface_names  ::LintPassProhibitSurfaceNames  >,
     pub lint_software_version:         Option<lint_software_version        ::LintPassSoftwareVersion       >,
     pub lint_surface_type:             Option<lint_surface_type            ::LintPassSurfaceType           >,
-    pub lint_layer_styles:             Option<lint_layer_styles            ::LintPassLayerStyles           >,
 }
 
 impl LintPass for LintConfig {
@@ -66,6 +66,7 @@ impl LintPass for LintConfig {
         lint_pass!(lint_document_resolution);
         lint_pass!(lint_document_size);
         lint_pass!(lint_hidden_surface);
+        lint_pass!(lint_layer_styles);
         lint_pass!(lint_malformed_document);
         lint_pass!(lint_non_default_blending);
         lint_pass!(lint_prohibit_custom_palettes);
@@ -73,7 +74,6 @@ impl LintPass for LintConfig {
         lint_pass!(lint_prohibit_surface_names);
         lint_pass!(lint_software_version);
         lint_pass!(lint_surface_type);
-        lint_pass!(lint_layer_styles);
 
         results
     }
