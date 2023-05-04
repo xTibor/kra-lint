@@ -1,0 +1,77 @@
+[lint_prohibit_kseexpr]
+
+[lint_malformed_document]
+
+[lint_prohibit_custom_palettes]
+
+[lint_non_default_blending]
+
+[lint_prohibit_surface_names]
+    [lint_prohibit_surface_names.layer_names]
+    paint_layers = '^(Paint Layer|ペイントレイヤー) \d+$'
+    group_layers = '^(Group|グループ化) \d+$'
+    clone_layers = '^(Clone Layer|クローンレイヤー) \d+$'
+    vector_layers = '^(Vector Layer|ベクターレイヤー) \d+$'
+    filter_layers = '^(Filter Layer|フィルタレイヤー) \d+ \(.*\)$'
+    fill_layers = '^(Fill Layer|塗りつぶしレイヤー) \d+$'
+    file_layers = '^(File Layer|ファイル参照レイヤー) \d+$'
+
+    [lint_prohibit_surface_names.mask_names]
+    transparency_masks = '^(Transparency Mask|透過マスク) \d+$'
+    filter_masks = '^(Filter Mask|フィルタマスク) \d+ \(.*\)$'
+    colorize_masks = '^(Colorize Mask|自動塗り分けマスク) \d+$'
+    transform_masks = '^(Transform Mask|変形マスク) \d+$'
+    local_selections = '^(Selection|選択) \d+$'
+
+[lint_layer_styles]
+styleable_layers = false
+
+[lint_surface_type]
+    [lint_surface_type.layer_types]
+    paint_layers = false
+    group_layers = false
+    clone_layers = false
+    vector_layers = false
+    filter_layers = false
+    fill_layers = false
+    file_layers = false
+
+    [lint_surface_type.mask_types]
+    transparency_masks = false
+    filter_masks = false
+    colorize_masks = false
+    transform_masks = false
+    local_selections = false
+
+[lint_hidden_surface]
+hidden_layers = false
+hidden_masks = false
+
+[lint_document_resolution]
+resolution = 300.0
+
+[lint_document_size]
+width = 3508
+height = 2480
+
+[lint_colorspace]
+colorspace = "RGBA"
+profile = "sRGB-elle-V2-srgbtrc.icc"
+
+[lint_software_version]
+software_versions = ["5.1.3", "5.1.4"]
+
+[lint_animation]
+framerate = 24
+animated_layers = false
+animated_masks = false
+
+[lint_copyright]
+copyright_line = "Copyright (c) 2023 <example-studio>, All rights reserved"
+copyright_disclaimer = """
+This document is confidential property of <example-studio>.
+Reproduction in whole or in part without permission is prohibited.
+"""
+studio_name = "<example-studio>"
+ensure_initial_author_exists = true
+ensure_author_exists = true

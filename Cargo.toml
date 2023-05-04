@@ -1,0 +1,14 @@
+[package]
+name = "kra-lint"
+version = "0.1.0"
+authors = ["Nagy Tibor <xnagytibor@protonmail.com>"]
+license = "MIT"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.2.4", features = ["derive", "env"] }
+regex = "1.8.1"
+serde = { version = "1.0.160", features = ["derive"] }
+strong-xml = "0.6"
+toml = "0.7.3"
+zip = "0.6.4"
