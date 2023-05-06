@@ -16,6 +16,7 @@ pub trait LintPass {
 mod lint_animation;
 mod lint_colorspace;
 mod lint_copyright;
+mod lint_document_name;
 mod lint_document_resolution;
 mod lint_document_size;
 mod lint_hidden_surface;
@@ -36,6 +37,7 @@ pub struct LintConfig {
     pub lint_animation:                Option<lint_animation               ::LintPassAnimation             >,
     pub lint_colorspace:               Option<lint_colorspace              ::LintPassColorspace            >,
     pub lint_copyright:                Option<lint_copyright               ::LintPassCopyright             >,
+    pub lint_document_name:            Option<lint_document_name           ::LintPassDocumentName          >,
     pub lint_document_resolution:      Option<lint_document_resolution     ::LintPassDocumentResolution    >,
     pub lint_document_size:            Option<lint_document_size           ::LintPassDocumentSize          >,
     pub lint_hidden_surface:           Option<lint_hidden_surface          ::LintPassHiddenSurface         >,
@@ -65,6 +67,7 @@ impl LintPass for LintConfig {
         lint_pass!(lint_animation);
         lint_pass!(lint_colorspace);
         lint_pass!(lint_copyright);
+        lint_pass!(lint_document_name);
         lint_pass!(lint_document_resolution);
         lint_pass!(lint_document_size);
         lint_pass!(lint_hidden_surface);

@@ -49,6 +49,9 @@ styleable_layers = false
 hidden_layers = false
 hidden_masks = false
 
+[lint_document_name]
+name = { regex = '^[abcdefg]_\d{4}_(tr|mk|wxp)$' }
+
 [lint_document_resolution]
 resolution = 300.0
 
