@@ -81,15 +81,37 @@ impl LintPass for LintPassMalformedDocument {
         {
             for layer in kra_archive.all_layers() {
                 if layer.node_type == "clonelayer" {
-                    if let Some(clone_from_uuid) =
-                        layer.clone_from_uuid.as_ref()
-                    {
-                        if clone_from_uuid == &layer.uuid {
+                    let uuid_root = &layer.uuid;
+
+                    let mut uuid_todo: Vec<&String> = vec![uuid_root];
+                    let mut uuid_done: Vec<&String> = vec![];
+
+                    while !uuid_todo.is_empty() {
+                        let current_uuid = uuid_todo.pop().unwrap();
+
+                        #[rustfmt::skip]
+                        let referencing_uuid = kra_archive
+                            .all_layers()
+                            .filter(|from_layer| from_layer.clone_from_uuid.as_ref() == Some(current_uuid))
+                            .map(|from_layer| &from_layer.uuid)
+                            .collect::<Vec<_>>();
+
+                        if referencing_uuid.contains(&uuid_root) {
                             results.push(format!(
-                                "Malformed document (Self-referential clone layers, layer: \"{}\")",
+                                "Malformed document (Clone layer loop, layer: \"{}\")",
                                 layer.name
                             ));
+                            break;
                         }
+
+                        let new_todo = referencing_uuid
+                            .iter()
+                            .filter(|from_uuid| !uuid_done.contains(from_uuid))
+                            .filter(|from_uuid| !uuid_todo.contains(from_uuid))
+                            .collect::<Vec<_>>();
+
+                        uuid_todo.extend(new_todo);
+                        uuid_done.push(current_uuid);
                     }
                 }
             }
