@@ -6,7 +6,7 @@ use crate::models::kra_archive::KraArchive;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassDocumentName {
-    pub name: StringMatchExpression,
+    pub document_name: StringMatchExpression,
 }
 
 impl LintPass for LintPassDocumentName {
@@ -19,10 +19,10 @@ impl LintPass for LintPassDocumentName {
 
             if kra_document_name.is_empty() {
                 results.push("Missing document name".to_owned());
-            } else if !self.name.matches(kra_document_name) {
+            } else if !self.document_name.matches(kra_document_name) {
                 results.push(format!(
                     "Incorrect document name (expected: {}, found: \"{}\")",
-                    self.name, kra_document_name,
+                    self.document_name, kra_document_name,
                 ));
             }
         }
