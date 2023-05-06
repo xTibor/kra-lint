@@ -88,6 +88,7 @@ impl LintPass for LintPassMalformedDocument {
 
                     while !uuid_todo.is_empty() {
                         let current_uuid = uuid_todo.pop().unwrap();
+                        uuid_done.push(current_uuid);
 
                         #[rustfmt::skip]
                         let referencing_uuid = kra_archive
@@ -111,7 +112,6 @@ impl LintPass for LintPassMalformedDocument {
                             .collect::<Vec<_>>();
 
                         uuid_todo.extend(new_todo);
-                        uuid_done.push(current_uuid);
                     }
                 }
             }
