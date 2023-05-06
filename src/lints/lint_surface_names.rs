@@ -8,12 +8,12 @@ use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassProhibitSurfaceNames {
+pub struct LintPassSurfaceNames {
     pub layer_names: Option<LintLayerTypeFlags<StringMatchExpression>>,
     pub mask_names: Option<LintMaskTypeFlags<StringMatchExpression>>,
 }
 
-impl LintPass for LintPassProhibitSurfaceNames {
+impl LintPass for LintPassSurfaceNames {
     fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
         let mut results = vec![];
 
@@ -24,10 +24,10 @@ impl LintPass for LintPassProhibitSurfaceNames {
                     let (layer_opt, layer_display) = layer_names.get(layer);
 
                     if let Some(string_match_expr) = layer_opt.as_ref() {
-                        if string_match_expr.matches(&layer.name) {
+                        if !string_match_expr.matches(&layer.name) {
                             results.push(format!(
-                                "Prohibited {} name (layer: \"{}\")",
-                                layer_display, layer.name
+                                "Incorrect {} name (layer: \"{}\", expected: {})",
+                                layer_display, layer.name, string_match_expr,
                             ));
                         }
                     }
@@ -42,10 +42,10 @@ impl LintPass for LintPassProhibitSurfaceNames {
                     let (mask_opt, mask_display) = mask_names.get(mask);
 
                     if let Some(string_match_expr) = mask_opt.as_ref() {
-                        if string_match_expr.matches(&mask.name) {
+                        if !string_match_expr.matches(&mask.name) {
                             results.push(format!(
-                                "Prohibited {} name (layer: \"{}\", mask: \"{}\")",
-                                mask_display, layer.name, mask.name
+                                "Incorrect {} name (layer: \"{}\", mask: \"{}\", expected: {})",
+                                mask_display, layer.name, mask.name, string_match_expr,
                             ));
                         }
                     }

@@ -8,22 +8,22 @@
 
 [lint_non_default_blending]
 
-[lint_prohibit_surface_names]
-    [lint_prohibit_surface_names.layer_names]
-    paint_layers  = { regex = '^(Paint Layer|ペイントレイヤー) \d+$'         }
-    group_layers  = { regex = '^(Group|グループ化) \d+$'                     }
-    clone_layers  = { regex = '^(Clone Layer|クローンレイヤー) \d+$'         }
-    vector_layers = { regex = '^(Vector Layer|ベクターレイヤー) \d+$'        }
-    filter_layers = { regex = '^(Filter Layer|フィルタレイヤー) \d+ \(.*\)$' }
-    fill_layers   = { regex = '^(Fill Layer|塗りつぶしレイヤー) \d+$'        }
-    file_layers   = { regex = '^(File Layer|ファイル参照レイヤー) \d+$'      }
+[lint_surface_names]
+    [lint_surface_names.layer_names]
+    paint_layers  = { not = { regex = '^(Paint Layer|ペイントレイヤー) \d+$'         }}
+    group_layers  = { not = { regex = '^(Group|グループ化) \d+$'                     }}
+    clone_layers  = { not = { regex = '^(Clone Layer|クローンレイヤー) \d+$'         }}
+    vector_layers = { not = { regex = '^(Vector Layer|ベクターレイヤー) \d+$'        }}
+    filter_layers = { not = { regex = '^(Filter Layer|フィルタレイヤー) \d+ \(.*\)$' }}
+    fill_layers   = { not = { regex = '^(Fill Layer|塗りつぶしレイヤー) \d+$'        }}
+    file_layers   = { not = { regex = '^(File Layer|ファイル参照レイヤー) \d+$'      }}
 
-    [lint_prohibit_surface_names.mask_names]
-    transparency_masks = { regex = '^(Transparency Mask|透過マスク) \d+$'      }
-    filter_masks       = { regex = '^(Filter Mask|フィルタマスク) \d+ \(.*\)$' }
-    colorize_masks     = { regex = '^(Colorize Mask|自動塗り分けマスク) \d+$'  }
-    transform_masks    = { regex = '^(Transform Mask|変形マスク) \d+$'         }
-    local_selections   = { regex = '^(Selection|選択) \d+$'                    }
+    [lint_surface_names.mask_names]
+    transparency_masks = { not = { regex = '^(Transparency Mask|透過マスク) \d+$'      }}
+    filter_masks       = { not = { regex = '^(Filter Mask|フィルタマスク) \d+ \(.*\)$' }}
+    colorize_masks     = { not = { regex = '^(Colorize Mask|自動塗り分けマスク) \d+$'  }}
+    transform_masks    = { not = { regex = '^(Transform Mask|変形マスク) \d+$'         }}
+    local_selections   = { not = { regex = '^(Selection|選択) \d+$'                    }}
 
 [lint_layer_styles]
 styleable_layers = false

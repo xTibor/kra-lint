@@ -25,8 +25,8 @@ mod lint_non_default_blending;
 mod lint_prohibit_compositions;
 mod lint_prohibit_custom_palettes;
 mod lint_prohibit_kseexpr;
-mod lint_prohibit_surface_names;
 mod lint_software_version;
+mod lint_surface_names;
 mod lint_surface_type;
 
 #[rustfmt::skip]
@@ -45,8 +45,8 @@ pub struct LintConfig {
     pub lint_prohibit_compositions:    Option<lint_prohibit_compositions   ::LintPassProhibitCompositions  >,
     pub lint_prohibit_custom_palettes: Option<lint_prohibit_custom_palettes::LintPassProhibitCustomPalettes>,
     pub lint_prohibit_kseexpr:         Option<lint_prohibit_kseexpr        ::LintPassProhibitKSeExpr       >,
-    pub lint_prohibit_surface_names:   Option<lint_prohibit_surface_names  ::LintPassProhibitSurfaceNames  >,
     pub lint_software_version:         Option<lint_software_version        ::LintPassSoftwareVersion       >,
+    pub lint_surface_names:            Option<lint_surface_names           ::LintPassSurfaceNames          >,
     pub lint_surface_type:             Option<lint_surface_type            ::LintPassSurfaceType           >,
 }
 
@@ -74,8 +74,8 @@ impl LintPass for LintConfig {
         lint_pass!(lint_prohibit_compositions);
         lint_pass!(lint_prohibit_custom_palettes);
         lint_pass!(lint_prohibit_kseexpr);
-        lint_pass!(lint_prohibit_surface_names);
         lint_pass!(lint_software_version);
+        lint_pass!(lint_surface_names);
         lint_pass!(lint_surface_type);
 
         results
