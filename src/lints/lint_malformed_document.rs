@@ -77,6 +77,24 @@ impl LintPass for LintPassMalformedDocument {
             }
         }
 
+        // Sub-pass #5
+        {
+            for layer in kra_archive.all_layers() {
+                if layer.node_type == "clonelayer" {
+                    if let Some(clone_from_uuid) =
+                        layer.clone_from_uuid.as_ref()
+                    {
+                        if clone_from_uuid == &layer.uuid {
+                            results.push(format!(
+                                "Malformed document (Self-referential clone layers, layer: \"{}\")",
+                                layer.name
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+
         results
     }
 }
