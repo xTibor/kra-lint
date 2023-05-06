@@ -52,6 +52,9 @@ pub struct KraMainDocImage {
     #[xml(child = "Palettes")]
     pub palette_container: Option<KraMainDocPaletteContainer>,
 
+    #[xml(child = "compositions")]
+    pub composition_container: Option<KraMainDocCompositionContainer>,
+
     #[xml(child = "animation")]
     pub animation: KraMainDocAnimation,
 }
@@ -266,4 +269,37 @@ pub struct KraMainDocResource {
 
     #[xml(attr = "type")]
     pub r#type: String,
+}
+
+#[derive(Debug, XmlRead)]
+#[xml(tag = "compositions")]
+pub struct KraMainDocCompositionContainer {
+    #[xml(child = "composition")]
+    pub compositions: Vec<KraMainDocComposition>,
+}
+
+#[derive(Debug, XmlRead)]
+#[xml(tag = "composition")]
+pub struct KraMainDocComposition {
+    #[xml(attr = "exportEnabled")]
+    pub export_enabled: usize,
+
+    #[xml(attr = "name")]
+    pub name: String,
+
+    #[xml(child = "value")]
+    pub values: Vec<KraMainDocCompositionValue>,
+}
+
+#[derive(Debug, XmlRead)]
+#[xml(tag = "value")]
+pub struct KraMainDocCompositionValue {
+    #[xml(attr = "collapsed")]
+    pub collapsed: usize,
+
+    #[xml(attr = "visible")]
+    pub visible: usize,
+
+    #[xml(attr = "uuid")]
+    pub uuid: String,
 }
