@@ -1,14 +1,14 @@
 use serde::Deserialize;
 
-use crate::lints::{LintPass, LintPassResult};
+use crate::lints::{LintPass, LintPassResult, StringMatchExpression};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassCopyright {
-    pub copyright_line: Option<String>,
-    pub copyright_disclaimer: Option<String>,
-    pub studio_name: Option<String>,
+    pub copyright_line: Option<StringMatchExpression>,
+    pub copyright_disclaimer: Option<StringMatchExpression>,
+    pub studio_name: Option<StringMatchExpression>,
     pub ensure_initial_author_exists: Option<bool>,
     pub ensure_author_exists: Option<bool>,
 }
@@ -25,9 +25,9 @@ impl LintPass for LintPassCopyright {
 
                 if kra_copyright_line.is_empty() {
                     results.push("Missing copyright line".to_owned());
-                } else if kra_copyright_line != copyright_line {
+                } else if !copyright_line.matches(kra_copyright_line) {
                     results.push(format!(
-                    "Incorrect copyright line (expected: \"{}\", found: \"{}\")",
+                    "Incorrect copyright line (expected: {}, found: \"{}\")",
                     copyright_line, kra_copyright_line,
                 ));
                 }
@@ -44,9 +44,11 @@ impl LintPass for LintPassCopyright {
 
                 if kra_copyright_disclaimer.is_empty() {
                     results.push("Missing copyright disclaimer".to_owned());
-                } else if kra_copyright_disclaimer != copyright_disclaimer {
+                } else if !copyright_disclaimer
+                    .matches(kra_copyright_disclaimer)
+                {
                     results.push(format!(
-                    "Incorrect copyright disclaimer (expected: \"{}\", found: \"{}\")",
+                    "Incorrect copyright disclaimer (expected: {}, found: \"{}\")",
                     copyright_disclaimer, kra_copyright_disclaimer,
                 ));
                 }
@@ -136,9 +138,9 @@ impl LintPass for LintPassCopyright {
 
                 if kra_studio_name.is_empty() {
                     results.push("Missing studio name".to_owned());
-                } else if kra_studio_name != studio_name {
+                } else if !studio_name.matches(kra_studio_name) {
                     results.push(format!(
-                        "Incorrect studio name (expected: \"{}\", found: \"{}\")",
+                        "Incorrect studio name (expected: {}, found: \"{}\")",
                         studio_name, kra_studio_name,
                     ));
                 }

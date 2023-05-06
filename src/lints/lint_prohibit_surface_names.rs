@@ -2,14 +2,15 @@ use serde::Deserialize;
 
 use crate::lints::{
     LintLayerTypeFlags, LintMaskTypeFlags, LintPass, LintPassResult,
+    StringMatchExpression,
 };
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassProhibitSurfaceNames {
-    pub layer_names: Option<LintLayerTypeFlags<String>>,
-    pub mask_names: Option<LintMaskTypeFlags<String>>,
+    pub layer_names: Option<LintLayerTypeFlags<StringMatchExpression>>,
+    pub mask_names: Option<LintMaskTypeFlags<StringMatchExpression>>,
 }
 
 impl LintPass for LintPassProhibitSurfaceNames {
@@ -22,11 +23,8 @@ impl LintPass for LintPassProhibitSurfaceNames {
                 for layer in kra_archive.all_layers() {
                     let (layer_opt, layer_display) = layer_names.get(layer);
 
-                    if let Some(layer_regex_str) = layer_opt.as_ref() {
-                        let regex = regex::Regex::new(layer_regex_str)
-                            .expect("Failed to compile regular expression");
-
-                        if regex.is_match(&layer.name) {
+                    if let Some(string_match_expr) = layer_opt.as_ref() {
+                        if string_match_expr.matches(&layer.name) {
                             results.push(format!(
                                 "Prohibited {} name (layer: \"{}\")",
                                 layer_display, layer.name
@@ -43,11 +41,8 @@ impl LintPass for LintPassProhibitSurfaceNames {
                 for (layer, mask) in kra_archive.all_masks() {
                     let (mask_opt, mask_display) = mask_names.get(mask);
 
-                    if let Some(mask_regex_str) = mask_opt.as_ref() {
-                        let regex = regex::Regex::new(mask_regex_str)
-                            .expect("Failed to compile regular expression");
-
-                        if regex.is_match(&mask.name) {
+                    if let Some(string_match_expr) = mask_opt.as_ref() {
+                        if string_match_expr.matches(&mask.name) {
                             results.push(format!(
                                 "Prohibited {} name (layer: \"{}\", mask: \"{}\")",
                                 mask_display, layer.name, mask.name
