@@ -4,6 +4,8 @@
 
 [lint_prohibit_custom_palettes]
 
+[lint_prohibit_compositions]
+
 [lint_non_default_blending]
 
 [lint_prohibit_surface_names]

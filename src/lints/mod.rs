@@ -22,6 +22,7 @@ mod lint_hidden_surface;
 mod lint_layer_styles;
 mod lint_malformed_document;
 mod lint_non_default_blending;
+mod lint_prohibit_compositions;
 mod lint_prohibit_custom_palettes;
 mod lint_prohibit_kseexpr;
 mod lint_prohibit_surface_names;
@@ -41,6 +42,7 @@ pub struct LintConfig {
     pub lint_layer_styles:             Option<lint_layer_styles            ::LintPassLayerStyles           >,
     pub lint_malformed_document:       Option<lint_malformed_document      ::LintPassMalformedDocument     >,
     pub lint_non_default_blending:     Option<lint_non_default_blending    ::LintPassNonDefaultBlending    >,
+    pub lint_prohibit_compositions:    Option<lint_prohibit_compositions   ::LintPassProhibitCompositions  >,
     pub lint_prohibit_custom_palettes: Option<lint_prohibit_custom_palettes::LintPassProhibitCustomPalettes>,
     pub lint_prohibit_kseexpr:         Option<lint_prohibit_kseexpr        ::LintPassProhibitKSeExpr       >,
     pub lint_prohibit_surface_names:   Option<lint_prohibit_surface_names  ::LintPassProhibitSurfaceNames  >,
@@ -69,6 +71,7 @@ impl LintPass for LintConfig {
         lint_pass!(lint_layer_styles);
         lint_pass!(lint_malformed_document);
         lint_pass!(lint_non_default_blending);
+        lint_pass!(lint_prohibit_compositions);
         lint_pass!(lint_prohibit_custom_palettes);
         lint_pass!(lint_prohibit_kseexpr);
         lint_pass!(lint_prohibit_surface_names);
