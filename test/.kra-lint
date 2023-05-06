@@ -53,9 +53,13 @@ hidden_masks = false
 name = { regex = '^[abcdefg]_\d{4}_(tr|mk|wxp)$' }
 
 [lint_document_size]
-width = 3508
-height = 2480
-resolution = 300.0
+document_sizes = [
+    { width = 1584, height =  884, resolution = 144.0 },
+    { width = 1740, height =  972, resolution = 158.0 },
+    { width = 1896, height = 1060, resolution = 172.0 },
+    { width = 2052, height = 1148, resolution = 186.0 },
+    { width = 2208, height = 1236, resolution = 200.0 },
+]
 
 [lint_colorspace]
 colorspace = "RGBA"
