@@ -18,6 +18,7 @@ mod lint_colorspace;
 mod lint_copyright;
 mod lint_document_name;
 mod lint_document_size;
+mod lint_file_layers;
 mod lint_hidden_surface;
 mod lint_layer_styles;
 mod lint_malformed_document;
@@ -38,6 +39,7 @@ pub struct LintConfig {
     pub lint_copyright:                Option<lint_copyright               ::LintPassCopyright             >,
     pub lint_document_name:            Option<lint_document_name           ::LintPassDocumentName          >,
     pub lint_document_size:            Option<lint_document_size           ::LintPassDocumentSize          >,
+    pub lint_file_layers:              Option<lint_file_layers             ::LintPassFileLayers            >,
     pub lint_hidden_surface:           Option<lint_hidden_surface          ::LintPassHiddenSurface         >,
     pub lint_layer_styles:             Option<lint_layer_styles            ::LintPassLayerStyles           >,
     pub lint_malformed_document:       Option<lint_malformed_document      ::LintPassMalformedDocument     >,
@@ -67,6 +69,7 @@ impl LintPass for LintConfig {
         lint_pass!(lint_copyright);
         lint_pass!(lint_document_name);
         lint_pass!(lint_document_size);
+        lint_pass!(lint_file_layers);
         lint_pass!(lint_hidden_surface);
         lint_pass!(lint_layer_styles);
         lint_pass!(lint_malformed_document);

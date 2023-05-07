@@ -1,33 +1,32 @@
 #![warn(clippy::pattern_type_mismatch)]
 
-use clap::Parser;
-use lints::LintPass;
-
 use std::fs;
-use std::path::PathBuf;
 use std::process::ExitCode;
+
+use camino::Utf8PathBuf;
+use clap::Parser;
 
 mod lints;
 mod models;
 
-use crate::lints::LintConfig;
+use crate::lints::{LintConfig, LintPass};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Parser, Debug)]
 pub struct Args {
     /// Config file path
     #[arg(long, short = 'C', value_name = "PATH", env = "KRALINT_CONFIG_PATH")]
-    pub config_path: Option<PathBuf>,
+    pub config_path: Option<Utf8PathBuf>,
 
     /// Document paths
-    pub paths: Vec<PathBuf>,
+    pub paths: Vec<Utf8PathBuf>,
 }
 
 fn main() -> ExitCode {
     let args = Args::parse();
 
     let lint_config_path =
-        args.config_path.unwrap_or(PathBuf::from(".kra-lint"));
+        args.config_path.unwrap_or(Utf8PathBuf::from(".kra-lint"));
 
     let lint_config_str = fs::read_to_string(lint_config_path)
         .expect("Failed to read config file");
@@ -57,7 +56,7 @@ fn main() -> ExitCode {
         ExitCode::SUCCESS
     } else {
         for (path, lint_message) in lint_results {
-            eprintln!("{}: {}", path.display(), lint_message);
+            eprintln!("{}: {}", path, lint_message);
         }
         ExitCode::FAILURE
     }

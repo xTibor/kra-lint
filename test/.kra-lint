@@ -28,6 +28,10 @@
 [lint_layer_styles]
 styleable_layers = false
 
+[lint_file_layers]
+file_formats = { or = ["kra", "tga"] }
+check_missing_files = true
+
 [lint_surface_type]
     [lint_surface_type.layer_types]
     paint_layers = false

@@ -1,8 +1,8 @@
 use std::cell::RefCell;
 use std::fs::File;
 use std::io;
-use std::path::Path;
 
+use camino::{Utf8Path, Utf8PathBuf};
 use strong_xml::XmlRead;
 use zip::ZipArchive;
 
@@ -15,10 +15,11 @@ pub struct KraArchive {
     pub document_info: KraDocumentInfo,
     pub main_doc: KraMainDoc,
     pub zip_archive: RefCell<ZipArchive<File>>,
+    pub zip_path: Utf8PathBuf,
 }
 
 impl KraArchive {
-    pub fn from_path(path: &Path) -> Result<Self, KraError> {
+    pub fn from_path(path: &Utf8Path) -> Result<Self, KraError> {
         let zip_file = File::open(path).map_err(|io_error| {
             KraError::ArchiveCannotOpen(io_error, path.to_owned())
         })?;
@@ -48,6 +49,7 @@ impl KraArchive {
             document_info: kra_xml!(KraDocumentInfo, "documentinfo.xml"),
             main_doc: kra_xml!(KraMainDoc, "maindoc.xml"),
             zip_archive: RefCell::new(zip_archive),
+            zip_path: path.to_owned(),
         })
     }
 }
