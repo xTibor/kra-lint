@@ -44,7 +44,27 @@ impl LintPass for LintPassFileLayers {
 
         // Sub-pass #2
         {
-            // TODO: self.check_missing_files
+            if self.check_missing_files == Some(true) {
+                for layer in kra_archive.all_layers() {
+                    if layer.node_type.as_str() == "filelayer" {
+                        if let Some(source) = layer.source.as_ref() {
+                            // File layers store relative paths, path traversal is intentional here.
+                            let source_path = kra_archive
+                                .zip_path
+                                .parent()
+                                .expect("Failed to get parent directory")
+                                .join(source);
+
+                            if !source_path.is_file() {
+                                results.push(format!(
+                                    "Missing file layer source image (layer: \"{}\", source: \"{}\")",
+                                    layer.name, source,
+                                ));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         results
