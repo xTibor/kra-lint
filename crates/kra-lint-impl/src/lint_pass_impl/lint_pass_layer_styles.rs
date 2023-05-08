@@ -1,7 +1,8 @@
 use serde::Deserialize;
 
-use crate::lints::{LintLayerProperty, LintPass, LintPassResult};
-use crate::models::kra_archive::KraArchive;
+use kra_parser::kra_archive::KraArchive;
+
+use crate::{LintLayerProperty, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]

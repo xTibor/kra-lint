@@ -1,0 +1,11 @@
+[package]
+name = "kra-parser"
+version = "0.1.0"
+authors = ["Nagy Tibor <xnagytibor@protonmail.com>"]
+license = "MIT"
+edition = "2021"
+
+[dependencies]
+camino = { version = "1.1.4", features = ["serde1"] }
+strong-xml = "0.6"
+zip = "0.6.4"

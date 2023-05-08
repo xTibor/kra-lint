@@ -1,8 +1,8 @@
 use camino::Utf8PathBuf;
 use serde::Deserialize;
 
-use crate::lints::{lint_pass_impl, LintPass, LintPassResult};
-use crate::models::kra_archive::KraArchive;
+use crate::{lint_pass_impl, LintPass, LintPassResult};
+use kra_parser::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]

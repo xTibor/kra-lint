@@ -405,18 +405,35 @@ dependencies = [
 ]
 
 [[package]]
-name = "kra-lint"
+name = "kra-lint-cli"
 version = "0.1.0"
 dependencies = [
  "camino",
  "clap",
+ "kra-lint-impl",
+ "kra-parser",
+]
+
+[[package]]
+name = "kra-lint-impl"
+version = "0.1.0"
+dependencies = [
+ "camino",
  "deser-hjson",
+ "kra-parser",
  "regex",
  "ron",
  "serde",
  "serde_yaml",
- "strong-xml",
  "toml",
+]
+
+[[package]]
+name = "kra-parser"
+version = "0.1.0"
+dependencies = [
+ "camino",
+ "strong-xml",
  "zip",
 ]
 

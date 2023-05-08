@@ -5,11 +5,8 @@ use std::process::ExitCode;
 use camino::Utf8PathBuf;
 use clap::Parser;
 
-mod lints;
-mod models;
-
-use crate::lints::{LintConfigCollection, LintPass};
-use crate::models::kra_archive::KraArchive;
+use kra_lint_impl::{LintConfigCollection, LintPass};
+use kra_parser::kra_archive::KraArchive;
 
 #[derive(Parser, Debug)]
 pub struct Args {

@@ -1,9 +1,9 @@
 use std::collections::VecDeque;
 
-use crate::models::kra_archive::KraArchive;
-use crate::models::kra_maindoc::{KraMainDocLayer, KraMainDocLayerContainer};
-
-use super::kra_maindoc::KraMainDocMask;
+use crate::kra_archive::KraArchive;
+use crate::kra_maindoc::{
+    KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask,
+};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

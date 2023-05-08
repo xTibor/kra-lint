@@ -1,0 +1,17 @@
+[package]
+name = "kra-lint-cli"
+version = "0.1.0"
+authors = ["Nagy Tibor <xnagytibor@protonmail.com>"]
+license = "MIT"
+edition = "2021"
+
+[[bin]]
+name = "kra-lint"
+path = "src/kra-lint.rs"
+
+[dependencies]
+kra-parser = { path = "../kra-parser/" }
+kra-lint-impl = { path = "../kra-lint-impl/" }
+
+camino = { version = "1.1.4", features = ["serde1"] }
+clap = { version = "4.2.4", features = ["derive", "env"] }

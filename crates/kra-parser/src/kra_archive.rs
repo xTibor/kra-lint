@@ -6,9 +6,9 @@ use camino::{Utf8Path, Utf8PathBuf};
 use strong_xml::XmlRead;
 use zip::ZipArchive;
 
-use crate::models::kra_documentinfo::KraDocumentInfo;
-use crate::models::kra_error::KraError;
-use crate::models::kra_maindoc::KraMainDoc;
+use crate::kra_documentinfo::KraDocumentInfo;
+use crate::kra_error::KraError;
+use crate::kra_maindoc::KraMainDoc;
 
 #[derive(Debug)]
 pub struct KraArchive {

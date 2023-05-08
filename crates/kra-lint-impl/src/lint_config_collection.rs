@@ -2,8 +2,8 @@ use std::fs;
 
 use camino::{Utf8Path, Utf8PathBuf};
 
-use crate::lints::{LintConfig, LintPass, LintPassResult};
-use crate::models::kra_archive::KraArchive;
+use crate::{LintConfig, LintPass, LintPassResult};
+use kra_parser::kra_archive::KraArchive;
 
 pub struct LintConfigCollection {
     pub lint_config_paths: Vec<Utf8PathBuf>,

@@ -1,4 +1,4 @@
-use crate::models::kra_archive::KraArchive;
+use kra_parser::kra_archive::KraArchive;
 
 pub type LintPassResult = Vec<String>;
 
