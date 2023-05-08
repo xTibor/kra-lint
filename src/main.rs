@@ -1,6 +1,5 @@
 #![warn(clippy::pattern_type_mismatch)]
 
-use std::fs;
 use std::process::ExitCode;
 
 use camino::Utf8PathBuf;
@@ -9,7 +8,7 @@ use clap::Parser;
 mod lints;
 mod models;
 
-use crate::lints::{LintConfig, LintPass};
+use crate::lints::{LintConfigCollection, LintPass};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Parser, Debug)]
@@ -28,11 +27,8 @@ fn main() -> ExitCode {
     let lint_config_path =
         args.config_path.unwrap_or(Utf8PathBuf::from(".kra-lint"));
 
-    let lint_config_str = fs::read_to_string(lint_config_path)
-        .expect("Failed to read config file");
-
-    let lint_config: LintConfig =
-        toml::from_str(&lint_config_str).expect("Failed to parse config file");
+    let mut lint_config_collection = LintConfigCollection::new();
+    lint_config_collection.load_config(&lint_config_path);
 
     let mut lint_results = vec![];
 
@@ -40,7 +36,7 @@ fn main() -> ExitCode {
         match KraArchive::from_path(path) {
             Ok(kra_archive) => {
                 lint_results.extend(
-                    lint_config
+                    lint_config_collection
                         .lint(&kra_archive)
                         .into_iter()
                         .map(|lint_message| (path, lint_message)),
