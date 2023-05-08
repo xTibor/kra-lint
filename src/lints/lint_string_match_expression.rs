@@ -3,7 +3,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum StringMatchExpression {
+pub enum LintStringMatchExpression {
     FullMatch(String),
     Regex {
         #[serde(rename = "regex")]
@@ -23,84 +23,84 @@ pub enum StringMatchExpression {
     },
     BinaryOr {
         #[serde(rename = "or")]
-        expressions: Vec<StringMatchExpression>,
+        expressions: Vec<LintStringMatchExpression>,
     },
     BinaryAnd {
         #[serde(rename = "and")]
-        expressions: Vec<StringMatchExpression>,
+        expressions: Vec<LintStringMatchExpression>,
     },
     BinaryNot {
         #[serde(rename = "not")]
-        expression: Box<StringMatchExpression>,
+        expression: Box<LintStringMatchExpression>,
     },
 }
 
-impl StringMatchExpression {
+impl LintStringMatchExpression {
     pub fn matches(&self, value: &str) -> bool {
         match self {
-            StringMatchExpression::FullMatch(pattern) => value == pattern,
-            StringMatchExpression::Regex { pattern } => {
+            LintStringMatchExpression::FullMatch(pattern) => value == pattern,
+            LintStringMatchExpression::Regex { pattern } => {
                 let compiled_regex = regex::Regex::new(pattern)
                     .expect("Failed to compile regular expression");
                 compiled_regex.is_match(value)
             }
-            StringMatchExpression::StartsWith { pattern } => {
+            LintStringMatchExpression::StartsWith { pattern } => {
                 value.starts_with(pattern)
             }
-            StringMatchExpression::EndsWith { pattern } => {
+            LintStringMatchExpression::EndsWith { pattern } => {
                 value.ends_with(pattern)
             }
-            StringMatchExpression::Contains { pattern } => {
+            LintStringMatchExpression::Contains { pattern } => {
                 value.contains(pattern)
             }
-            StringMatchExpression::BinaryOr { expressions } => {
+            LintStringMatchExpression::BinaryOr { expressions } => {
                 expressions.iter().any(|expression| expression.matches(value))
             }
-            StringMatchExpression::BinaryAnd { expressions } => {
+            LintStringMatchExpression::BinaryAnd { expressions } => {
                 expressions.iter().all(|expression| expression.matches(value))
             }
-            StringMatchExpression::BinaryNot { expression } => {
+            LintStringMatchExpression::BinaryNot { expression } => {
                 !expression.matches(value)
             }
         }
     }
 }
 
-impl std::fmt::Display for StringMatchExpression {
+impl std::fmt::Display for LintStringMatchExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            StringMatchExpression::FullMatch(pattern) => {
+            LintStringMatchExpression::FullMatch(pattern) => {
                 write!(f, "\"{}\"", pattern)
             }
-            StringMatchExpression::Regex { pattern } => {
+            LintStringMatchExpression::Regex { pattern } => {
                 write!(f, "regex(\"{}\")", pattern)
             }
-            StringMatchExpression::StartsWith { pattern } => {
+            LintStringMatchExpression::StartsWith { pattern } => {
                 write!(f, "starts_with(\"{}\")", pattern)
             }
-            StringMatchExpression::EndsWith { pattern } => {
+            LintStringMatchExpression::EndsWith { pattern } => {
                 write!(f, "ends_with(\"{}\")", pattern)
             }
-            StringMatchExpression::Contains { pattern } => {
+            LintStringMatchExpression::Contains { pattern } => {
                 write!(f, "contains(\"{}\")", pattern)
             }
-            StringMatchExpression::BinaryOr { expressions } => {
+            LintStringMatchExpression::BinaryOr { expressions } => {
                 let param_list = expressions
                     .iter()
-                    .map(StringMatchExpression::to_string)
+                    .map(LintStringMatchExpression::to_string)
                     .collect::<Vec<_>>()
                     .join(", ");
                 write!(f, "or({})", param_list)
             }
-            StringMatchExpression::BinaryAnd { expressions } => {
+            LintStringMatchExpression::BinaryAnd { expressions } => {
                 let param_list = expressions
                     .iter()
-                    .map(StringMatchExpression::to_string)
+                    .map(LintStringMatchExpression::to_string)
                     .collect::<Vec<_>>()
                     .join(", ");
                 write!(f, "and({})", param_list)
             }
-            StringMatchExpression::BinaryNot { expression } => {
+            LintStringMatchExpression::BinaryNot { expression } => {
                 write!(f, "not({})", expression)
             }
         }

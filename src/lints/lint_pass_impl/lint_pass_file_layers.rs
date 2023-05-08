@@ -1,13 +1,13 @@
 use camino::Utf8Path;
 use serde::Deserialize;
 
-use crate::lints::{LintPass, LintPassResult, StringMatchExpression};
+use crate::lints::{LintPass, LintPassResult, LintStringMatchExpression};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassFileLayers {
-    pub file_formats: Option<StringMatchExpression>,
+    pub file_formats: Option<LintStringMatchExpression>,
     pub check_missing_files: Option<bool>,
 }
 

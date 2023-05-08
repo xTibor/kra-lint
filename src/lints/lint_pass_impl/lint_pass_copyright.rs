@@ -1,14 +1,14 @@
 use serde::Deserialize;
 
-use crate::lints::{LintPass, LintPassResult, StringMatchExpression};
+use crate::lints::{LintPass, LintPassResult, LintStringMatchExpression};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassCopyright {
-    pub copyright_line: Option<StringMatchExpression>,
-    pub copyright_disclaimer: Option<StringMatchExpression>,
-    pub studio_name: Option<StringMatchExpression>,
+    pub copyright_line: Option<LintStringMatchExpression>,
+    pub copyright_disclaimer: Option<LintStringMatchExpression>,
+    pub studio_name: Option<LintStringMatchExpression>,
     pub ensure_initial_author_exists: Option<bool>,
     pub ensure_author_exists: Option<bool>,
 }

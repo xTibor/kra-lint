@@ -1,12 +1,12 @@
 use serde::Deserialize;
 
-use crate::lints::{LintPass, LintPassResult, StringMatchExpression};
+use crate::lints::{LintPass, LintPassResult, LintStringMatchExpression};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassDocumentName {
-    pub document_name: StringMatchExpression,
+    pub document_name: LintStringMatchExpression,
 }
 
 impl LintPass for LintPassDocumentName {

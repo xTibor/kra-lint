@@ -1,13 +1,13 @@
 use serde::Deserialize;
 
-use crate::lints::{LintPass, LintPassResult, StringMatchExpression};
+use crate::lints::{LintPass, LintPassResult, LintStringMatchExpression};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassColorspace {
-    pub colorspace: StringMatchExpression,
-    pub profile: StringMatchExpression,
+    pub colorspace: LintStringMatchExpression,
+    pub profile: LintStringMatchExpression,
 }
 
 impl LintPass for LintPassColorspace {
