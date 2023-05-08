@@ -6,7 +6,7 @@ use crate::models::kra_maindoc::KraMainDocLayer;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum LintLayerTypeFlags<T> {
+pub enum LintLayerProperty<T> {
     All(Option<T>),
     ByType {
         paint_layers:  Option<T>,
@@ -19,12 +19,12 @@ pub enum LintLayerTypeFlags<T> {
     },
 }
 
-impl<T> LintLayerTypeFlags<T> {
+impl<T> LintLayerProperty<T> {
     #[rustfmt::skip]
     pub fn get<'a>(&'a self, layer: &KraMainDocLayer) -> (&'a Option<T>, &str) {
         match *self {
-            LintLayerTypeFlags::All(ref all_layers) => (all_layers, "layer"),
-            LintLayerTypeFlags::ByType {
+            LintLayerProperty::All(ref all_layers) => (all_layers, "layer"),
+            LintLayerProperty::ByType {
                 ref paint_layers,
                 ref group_layers,
                 ref clone_layers,

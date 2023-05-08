@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 use crate::lints::{
-    LintLayerTypeFlags, LintMaskTypeFlags, LintPass, LintPassResult,
+    LintLayerProperty, LintMaskProperty, LintPass, LintPassResult,
     StringMatchExpression,
 };
 use crate::models::kra_archive::KraArchive;
@@ -9,8 +9,8 @@ use crate::models::kra_archive::KraArchive;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassSurfaceNames {
-    pub layer_names: Option<LintLayerTypeFlags<StringMatchExpression>>,
-    pub mask_names: Option<LintMaskTypeFlags<StringMatchExpression>>,
+    pub layer_names: Option<LintLayerProperty<StringMatchExpression>>,
+    pub mask_names: Option<LintMaskProperty<StringMatchExpression>>,
 }
 
 impl LintPass for LintPassSurfaceNames {

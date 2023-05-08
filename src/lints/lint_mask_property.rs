@@ -6,7 +6,7 @@ use crate::models::kra_maindoc::KraMainDocMask;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum LintMaskTypeFlags<T> {
+pub enum LintMaskProperty<T> {
     All(Option<T>),
     ByType {
         transparency_masks: Option<T>,
@@ -17,12 +17,12 @@ pub enum LintMaskTypeFlags<T> {
     },
 }
 
-impl<T> LintMaskTypeFlags<T> {
+impl<T> LintMaskProperty<T> {
     #[rustfmt::skip]
     pub fn get<'a>(&'a self, mask: &KraMainDocMask) -> (&'a Option<T>, &str) {
         match *self {
-            LintMaskTypeFlags::All(ref all_masks) => (all_masks, "mask"),
-            LintMaskTypeFlags::ByType {
+            LintMaskProperty::All(ref all_masks) => (all_masks, "mask"),
+            LintMaskProperty::ByType {
                 ref transparency_masks,
                 ref filter_masks,
                 ref colorize_masks,

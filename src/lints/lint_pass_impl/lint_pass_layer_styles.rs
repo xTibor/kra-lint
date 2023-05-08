@@ -1,12 +1,12 @@
 use serde::Deserialize;
 
-use crate::lints::{LintLayerTypeFlags, LintPass, LintPassResult};
+use crate::lints::{LintLayerProperty, LintPass, LintPassResult};
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassLayerStyles {
-    pub styleable_layers: LintLayerTypeFlags<bool>,
+    pub styleable_layers: LintLayerProperty<bool>,
 }
 
 impl LintPass for LintPassLayerStyles {

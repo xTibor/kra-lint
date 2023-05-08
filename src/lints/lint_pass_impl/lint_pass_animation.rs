@@ -1,15 +1,15 @@
 use serde::Deserialize;
 
 use crate::lints::{
-    LintLayerTypeFlags, LintMaskTypeFlags, LintPass, LintPassResult,
+    LintLayerProperty, LintMaskProperty, LintPass, LintPassResult,
 };
 use crate::models::kra_archive::KraArchive;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassAnimation {
-    pub animated_layers: LintLayerTypeFlags<bool>,
-    pub animated_masks: LintMaskTypeFlags<bool>,
+    pub animated_layers: LintLayerProperty<bool>,
+    pub animated_masks: LintMaskProperty<bool>,
     pub framerate: Option<usize>,
 }
 
