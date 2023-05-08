@@ -47,6 +47,7 @@ fn main() -> ExitCode {
     }
 
     lint_results.sort();
+    lint_results.dedup();
 
     if lint_results.is_empty() {
         ExitCode::SUCCESS

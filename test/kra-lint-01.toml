@@ -5,3 +5,5 @@ paths = [
     "kra-lint-01.toml",
     ".kra-lint",
 ]
+
+[lint_prohibit_kseexpr]
