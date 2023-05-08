@@ -9,7 +9,9 @@ edition = "2021"
 camino = { version = "1.1.4", features = ["serde1"] }
 clap = { version = "4.2.4", features = ["derive", "env"] }
 regex = "1.8.1"
-serde = { version = "1.0.160", features = ["derive"] }
 strong-xml = "0.6"
-toml = "0.7.3"
 zip = "0.6.4"
+
+serde = { version = "1.0.160", features = ["derive"] }
+toml = "0.7.3"
+deser-hjson = "1.1.1"

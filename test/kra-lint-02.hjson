@@ -1,0 +1,11 @@
+// Include test file
+
+{
+    "lint_includes": {
+        "paths": [
+            "kra-lint-02.hjson",
+            ".kra-lint"
+        ]
+    },
+    "lint_prohibit_kseexpr": {}
+}

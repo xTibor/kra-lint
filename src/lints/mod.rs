@@ -122,8 +122,15 @@ impl LintConfigCollection {
             let lint_config_str = fs::read_to_string(&lint_config_path)
                 .expect("Failed to read config file");
 
-            toml::from_str(&lint_config_str)
-                .expect("Failed to parse config file")
+            match lint_config_path.extension() {
+                None | Some("toml") => toml::from_str(&lint_config_str)
+                    .expect("Failed to parse config file"),
+                Some("json" | "hjson") => {
+                    deser_hjson::from_str(&lint_config_str)
+                        .expect("Failed to parse config file")
+                }
+                Some(ext) => panic!("Unknown config file format \"{}\"", ext),
+            }
         };
 
         self.lint_config_paths.push(lint_config_path.clone());

@@ -1,6 +1,7 @@
 [lint_includes]
 paths = [
     "kra-lint-01.toml",
+    "kra-lint-02.hjson",
 ]
 
 [lint_prohibit_kseexpr]
