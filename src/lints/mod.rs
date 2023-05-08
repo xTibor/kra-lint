@@ -129,8 +129,16 @@ impl LintConfigCollection {
                     deser_hjson::from_str(&lint_config_str)
                         .expect("Failed to parse config file")
                 }
-                Some("ron") => ron::from_str(&lint_config_str)
-                    .expect("Failed to parse config file"),
+                Some("ron") => {
+                    let ron_options = ron::Options::default()
+                        .with_default_extension(
+                            ron::extensions::Extensions::IMPLICIT_SOME,
+                        );
+
+                    ron_options
+                        .from_str(&lint_config_str)
+                        .expect("Failed to parse config file")
+                }
                 Some(ext) => panic!("Unknown config file format \"{}\"", ext),
             }
         };
