@@ -1,10 +1,10 @@
 # Include test file
 
-[lint_includes]
+[includes]
 # Test circular includes
 paths = [
     "kra-lint-01.toml",
     ".kra-lint",
 ]
 
-[lint_prohibit_kseexpr]
+[prohibit_kseexpr]

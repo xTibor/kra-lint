@@ -1,4 +1,4 @@
-[lint_includes]
+[includes]
 paths = [
     "kra-lint-01.toml",
     "kra-lint-02.hjson",
@@ -6,18 +6,18 @@ paths = [
     "kra-lint-04.yaml",
 ]
 
-[lint_prohibit_kseexpr]
+[prohibit_kseexpr]
 
-[lint_malformed_document]
+[malformed_document]
 
-[lint_prohibit_custom_palettes]
+[prohibit_custom_palettes]
 
-[lint_prohibit_compositions]
+[prohibit_compositions]
 
-[lint_non_default_blending]
+[non_default_blending]
 
-[lint_surface_names]
-    [lint_surface_names.layer_names]
+[surface_names]
+    [surface_names.layer_names]
     paint_layers  = { not = { regex = '^(Paint Layer|ペイントレイヤー) \d+$'         }}
     group_layers  = { not = { regex = '^(Group|グループ化) \d+$'                     }}
     clone_layers  = { not = { regex = '^(Clone Layer|クローンレイヤー) \d+$'         }}
@@ -26,22 +26,22 @@ paths = [
     fill_layers   = { not = { regex = '^(Fill Layer|塗りつぶしレイヤー) \d+$'        }}
     file_layers   = { not = { regex = '^(File Layer|ファイル参照レイヤー) \d+$'      }}
 
-    [lint_surface_names.mask_names]
+    [surface_names.mask_names]
     transparency_masks = { not = { regex = '^(Transparency Mask|透過マスク) \d+$'      }}
     filter_masks       = { not = { regex = '^(Filter Mask|フィルタマスク) \d+ \(.*\)$' }}
     colorize_masks     = { not = { regex = '^(Colorize Mask|自動塗り分けマスク) \d+$'  }}
     transform_masks    = { not = { regex = '^(Transform Mask|変形マスク) \d+$'         }}
     local_selections   = { not = { regex = '^(Selection|選択) \d+$'                    }}
 
-[lint_layer_styles]
+[layer_styles]
 styleable_layers = false
 
-[lint_file_layers]
+[file_layers]
 file_formats = { or = ["kra", "tga"] }
 check_missing_files = true
 
-[lint_surface_type]
-    [lint_surface_type.layer_types]
+[surface_type]
+    [surface_type.layer_types]
     paint_layers = false
     group_layers = false
     clone_layers = false
@@ -50,21 +50,21 @@ check_missing_files = true
     fill_layers = false
     file_layers = false
 
-    [lint_surface_type.mask_types]
+    [surface_type.mask_types]
     transparency_masks = false
     filter_masks = false
     colorize_masks = false
     transform_masks = false
     local_selections = false
 
-[lint_hidden_surface]
+[hidden_surface]
 hidden_layers = false
 hidden_masks = false
 
-[lint_document_name]
+[document_name]
 document_name = { regex = '^[abcdefg]_\d{4}_(tr|mk|wxp)$' }
 
-[lint_document_size]
+[document_size]
 document_sizes = [
     { width = 1584, height =  884, resolution = 144.0 },
     { width = 1740, height =  972, resolution = 158.0 },
@@ -73,19 +73,19 @@ document_sizes = [
     { width = 2208, height = 1236, resolution = 200.0 },
 ]
 
-[lint_colorspace]
+[colorspace]
 colorspace = "RGBA"
 profile = "sRGB-elle-V2-srgbtrc.icc"
 
-[lint_software_version]
+[software_version]
 software_versions = { or = ["5.1.3", "5.1.4"] }
 
-[lint_animation]
+[animation]
 framerate = 24
 animated_layers = false
 animated_masks = false
 
-[lint_copyright]
+[copyright]
 copyright_line = "Copyright (c) 2023 <example-studio>, All rights reserved"
 copyright_disclaimer = """
 This document is confidential property of <example-studio>.
