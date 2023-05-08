@@ -15,3 +15,4 @@ zip = "0.6.4"
 serde = { version = "1.0.160", features = ["derive"] }
 toml = "0.7.3"
 deser-hjson = "1.1.1"
+ron = "0.8.0"

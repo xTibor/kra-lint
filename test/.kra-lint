@@ -2,6 +2,7 @@
 paths = [
     "kra-lint-01.toml",
     "kra-lint-02.hjson",
+    "kra-lint-03.ron",
 ]
 
 [lint_prohibit_kseexpr]

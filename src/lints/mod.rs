@@ -129,6 +129,8 @@ impl LintConfigCollection {
                     deser_hjson::from_str(&lint_config_str)
                         .expect("Failed to parse config file")
                 }
+                Some("ron") => ron::from_str(&lint_config_str)
+                    .expect("Failed to parse config file"),
                 Some(ext) => panic!("Unknown config file format \"{}\"", ext),
             }
         };

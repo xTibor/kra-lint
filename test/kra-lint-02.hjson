@@ -2,6 +2,7 @@
 
 {
     "lint_includes": {
+        // Test circular includes
         "paths": [
             "kra-lint-02.hjson",
             ".kra-lint"

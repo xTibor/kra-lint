@@ -1,0 +1,12 @@
+// Include test file
+
+(
+    lint_includes: Some((
+        // Test circular includes
+        paths: [
+            "kra-lint-03.ron",
+            ".kra-lint",
+        ],
+    )),
+    lint_prohibit_kseexpr: Some(()),
+)

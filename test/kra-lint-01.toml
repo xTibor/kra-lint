@@ -1,6 +1,7 @@
 # Include test file
 
 [lint_includes]
+# Test circular includes
 paths = [
     "kra-lint-01.toml",
     ".kra-lint",
