@@ -1,0 +1,8 @@
+# Include test file
+
+lint_includes:
+  # Test circular includes
+  paths:
+    - "kra-lint-04.yaml"
+    - ".kra-lint"
+lint_prohibit_kseexpr:
