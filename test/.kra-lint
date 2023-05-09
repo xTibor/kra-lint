@@ -64,6 +64,9 @@ hidden_masks = false
 [document_name]
 document_name = { regex = '^[abcdefg]_\d{4}_(tr|mk|wxp)$' }
 
+[file_name]
+file_name = { regex = '^scene_\d{4}_\d{4}\.kra$' }
+
 [document_size]
 document_sizes = [
     { width = 1584, height =  884, resolution = 144.0 },

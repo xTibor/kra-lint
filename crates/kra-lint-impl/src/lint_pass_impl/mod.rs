@@ -4,6 +4,7 @@ pub mod lint_pass_copyright;
 pub mod lint_pass_document_name;
 pub mod lint_pass_document_size;
 pub mod lint_pass_file_layers;
+pub mod lint_pass_file_name;
 pub mod lint_pass_hidden_surface;
 pub mod lint_pass_layer_styles;
 pub mod lint_pass_malformed_document;
