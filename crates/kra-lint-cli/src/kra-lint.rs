@@ -1,5 +1,3 @@
-#![warn(clippy::pattern_type_mismatch)]
-
 use std::process::ExitCode;
 
 use camino::{Utf8Path, Utf8PathBuf};
@@ -24,9 +22,21 @@ fn main() -> ExitCode {
     let mut lint_config_collection = LintConfigCollection::default();
 
     if args.config_paths.is_empty() {
-        lint_config_collection.load_config(Utf8Path::new(".kra-lint"));
+        let default_config_path = Utf8Path::new(".kra-lint");
+
+        if default_config_path.is_file() {
+            eprintln!(
+                "kra-lint: Using default config file \"{}\"",
+                default_config_path
+            );
+            lint_config_collection.load_config(default_config_path);
+        } else {
+            eprintln!("kra-lint: No config files were found");
+            return ExitCode::FAILURE;
+        }
     } else {
         for lint_config_path in args.config_paths {
+            eprintln!("kra-lint: Using config file \"{}\"", lint_config_path);
             lint_config_collection.load_config(&lint_config_path);
         }
     }
