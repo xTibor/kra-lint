@@ -1,8 +1,9 @@
-use camino::Utf8PathBuf;
+use camino::{Utf8Path, Utf8PathBuf};
 use serde::Deserialize;
 
-use crate::{lint_pass_impl, LintPass, LintPassResult};
 use kra_parser::kra_archive::KraArchive;
+
+use crate::{lint_pass_impl, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -64,5 +65,32 @@ impl LintPass for LintConfig {
         lint_pass!(surface_type);
 
         results
+    }
+}
+
+impl LintConfig {
+    pub fn from_path(lint_config_path: &Utf8Path) -> LintConfig {
+        let lint_config_str = std::fs::read_to_string(lint_config_path)
+            .expect("Failed to read config file");
+
+        match lint_config_path.extension() {
+            None | Some("toml") => toml::from_str(&lint_config_str)
+                .expect("Failed to parse config file"),
+            Some("json" | "hjson") => deser_hjson::from_str(&lint_config_str)
+                .expect("Failed to parse config file"),
+            Some("ron") => {
+                let ron_options = ron::Options::default()
+                    .with_default_extension(
+                        ron::extensions::Extensions::IMPLICIT_SOME,
+                    );
+
+                ron_options
+                    .from_str(&lint_config_str)
+                    .expect("Failed to parse config file")
+            }
+            Some("yaml") => serde_yaml::from_str(&lint_config_str)
+                .expect("Failed to parse config file"),
+            Some(ext) => panic!("Unknown config file format \"{}\"", ext),
+        }
     }
 }

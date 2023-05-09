@@ -1,9 +1,8 @@
-use std::fs;
-
 use camino::{Utf8Path, Utf8PathBuf};
 
-use crate::{LintConfig, LintPass, LintPassResult};
 use kra_parser::kra_archive::KraArchive;
+
+use crate::{LintConfig, LintPass, LintPassResult};
 
 pub struct LintConfigCollection {
     pub lint_config_paths: Vec<Utf8PathBuf>,
@@ -23,33 +22,7 @@ impl LintConfigCollection {
             return;
         }
 
-        let lint_config: LintConfig = {
-            let lint_config_str = fs::read_to_string(&lint_config_path)
-                .expect("Failed to read config file");
-
-            match lint_config_path.extension() {
-                None | Some("toml") => toml::from_str(&lint_config_str)
-                    .expect("Failed to parse config file"),
-                Some("json" | "hjson") => {
-                    deser_hjson::from_str(&lint_config_str)
-                        .expect("Failed to parse config file")
-                }
-                Some("ron") => {
-                    let ron_options = ron::Options::default()
-                        .with_default_extension(
-                            ron::extensions::Extensions::IMPLICIT_SOME,
-                        );
-
-                    ron_options
-                        .from_str(&lint_config_str)
-                        .expect("Failed to parse config file")
-                }
-                Some("yaml") => serde_yaml::from_str(&lint_config_str)
-                    .expect("Failed to parse config file"),
-                Some(ext) => panic!("Unknown config file format \"{}\"", ext),
-            }
-        };
-
+        let lint_config = LintConfig::from_path(&lint_config_path);
         self.lint_config_paths.push(lint_config_path.clone());
 
         if let Some(lint_includes) = lint_config.includes.as_ref() {
