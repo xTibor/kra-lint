@@ -26,14 +26,18 @@ impl LintConfigCollection {
 
         if let Some(lint_includes) = lint_config.includes.as_ref() {
             for include_path in &lint_includes.paths {
-                // Include paths are relative to the config file they are defined in
-                let resolved_include_path = &lint_config_path
-                    .parent()
-                    .expect("Failed to get parent directory")
-                    .join(include_path)
-                    .canonicalize_utf8()
-                    .expect("Failed to canonicalize path");
-                self.load_config(resolved_include_path);
+                if include_path.is_absolute() {
+                    self.load_config(include_path);
+                } else {
+                    // Relative paths are relative to the config file they are defined in
+                    let resolved_include_path = &lint_config_path
+                        .parent()
+                        .expect("Failed to get parent directory")
+                        .join(include_path)
+                        .canonicalize_utf8()
+                        .expect("Failed to canonicalize path");
+                    self.load_config(resolved_include_path);
+                }
             }
         }
 
