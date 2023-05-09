@@ -2,7 +2,7 @@
 
 use std::process::ExitCode;
 
-use camino::Utf8PathBuf;
+use camino::{Utf8Path, Utf8PathBuf};
 use clap::Parser;
 
 use kra_lint_impl::{LintConfigCollection, LintPass};
@@ -12,7 +12,7 @@ use kra_parser::kra_archive::KraArchive;
 pub struct Args {
     /// Config file path
     #[arg(long, short = 'C', value_name = "PATH", env = "KRALINT_CONFIG_PATH")]
-    pub config_path: Option<Utf8PathBuf>,
+    pub config_paths: Vec<Utf8PathBuf>,
 
     /// Document paths
     pub paths: Vec<Utf8PathBuf>,
@@ -21,11 +21,15 @@ pub struct Args {
 fn main() -> ExitCode {
     let args = Args::parse();
 
-    let lint_config_path =
-        args.config_path.unwrap_or(Utf8PathBuf::from(".kra-lint"));
-
     let mut lint_config_collection = LintConfigCollection::default();
-    lint_config_collection.load_config(&lint_config_path);
+
+    if args.config_paths.is_empty() {
+        lint_config_collection.load_config(Utf8Path::new(".kra-lint"));
+    } else {
+        for lint_config_path in args.config_paths {
+            lint_config_collection.load_config(&lint_config_path);
+        }
+    }
 
     let mut lint_results = vec![];
 
