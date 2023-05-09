@@ -73,7 +73,7 @@ impl LintConfig {
         let lint_config_str = std::fs::read_to_string(lint_config_path)
             .expect("Failed to read config file");
 
-        match lint_config_path.extension() {
+        match lint_config_path.extension().map(str::to_lowercase).as_deref() {
             None | Some("toml") => toml::from_str(&lint_config_str)
                 .expect("Failed to parse config file"),
             Some("json" | "hjson") => deser_hjson::from_str(&lint_config_str)
