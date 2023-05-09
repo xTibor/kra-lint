@@ -4,16 +4,13 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::{LintConfig, LintPass, LintPassResult};
 
+#[derive(Default)]
 pub struct LintConfigCollection {
     pub lint_config_paths: Vec<Utf8PathBuf>,
     pub lint_configs: Vec<LintConfig>,
 }
 
 impl LintConfigCollection {
-    pub fn new() -> Self {
-        Self { lint_configs: vec![], lint_config_paths: vec![] }
-    }
-
     pub fn load_config(&mut self, lint_config_path: &Utf8Path) {
         let lint_config_path = lint_config_path.to_path_buf();
 

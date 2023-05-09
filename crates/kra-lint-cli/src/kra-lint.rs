@@ -24,7 +24,7 @@ fn main() -> ExitCode {
     let lint_config_path =
         args.config_path.unwrap_or(Utf8PathBuf::from(".kra-lint"));
 
-    let mut lint_config_collection = LintConfigCollection::new();
+    let mut lint_config_collection = LintConfigCollection::default();
     lint_config_collection.load_config(&lint_config_path);
 
     let mut lint_results = vec![];
