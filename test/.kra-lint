@@ -4,6 +4,7 @@ paths = [
     "kra-lint-02.hjson",
     "kra-lint-03.ron",
     "kra-lint-04.yaml",
+    "test-subfolder/kra-lint.toml",
 ]
 
 [prohibit_kseexpr]

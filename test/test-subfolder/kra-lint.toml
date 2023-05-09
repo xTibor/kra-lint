@@ -1,0 +1,7 @@
+# Include test file
+
+[includes]
+# Test circular includes with relative paths
+paths = [
+    "../.kra-lint",
+]

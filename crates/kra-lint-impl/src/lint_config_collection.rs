@@ -12,7 +12,9 @@ pub struct LintConfigCollection {
 
 impl LintConfigCollection {
     pub fn load_config(&mut self, lint_config_path: &Utf8Path) {
-        let lint_config_path = lint_config_path.to_path_buf();
+        let lint_config_path = lint_config_path
+            .canonicalize_utf8()
+            .expect("Failed to canonicalize path");
 
         // Do not enter infinite loop on circular includes
         if self.lint_config_paths.contains(&lint_config_path) {
@@ -28,7 +30,9 @@ impl LintConfigCollection {
                 let resolved_include_path = &lint_config_path
                     .parent()
                     .expect("Failed to get parent directory")
-                    .join(include_path);
+                    .join(include_path)
+                    .canonicalize_utf8()
+                    .expect("Failed to canonicalize path");
                 self.load_config(resolved_include_path);
             }
         }
