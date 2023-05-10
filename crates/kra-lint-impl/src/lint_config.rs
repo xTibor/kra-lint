@@ -97,7 +97,7 @@ impl LintConfig {
                     )
                 })
             }
-            Some("json" | "hjson") => deser_hjson::from_str(&lint_config_str)
+            Some("hjson" | "json") => deser_hjson::from_str(&lint_config_str)
                 .map_err(|hjson_error| {
                     LintError::FailedToParseHjsonConfig(
                         lint_config_path.to_owned(),
@@ -117,14 +117,13 @@ impl LintConfig {
                     )
                 })
             }
-            Some("yaml") => {
-                serde_yaml::from_str(&lint_config_str).map_err(|yaml_error| {
+            Some("yaml" | "yml") => serde_yaml::from_str(&lint_config_str)
+                .map_err(|yaml_error| {
                     LintError::FailedToParseYamlConfig(
                         lint_config_path.to_owned(),
                         yaml_error,
                     )
-                })
-            }
+                }),
             Some(extension) => {
                 Err(LintError::UnknownConfigFormat(extension.to_owned()))
             }
