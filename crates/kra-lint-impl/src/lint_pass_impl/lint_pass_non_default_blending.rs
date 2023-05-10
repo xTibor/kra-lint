@@ -12,13 +12,13 @@ impl LintPass for LintPassNonDefaultBlending {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
                 if layer.opacity != 255 {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Non-default layer transparency (layer: \"{}\", expected: \"{:.0}%\", found: \"{:.0}%\")",
                         layer.name, 100.0, (layer.opacity as f64 / 255.0 * 100.0),
                     ));
@@ -35,7 +35,7 @@ impl LintPass for LintPassNonDefaultBlending {
                 };
 
                 if layer.composite_op != expected_blending_mode {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Non-default layer blending mode (layer: \"{}\", expected: \"{}\", found: \"{}\")",
                         layer.name, expected_blending_mode, layer.composite_op,
                     ));
@@ -52,7 +52,7 @@ impl LintPass for LintPassNonDefaultBlending {
                 };
 
                 if mask.composite_op.as_deref() != expected_blending_mode {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Non-default mask blending mode (layer: \"{}\", mask: \"{}\", expected: \"{}\", found: \"{}\")",
                         layer.name,
                         mask.name,

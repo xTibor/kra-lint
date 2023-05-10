@@ -12,7 +12,7 @@ impl LintPass for LintPassProhibitCustomPalettes {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -20,7 +20,7 @@ impl LintPass for LintPassProhibitCustomPalettes {
                 kra_archive.main_doc.image.palette_container.as_ref()
             {
                 for kra_palette in &kra_palette_container.resources {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Prohibited use of custom palettes (palette: \"{}\")",
                         kra_palette.name
                     ));

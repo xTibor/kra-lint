@@ -18,7 +18,7 @@ impl LintPass for LintPassSurfaceNames {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -28,7 +28,7 @@ impl LintPass for LintPassSurfaceNames {
 
                     if let Some(string_match_expr) = layer_opt.as_ref() {
                         if !string_match_expr.matches(&layer.name) {
-                            results.push(format!(
+                            lint_messages.push(format!(
                                 "Incorrect {} name (layer: \"{}\", expected: {})",
                                 layer_display, layer.name, string_match_expr,
                             ));
@@ -46,7 +46,7 @@ impl LintPass for LintPassSurfaceNames {
 
                     if let Some(string_match_expr) = mask_opt.as_ref() {
                         if !string_match_expr.matches(&mask.name) {
-                            results.push(format!(
+                            lint_messages.push(format!(
                                 "Incorrect {} name (layer: \"{}\", mask: \"{}\", expected: {})",
                                 mask_display, layer.name, mask.name, string_match_expr,
                             ));

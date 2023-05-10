@@ -52,39 +52,41 @@ fn main() -> ExitCode {
         lint_config_collection
     };
 
-    let lint_results = {
-        let mut lint_results = vec![];
+    let all_lint_messages = {
+        let mut all_lint_messages = vec![];
 
-        for path in &args.paths {
-            match KraArchive::from_path(path) {
+        for kra_path in &args.paths {
+            match KraArchive::from_path(kra_path) {
                 Ok(kra_archive) => {
-                    let mut kra_results = vec![];
+                    let mut lint_messages = vec![];
 
                     match lint_config_collection
-                        .lint(&kra_archive, &mut kra_results)
+                        .lint(&kra_archive, &mut lint_messages)
                     {
-                        Ok(()) => lint_results.extend(
-                            kra_results
+                        Ok(()) => all_lint_messages.extend(
+                            lint_messages
                                 .into_iter()
-                                .map(|lint_message| (path, lint_message)),
+                                .map(|lint_message| (kra_path, lint_message)),
                         ),
-                        Err(err) => lint_results.push((path, err.to_string())),
+                        Err(err) => {
+                            all_lint_messages.push((kra_path, err.to_string()))
+                        }
                     }
                 }
-                Err(err) => lint_results.push((path, err.to_string())),
+                Err(err) => all_lint_messages.push((kra_path, err.to_string())),
             }
         }
 
-        lint_results.sort();
-        lint_results.dedup();
-        lint_results
+        all_lint_messages.sort();
+        all_lint_messages.dedup();
+        all_lint_messages
     };
 
-    if lint_results.is_empty() {
+    if all_lint_messages.is_empty() {
         ExitCode::SUCCESS
     } else {
-        for (path, lint_message) in lint_results {
-            eprintln!("{}: {}", path, lint_message);
+        for (kra_path, lint_message) in all_lint_messages {
+            eprintln!("{}: {}", kra_path, lint_message);
         }
         ExitCode::FAILURE
     }

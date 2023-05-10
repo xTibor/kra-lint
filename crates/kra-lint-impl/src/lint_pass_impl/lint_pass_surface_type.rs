@@ -15,7 +15,7 @@ impl LintPass for LintPassSurfaceType {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -23,7 +23,7 @@ impl LintPass for LintPassSurfaceType {
                 let (layer_opt, layer_display) = self.layer_types.get(layer)?;
 
                 if *layer_opt == Some(false) {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Prohibited use of {} (layer: \"{}\")",
                         layer_display, layer.name
                     ));
@@ -37,7 +37,7 @@ impl LintPass for LintPassSurfaceType {
                 let (mask_opt, mask_display) = self.mask_types.get(mask)?;
 
                 if *mask_opt == Some(false) {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Prohibited use of {} (layer: \"{}\", mask: \"{}\")",
                         mask_display, layer.name, mask.name
                     ));

@@ -53,10 +53,10 @@ impl LintPass for LintConfigCollection {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         for lint_config in &self.lint_configs {
-            lint_config.lint(kra_archive, results)?;
+            lint_config.lint(kra_archive, lint_messages)?;
         }
 
         Ok(())

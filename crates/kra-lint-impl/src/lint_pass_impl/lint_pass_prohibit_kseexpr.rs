@@ -12,7 +12,7 @@ impl LintPass for LintPassProhibitKSeExpr {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -20,7 +20,7 @@ impl LintPass for LintPassProhibitKSeExpr {
                 if (layer.node_type == "generatorlayer")
                     && (layer.generator_name.as_deref() == Some("seexpr"))
                 {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Prohibited use of KSeExpr (layer: \"{}\")",
                         layer.name
                     ));

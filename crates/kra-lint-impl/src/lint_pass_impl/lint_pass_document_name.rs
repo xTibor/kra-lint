@@ -14,16 +14,16 @@ impl LintPass for LintPassDocumentName {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_document_name = &kra_archive.main_doc.image.name;
 
             if kra_document_name.is_empty() {
-                results.push("Missing document name".to_owned());
+                lint_messages.push("Missing document name".to_owned());
             } else if !self.document_name.matches(kra_document_name) {
-                results.push(format!(
+                lint_messages.push(format!(
                     "Incorrect document name (expected: {}, found: \"{}\")",
                     self.document_name, kra_document_name,
                 ));

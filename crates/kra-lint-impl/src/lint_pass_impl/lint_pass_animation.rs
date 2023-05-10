@@ -16,7 +16,7 @@ impl LintPass for LintPassAnimation {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -27,7 +27,7 @@ impl LintPass for LintPassAnimation {
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
                     if layer.keyframes.is_some() {
-                        results.push(format!(
+                        lint_messages.push(format!(
                             "Prohibited use of animated {} (layer: \"{}\")",
                             layer_display, layer.name
                         ));
@@ -44,7 +44,7 @@ impl LintPass for LintPassAnimation {
                 #[allow(clippy::collapsible_if)]
                 if *mask_opt == Some(false) {
                     if mask.keyframes.is_some() {
-                        results.push(format!(
+                        lint_messages.push(format!(
                             "Prohibited use of animated {} (layer: \"{}\", mask: \"{}\")",
                             mask_display, layer.name, mask.name
                         ));
@@ -60,7 +60,7 @@ impl LintPass for LintPassAnimation {
                     kra_archive.main_doc.image.animation.framerate.value;
 
                 if kra_framerate != framerate {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Incorrect animation framerate (expected: {}fps, found: {}fps)",
                         framerate, kra_framerate
                     ));

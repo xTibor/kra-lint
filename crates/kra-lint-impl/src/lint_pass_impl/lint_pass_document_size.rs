@@ -32,7 +32,7 @@ impl LintPass for LintPassDocumentSize {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -43,7 +43,7 @@ impl LintPass for LintPassDocumentSize {
             };
 
             if !self.document_sizes.contains(&kra_document_size) {
-                results.push(format!(
+                lint_messages.push(format!(
                     "Incorrect document size (expected: [{}], found: {})",
                     self.document_sizes
                         .iter()
@@ -61,7 +61,7 @@ impl LintPass for LintPassDocumentSize {
             let kra_resolution_y = kra_archive.main_doc.image.y_res;
 
             if kra_resolution_x != kra_resolution_y {
-                results.push(format!(
+                lint_messages.push(format!(
                     "Inconsistent horizontal and vertical document resolution (horizontal: {}dpi, vertical: {}dpi)",
                     kra_resolution_x, kra_resolution_y,
                 ));

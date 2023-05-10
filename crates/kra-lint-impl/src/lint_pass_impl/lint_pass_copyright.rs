@@ -18,7 +18,7 @@ impl LintPass for LintPassCopyright {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -27,9 +27,9 @@ impl LintPass for LintPassCopyright {
                     &kra_archive.document_info.about.license;
 
                 if kra_copyright_line.is_empty() {
-                    results.push("Missing copyright line".to_owned());
+                    lint_messages.push("Missing copyright line".to_owned());
                 } else if !copyright_line.matches(kra_copyright_line) {
-                    results.push(format!(
+                    lint_messages.push(format!(
                     "Incorrect copyright line (expected: {}, found: \"{}\")",
                     copyright_line, kra_copyright_line,
                 ));
@@ -46,11 +46,12 @@ impl LintPass for LintPassCopyright {
                     &kra_archive.document_info.about.r#abstract;
 
                 if kra_copyright_disclaimer.is_empty() {
-                    results.push("Missing copyright disclaimer".to_owned());
+                    lint_messages
+                        .push("Missing copyright disclaimer".to_owned());
                 } else if !copyright_disclaimer
                     .matches(kra_copyright_disclaimer)
                 {
-                    results.push(format!(
+                    lint_messages.push(format!(
                     "Incorrect copyright disclaimer (expected: {}, found: \"{}\")",
                     copyright_disclaimer, kra_copyright_disclaimer,
                 ));
@@ -67,7 +68,7 @@ impl LintPass for LintPassCopyright {
                 if kra_initial_creator.is_empty()
                     || (kra_initial_creator == "Unknown")
                 {
-                    results.push(
+                    lint_messages.push(
                         "Missing author information (Initial creator)"
                             .to_owned(),
                     );
@@ -88,21 +89,21 @@ impl LintPass for LintPassCopyright {
                     &kra_archive.document_info.author.creator_last_name;
 
                 if kra_author_full_name.is_empty() {
-                    results.push(
+                    lint_messages.push(
                         "Missing author information (Author full name)"
                             .to_owned(),
                     );
                 }
 
                 if kra_author_first_name.is_empty() {
-                    results.push(
+                    lint_messages.push(
                         "Missing author information (Author first name)"
                             .to_owned(),
                     );
                 }
 
                 if kra_author_last_name.is_empty() {
-                    results.push(
+                    lint_messages.push(
                         "Missing author information (Author last name)"
                             .to_owned(),
                     );
@@ -113,7 +114,7 @@ impl LintPass for LintPassCopyright {
                 {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_first_name) {
-                        results.push(format!(
+                        lint_messages.push(format!(
                             "Inconsistent author information (first name: \"{}\", full name: \"{}\")",
                             kra_author_first_name, kra_author_full_name
                         ));
@@ -125,7 +126,7 @@ impl LintPass for LintPassCopyright {
                 {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_last_name) {
-                        results.push(format!(
+                        lint_messages.push(format!(
                             "Inconsistent author information (last name: \"{}\", full name: \"{}\")",
                             kra_author_last_name, kra_author_full_name
                         ));
@@ -140,9 +141,9 @@ impl LintPass for LintPassCopyright {
                 let kra_studio_name = &kra_archive.document_info.author.company;
 
                 if kra_studio_name.is_empty() {
-                    results.push("Missing studio name".to_owned());
+                    lint_messages.push("Missing studio name".to_owned());
                 } else if !studio_name.matches(kra_studio_name) {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Incorrect studio name (expected: {}, found: \"{}\")",
                         studio_name, kra_studio_name,
                     ));

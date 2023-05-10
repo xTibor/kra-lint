@@ -14,7 +14,7 @@ impl LintPass for LintPassFileName {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -24,7 +24,7 @@ impl LintPass for LintPassFileName {
                 .expect("Failed to get file name");
 
             if !self.file_name.matches(kra_file_name) {
-                results.push(format!(
+                lint_messages.push(format!(
                     "Incorrect file name (expected: {}, found: \"{}\")",
                     self.file_name, kra_file_name,
                 ));

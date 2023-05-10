@@ -12,7 +12,7 @@ impl LintPass for LintPassMalformedDocument {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -22,7 +22,7 @@ impl LintPass for LintPassMalformedDocument {
             let documentinfo_xml = std::io::read_to_string(zip_file).unwrap();
 
             if documentinfo_xml.matches("]]>").count() > 1 {
-                results.push(
+                lint_messages.push(
                     "Potentially malformed document (Unescaped documentinfo.xml <abstract> tag, Bug 446376)".to_owned(),
                 );
             }
@@ -36,7 +36,7 @@ impl LintPass for LintPassMalformedDocument {
                 .file_names()
                 .any(|file_name| file_name.contains("../"))
             {
-                results.push("Malformed document (Path traversal vulnerability, Bug 429925)".to_owned());
+                lint_messages.push("Malformed document (Path traversal vulnerability, Bug 429925)".to_owned());
             }
         }
 
@@ -50,13 +50,13 @@ impl LintPass for LintPassMalformedDocument {
                         if !kra_archive.all_layers().any(|target_layer| {
                             &target_layer.uuid == clone_from_uuid
                         }) {
-                            results.push(format!(
+                            lint_messages.push(format!(
                                 "Malformed document (Missing clone layer target layer, layer: \"{}\", Bug 414699)",
                                 layer.name
                             ));
                         }
                     } else {
-                        results.push(format!(
+                        lint_messages.push(format!(
                             "Malformed document (Missing clone layer target field, layer: \"{}\")",
                             layer.name
                         ));
@@ -75,7 +75,7 @@ impl LintPass for LintPassMalformedDocument {
                     .iter()
                     .any(|composition| composition.name.contains('/'))
                 {
-                    results.push("Malformed document (Compositions path traversal vulnerability)".to_owned());
+                    lint_messages.push("Malformed document (Compositions path traversal vulnerability)".to_owned());
                 }
             }
         }
@@ -101,7 +101,7 @@ impl LintPass for LintPassMalformedDocument {
                             .collect::<Vec<_>>();
 
                         if referencing_uuid.contains(&uuid_root) {
-                            results.push(format!(
+                            lint_messages.push(format!(
                                 "Malformed document (Clone layer loop, layer: \"{}\")",
                                 layer.name
                             ));

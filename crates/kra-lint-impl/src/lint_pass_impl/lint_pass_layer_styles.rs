@@ -14,7 +14,7 @@ impl LintPass for LintPassLayerStyles {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -28,7 +28,7 @@ impl LintPass for LintPassLayerStyles {
                         // Bug: When removing all layer styles this KRA field does
                         //  not get cleared, interface still acts like layer styles
                         //  are present.
-                        results.push(format!(
+                        lint_messages.push(format!(
                             "Prohibited use of layer styles on {} (layer: \"{}\")",
                             layer_display, layer.name
                         ));

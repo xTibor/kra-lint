@@ -14,14 +14,14 @@ impl LintPass for LintPassSoftwareVersion {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_software_version = &kra_archive.main_doc.software_version;
 
             if !self.software_versions.matches(kra_software_version) {
-                results.push(format!(
+                lint_messages.push(format!(
                     "Incorrect software version (expected: {}, found: \"{}\")",
                     self.software_versions, kra_software_version
                 ));

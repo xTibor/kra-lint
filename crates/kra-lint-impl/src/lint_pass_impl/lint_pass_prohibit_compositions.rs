@@ -12,7 +12,7 @@ impl LintPass for LintPassProhibitCompositions {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -20,7 +20,7 @@ impl LintPass for LintPassProhibitCompositions {
                 kra_archive.main_doc.image.composition_container.as_ref()
             {
                 for composition in &composition_container.compositions {
-                    results.push(format!(
+                    lint_messages.push(format!(
                         "Prohibited use of compositions (composition name: \"{}\")",
                         composition.name
                     ));

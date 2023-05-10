@@ -16,7 +16,7 @@ impl LintPass for LintPassFileLayers {
     fn lint(
         &self,
         kra_archive: &KraArchive,
-        results: &mut Vec<String>,
+        lint_messages: &mut Vec<String>,
     ) -> LintPassResult {
         // Sub-pass #1
         {
@@ -28,13 +28,13 @@ impl LintPass for LintPassFileLayers {
                                 Utf8Path::new(source).extension()
                             {
                                 if !file_formats.matches(source_ext) {
-                                    results.push(format!(
+                                    lint_messages.push(format!(
                                         "Incorrect file layer source image format (layer: \"{}\", expected: {}, found: \"{}\")",
                                         layer.name, file_formats, source_ext,
                                     ));
                                 }
                             } else {
-                                results.push(format!(
+                                lint_messages.push(format!(
                                     "File layer source image has no file extension (layer: \"{}\", expected: {})",
                                      layer.name, file_formats,
                                 ));
@@ -59,7 +59,7 @@ impl LintPass for LintPassFileLayers {
                                 .join(source);
 
                             if !source_path.is_file() {
-                                results.push(format!(
+                                lint_messages.push(format!(
                                     "Missing file layer source image (layer: \"{}\", source: \"{}\")",
                                     layer.name, source,
                                 ));
