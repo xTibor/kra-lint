@@ -10,7 +10,7 @@ kra-parser = { path = "../kra-parser/" }
 
 camino = { version = "1.1.4", features = ["serde1"] }
 regex = "1.8.1"
-zip = "0.6.4"
+zip = { version = "0.6.4", default-features = false, features = ["deflate"] }
 
 serde = { version = "1.0.160", features = ["derive"] }
 toml = "0.7.3"
