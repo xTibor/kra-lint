@@ -26,6 +26,6 @@ impl LintPass for LintPassProhibitCustomPalettes {
             }
         }
 
-        results
+        Ok(results)
     }
 }

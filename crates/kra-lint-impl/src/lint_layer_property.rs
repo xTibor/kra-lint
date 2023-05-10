@@ -2,6 +2,8 @@ use serde::Deserialize;
 
 use kra_parser::kra_maindoc::KraMainDocLayer;
 
+use crate::LintError;
+
 #[rustfmt::skip]
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -21,9 +23,9 @@ pub enum LintLayerProperty<T> {
 
 impl<T> LintLayerProperty<T> {
     #[rustfmt::skip]
-    pub fn get<'a>(&'a self, layer: &KraMainDocLayer) -> (&'a Option<T>, &str) {
+    pub fn get<'a>(&'a self, layer: &KraMainDocLayer) -> Result<(&'a Option<T>, &str), LintError> {
         match *self {
-            LintLayerProperty::All(ref all_layers) => (all_layers, "layer"),
+            LintLayerProperty::All(ref all_layers) => Ok((all_layers, "layer")),
             LintLayerProperty::ByType {
                 ref paint_layers,
                 ref group_layers,
@@ -33,14 +35,14 @@ impl<T> LintLayerProperty<T> {
                 ref fill_layers,
                 ref file_layers,
             } => match layer.node_type.as_str() {
-                "paintlayer"      => (paint_layers,  "paint layer" ),
-                "grouplayer"      => (group_layers,  "group layer" ),
-                "clonelayer"      => (clone_layers,  "clone layer" ),
-                "shapelayer"      => (vector_layers, "vector layer"),
-                "adjustmentlayer" => (filter_layers, "filter layer"),
-                "generatorlayer"  => (fill_layers,   "fill layer"  ),
-                "filelayer"       => (file_layers,   "file layer"  ),
-                _ => unreachable!("Unknown layer node type: \"{}\"", layer.node_type),
+                "paintlayer"      => Ok((paint_layers,  "paint layer" )),
+                "grouplayer"      => Ok((group_layers,  "group layer" )),
+                "clonelayer"      => Ok((clone_layers,  "clone layer" )),
+                "shapelayer"      => Ok((vector_layers, "vector layer")),
+                "adjustmentlayer" => Ok((filter_layers, "filter layer")),
+                "generatorlayer"  => Ok((fill_layers,   "fill layer"  )),
+                "filelayer"       => Ok((file_layers,   "file layer"  )),
+                _ => Err(LintError::UnknownLayerNodeType(layer.node_type.clone())),
             },
         }
     }

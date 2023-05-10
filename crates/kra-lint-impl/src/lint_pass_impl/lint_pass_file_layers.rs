@@ -68,6 +68,6 @@ impl LintPass for LintPassFileLayers {
             }
         }
 
-        results
+        Ok(results)
     }
 }

@@ -26,6 +26,6 @@ impl LintPass for LintPassProhibitCompositions {
             }
         }
 
-        results
+        Ok(results)
     }
 }

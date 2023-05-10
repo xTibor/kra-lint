@@ -18,7 +18,7 @@ impl LintPass for LintPassLayerStyles {
         {
             for layer in kra_archive.all_layers() {
                 let (layer_opt, layer_display) =
-                    self.styleable_layers.get(layer);
+                    self.styleable_layers.get(layer)?;
 
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
@@ -35,6 +35,6 @@ impl LintPass for LintPassLayerStyles {
             }
         }
 
-        results
+        Ok(results)
     }
 }

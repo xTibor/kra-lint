@@ -66,6 +66,6 @@ impl LintPass for LintPassDocumentSize {
             }
         }
 
-        results
+        Ok(results)
     }
 }

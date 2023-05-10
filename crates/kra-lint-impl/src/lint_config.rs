@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{lint_pass_impl, LintPass, LintPassResult};
+use crate::{lint_pass_impl, LintError, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -43,7 +43,7 @@ impl LintPass for LintConfig {
         macro_rules! lint_pass {
             ($lint_name:ident) => {{
                 if let Some($lint_name) = self.$lint_name.as_ref() {
-                    results.extend($lint_name.lint(kra_archive))
+                    results.extend($lint_name.lint(kra_archive)?)
                 }
             }};
         }
@@ -66,33 +66,62 @@ impl LintPass for LintConfig {
         lint_pass!(surface_names);
         lint_pass!(surface_type);
 
-        results
+        Ok(results)
     }
 }
 
 impl LintConfig {
-    pub fn from_path(lint_config_path: &Utf8Path) -> LintConfig {
+    pub fn from_path(
+        lint_config_path: &Utf8Path,
+    ) -> Result<LintConfig, LintError> {
         let lint_config_str = std::fs::read_to_string(lint_config_path)
-            .expect("Failed to read config file");
+            .map_err(|io_error| {
+                LintError::FailedToReadConfig(
+                    lint_config_path.to_owned(),
+                    io_error,
+                )
+            })?;
 
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
-            None | Some("toml") => toml::from_str(&lint_config_str)
-                .expect("Failed to parse config file"),
+            None | Some("toml") => {
+                toml::from_str(&lint_config_str).map_err(|toml_error| {
+                    LintError::FailedToParseTomlConfig(
+                        lint_config_path.to_owned(),
+                        toml_error,
+                    )
+                })
+            }
             Some("json" | "hjson") => deser_hjson::from_str(&lint_config_str)
-                .expect("Failed to parse config file"),
+                .map_err(|hjson_error| {
+                    LintError::FailedToParseHjsonConfig(
+                        lint_config_path.to_owned(),
+                        hjson_error,
+                    )
+                }),
             Some("ron") => {
                 let ron_options = ron::Options::default()
                     .with_default_extension(
                         ron::extensions::Extensions::IMPLICIT_SOME,
                     );
 
-                ron_options
-                    .from_str(&lint_config_str)
-                    .expect("Failed to parse config file")
+                ron_options.from_str(&lint_config_str).map_err(|ron_error| {
+                    LintError::FailedToParseRonConfig(
+                        lint_config_path.to_owned(),
+                        ron_error,
+                    )
+                })
             }
-            Some("yaml") => serde_yaml::from_str(&lint_config_str)
-                .expect("Failed to parse config file"),
-            Some(ext) => panic!("Unknown config file format \"{}\"", ext),
+            Some("yaml") => {
+                serde_yaml::from_str(&lint_config_str).map_err(|yaml_error| {
+                    LintError::FailedToParseYamlConfig(
+                        lint_config_path.to_owned(),
+                        yaml_error,
+                    )
+                })
+            }
+            Some(extension) => {
+                Err(LintError::UnknownConfigFormat(extension.to_owned()))
+            }
         }
     }
 }

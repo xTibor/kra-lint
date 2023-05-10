@@ -29,6 +29,6 @@ impl LintPass for LintPassFileName {
             }
         }
 
-        results
+        Ok(results)
     }
 }

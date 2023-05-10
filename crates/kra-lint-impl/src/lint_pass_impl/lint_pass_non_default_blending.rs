@@ -61,6 +61,6 @@ impl LintPass for LintPassNonDefaultBlending {
             }
         }
 
-        results
+        Ok(results)
     }
 }

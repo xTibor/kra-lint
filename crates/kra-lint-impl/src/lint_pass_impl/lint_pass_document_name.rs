@@ -28,6 +28,6 @@ impl LintPass for LintPassDocumentName {
             }
         }
 
-        results
+        Ok(results)
     }
 }

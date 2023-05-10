@@ -18,7 +18,8 @@ impl LintPass for LintPassHiddenSurface {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
-                let (layer_opt, layer_display) = self.hidden_layers.get(layer);
+                let (layer_opt, layer_display) =
+                    self.hidden_layers.get(layer)?;
 
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
@@ -35,7 +36,7 @@ impl LintPass for LintPassHiddenSurface {
         // Sub-pass #2
         {
             for (layer, mask) in kra_archive.all_masks() {
-                let (mask_opt, mask_display) = self.hidden_masks.get(mask);
+                let (mask_opt, mask_display) = self.hidden_masks.get(mask)?;
 
                 #[allow(clippy::collapsible_if)]
                 if *mask_opt == Some(false) {
@@ -51,6 +52,6 @@ impl LintPass for LintPassHiddenSurface {
             }
         }
 
-        results
+        Ok(results)
     }
 }

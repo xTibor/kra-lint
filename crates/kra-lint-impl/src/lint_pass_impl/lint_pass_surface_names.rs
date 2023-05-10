@@ -22,7 +22,7 @@ impl LintPass for LintPassSurfaceNames {
         {
             if let Some(layer_names) = self.layer_names.as_ref() {
                 for layer in kra_archive.all_layers() {
-                    let (layer_opt, layer_display) = layer_names.get(layer);
+                    let (layer_opt, layer_display) = layer_names.get(layer)?;
 
                     if let Some(string_match_expr) = layer_opt.as_ref() {
                         if !string_match_expr.matches(&layer.name) {
@@ -40,7 +40,7 @@ impl LintPass for LintPassSurfaceNames {
         {
             if let Some(mask_names) = self.mask_names.as_ref() {
                 for (layer, mask) in kra_archive.all_masks() {
-                    let (mask_opt, mask_display) = mask_names.get(mask);
+                    let (mask_opt, mask_display) = mask_names.get(mask)?;
 
                     if let Some(string_match_expr) = mask_opt.as_ref() {
                         if !string_match_expr.matches(&mask.name) {
@@ -54,6 +54,6 @@ impl LintPass for LintPassSurfaceNames {
             }
         }
 
-        results
+        Ok(results)
     }
 }

@@ -2,6 +2,8 @@ use serde::Deserialize;
 
 use kra_parser::kra_maindoc::KraMainDocMask;
 
+use crate::LintError;
+
 #[rustfmt::skip]
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -19,9 +21,9 @@ pub enum LintMaskProperty<T> {
 
 impl<T> LintMaskProperty<T> {
     #[rustfmt::skip]
-    pub fn get<'a>(&'a self, mask: &KraMainDocMask) -> (&'a Option<T>, &str) {
+    pub fn get<'a>(&'a self, mask: &KraMainDocMask) -> Result<(&'a Option<T>, &str), LintError> {
         match *self {
-            LintMaskProperty::All(ref all_masks) => (all_masks, "mask"),
+            LintMaskProperty::All(ref all_masks) => Ok((all_masks, "mask")),
             LintMaskProperty::ByType {
                 ref transparency_masks,
                 ref filter_masks,
@@ -29,12 +31,12 @@ impl<T> LintMaskProperty<T> {
                 ref transform_masks,
                 ref local_selections,
             } => match mask.node_type.as_str() {
-                "transparencymask" => (transparency_masks, "transparency mask"),
-                "filtermask"       => (filter_masks,       "filter mask"      ),
-                "colorizemask"     => (colorize_masks,     "colorize mask"    ),
-                "transformmask"    => (transform_masks,    "transform mask"   ),
-                "selectionmask"    => (local_selections,   "local selection"  ),
-                _ => unreachable!("Unknown mask node type: \"{}\"", mask.node_type),
+                "transparencymask" => Ok((transparency_masks, "transparency mask")),
+                "filtermask"       => Ok((filter_masks,       "filter mask"      )),
+                "colorizemask"     => Ok((colorize_masks,     "colorize mask"    )),
+                "transformmask"    => Ok((transform_masks,    "transform mask"   )),
+                "selectionmask"    => Ok((local_selections,   "local selection"  )),
+                _ => Err(LintError::UnknownMaskNodeType(mask.node_type.clone())),
             },
         }
     }

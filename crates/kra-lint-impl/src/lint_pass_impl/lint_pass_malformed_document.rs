@@ -118,6 +118,6 @@ impl LintPass for LintPassMalformedDocument {
             }
         }
 
-        results
+        Ok(results)
     }
 }

@@ -1,6 +1,6 @@
 use std::process::ExitCode;
 
-use camino::{Utf8Path, Utf8PathBuf};
+use camino::Utf8PathBuf;
 use clap::Parser;
 
 use kra_lint_impl::{LintConfigCollection, LintPass};
@@ -19,46 +19,62 @@ pub struct Args {
 fn main() -> ExitCode {
     let args = Args::parse();
 
-    let mut lint_config_collection = LintConfigCollection::default();
+    let lint_config_collection = {
+        let mut lint_config_collection = LintConfigCollection::default();
+        let mut config_paths = args.config_paths.clone();
 
-    if args.config_paths.is_empty() {
-        let default_config_path = Utf8Path::new(".kra-lint");
+        if config_paths.is_empty() {
+            let default_config_path = Utf8PathBuf::from(".kra-lint");
 
-        if default_config_path.is_file() {
-            eprintln!(
-                "kra-lint: Using default config file \"{}\"",
-                default_config_path
-            );
-            lint_config_collection.load_config(default_config_path);
-        } else {
+            if default_config_path.is_file() {
+                config_paths.push(default_config_path);
+            }
+        }
+
+        if config_paths.is_empty() {
             eprintln!("kra-lint: No config files were found");
             return ExitCode::FAILURE;
-        }
-    } else {
-        for lint_config_path in args.config_paths {
-            eprintln!("kra-lint: Using config file \"{}\"", lint_config_path);
-            lint_config_collection.load_config(&lint_config_path);
-        }
-    }
-
-    let mut lint_results = vec![];
-
-    for path in &args.paths {
-        match KraArchive::from_path(path) {
-            Ok(kra_archive) => {
-                lint_results.extend(
-                    lint_config_collection
-                        .lint(&kra_archive)
-                        .into_iter()
-                        .map(|lint_message| (path, lint_message)),
+        } else {
+            for lint_config_path in config_paths {
+                eprintln!(
+                    "kra-lint: Using config file \"{}\"",
+                    lint_config_path
                 );
-            }
-            Err(err) => lint_results.push((path, err.to_string())),
-        }
-    }
 
-    lint_results.sort();
-    lint_results.dedup();
+                if let Err(err) =
+                    lint_config_collection.load_config(&lint_config_path)
+                {
+                    eprintln!("kra-lint: {}", err)
+                }
+            }
+        }
+
+        lint_config_collection
+    };
+
+    let lint_results = {
+        let mut lint_results = vec![];
+
+        for path in &args.paths {
+            match KraArchive::from_path(path) {
+                Ok(kra_archive) => {
+                    match lint_config_collection.lint(&kra_archive) {
+                        Ok(results) => lint_results.extend(
+                            results
+                                .into_iter()
+                                .map(|lint_message| (path, lint_message)),
+                        ),
+                        Err(err) => lint_results.push((path, err.to_string())),
+                    }
+                }
+                Err(err) => lint_results.push((path, err.to_string())),
+            }
+        }
+
+        lint_results.sort();
+        lint_results.dedup();
+        lint_results
+    };
 
     if lint_results.is_empty() {
         ExitCode::SUCCESS

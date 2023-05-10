@@ -26,6 +26,6 @@ impl LintPass for LintPassProhibitKSeExpr {
             }
         }
 
-        results
+        Ok(results)
     }
 }

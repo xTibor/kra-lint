@@ -148,6 +148,6 @@ impl LintPass for LintPassCopyright {
             }
         }
 
-        results
+        Ok(results)
     }
 }

@@ -26,6 +26,6 @@ impl LintPass for LintPassSoftwareVersion {
             }
         }
 
-        results
+        Ok(results)
     }
 }

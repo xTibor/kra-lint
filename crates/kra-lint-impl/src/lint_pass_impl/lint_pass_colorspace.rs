@@ -72,6 +72,6 @@ impl LintPass for LintPassColorspace {
             // TODO: Lint layer color profiles
         }
 
-        results
+        Ok(results)
     }
 }
