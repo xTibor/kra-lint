@@ -19,9 +19,7 @@ impl LintConfigCollection {
             return Err(LintError::ConfigNotFound(lint_config_path.to_owned()));
         }
 
-        let lint_config_path = lint_config_path
-            .canonicalize_utf8()
-            .expect("Failed to canonicalize path");
+        let lint_config_path = lint_config_path.canonicalize_utf8()?;
 
         // Do not enter infinite loop on circular includes
         if self.lint_config_paths.contains(&lint_config_path) {
@@ -56,9 +54,8 @@ impl LintConfigCollection {
                         ));
                     }
 
-                    let resolved_include_path = resolved_include_path
-                        .canonicalize_utf8()
-                        .expect("Failed to canonicalize path");
+                    let resolved_include_path =
+                        resolved_include_path.canonicalize_utf8()?;
 
                     self.load_config(&resolved_include_path)?;
                 }

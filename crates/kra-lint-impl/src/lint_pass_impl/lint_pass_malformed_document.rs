@@ -17,9 +17,9 @@ impl LintPass for LintPassMalformedDocument {
         // Sub-pass #1
         {
             let mut zip_archive = kra_archive.zip_archive.borrow_mut();
-            let zip_file = zip_archive.by_name("documentinfo.xml").unwrap();
+            let zip_file = zip_archive.by_name("documentinfo.xml")?;
 
-            let documentinfo_xml = std::io::read_to_string(zip_file).unwrap();
+            let documentinfo_xml = std::io::read_to_string(zip_file)?;
 
             if documentinfo_xml.matches("]]>").count() > 1 {
                 lint_messages.push(

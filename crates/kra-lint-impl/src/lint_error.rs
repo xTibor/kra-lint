@@ -14,6 +14,8 @@ pub enum LintError {
     FailedToParseYamlConfig(Utf8PathBuf, serde_yaml::Error),
     UnknownLayerNodeType(String),
     UnknownMaskNodeType(String),
+    ZipError(zip::result::ZipError),
+    IoError(io::Error),
 }
 
 impl error::Error for LintError {
@@ -29,6 +31,8 @@ impl error::Error for LintError {
             LintError::FailedToParseYamlConfig(_, ref err) => Some(err),
             LintError::UnknownLayerNodeType(_) => None,
             LintError::UnknownMaskNodeType(_) => None,
+            LintError::ZipError(ref err) => Some(err),
+            LintError::IoError(ref err) => Some(err),
         }
     }
 }
@@ -70,6 +74,24 @@ impl fmt::Display for LintError {
             LintError::UnknownMaskNodeType(ref node_type) => {
                 write!(f, "Unknown mask node type \"{}\"", node_type)
             }
+            LintError::ZipError(_) => {
+                write!(f, "ZIP error")
+            }
+            LintError::IoError(_) => {
+                write!(f, "I/O error")
+            }
         }
+    }
+}
+
+impl From<zip::result::ZipError> for LintError {
+    fn from(zip_error: zip::result::ZipError) -> LintError {
+        LintError::ZipError(zip_error)
+    }
+}
+
+impl From<io::Error> for LintError {
+    fn from(io_error: io::Error) -> LintError {
+        LintError::IoError(io_error)
     }
 }
