@@ -29,10 +29,10 @@ impl fmt::Display for KraError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
             KraError::ArchiveCannotOpen(_, ref path) => {
-                write!(f, "Cannot open KRA archive '{}'", path)
+                write!(f, "Cannot open KRA document \"{}\"", path)
             }
             KraError::ArchiveCannotRead(_, ref path) => {
-                write!(f, "Cannot read KRA archive '{}'", path)
+                write!(f, "Cannot read KRA document \"{}\"", path)
             }
             KraError::XmlNotFound(_, ref path, ref xml) => {
                 write!(f, "Cannot find '{}' in '{}'", xml, path)
