@@ -37,7 +37,7 @@ impl LintConfigCollection {
                     if !include_path.is_file() {
                         return Err(LintError::ConfigIncludeNotFound(
                             include_path.to_owned(),
-                            lint_config_path.to_owned(),
+                            lint_config_path,
                         ));
                     }
 
@@ -51,8 +51,8 @@ impl LintConfigCollection {
 
                     if !resolved_include_path.is_file() {
                         return Err(LintError::ConfigIncludeNotFound(
-                            resolved_include_path.to_owned(),
-                            lint_config_path.to_owned(),
+                            resolved_include_path,
+                            lint_config_path,
                         ));
                     }
 
