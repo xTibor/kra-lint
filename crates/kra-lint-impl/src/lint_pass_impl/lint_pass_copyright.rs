@@ -15,9 +15,11 @@ pub struct LintPassCopyright {
 }
 
 impl LintPass for LintPassCopyright {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(copyright_line) = self.copyright_line.as_ref() {
@@ -148,6 +150,6 @@ impl LintPass for LintPassCopyright {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

@@ -11,9 +11,11 @@ pub struct LintPassLayerStyles {
 }
 
 impl LintPass for LintPassLayerStyles {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
@@ -35,6 +37,6 @@ impl LintPass for LintPassLayerStyles {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

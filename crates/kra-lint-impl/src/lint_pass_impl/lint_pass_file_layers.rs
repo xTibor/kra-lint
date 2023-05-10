@@ -13,9 +13,11 @@ pub struct LintPassFileLayers {
 }
 
 impl LintPass for LintPassFileLayers {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(file_formats) = self.file_formats.as_ref() {
@@ -68,6 +70,6 @@ impl LintPass for LintPassFileLayers {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

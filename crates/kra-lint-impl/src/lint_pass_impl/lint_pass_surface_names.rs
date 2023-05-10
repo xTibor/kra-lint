@@ -15,9 +15,11 @@ pub struct LintPassSurfaceNames {
 }
 
 impl LintPass for LintPassSurfaceNames {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(layer_names) = self.layer_names.as_ref() {
@@ -54,6 +56,6 @@ impl LintPass for LintPassSurfaceNames {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

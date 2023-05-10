@@ -9,9 +9,11 @@ use crate::{LintPass, LintPassResult};
 pub struct LintPassProhibitCompositions {}
 
 impl LintPass for LintPassProhibitCompositions {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(composition_container) =
@@ -26,6 +28,6 @@ impl LintPass for LintPassProhibitCompositions {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

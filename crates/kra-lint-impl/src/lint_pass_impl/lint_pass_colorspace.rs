@@ -12,9 +12,11 @@ pub struct LintPassColorspace {
 }
 
 impl LintPass for LintPassColorspace {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_colorspace = &kra_archive.main_doc.image.colorspace_name;
@@ -72,6 +74,6 @@ impl LintPass for LintPassColorspace {
             // TODO: Lint layer color profiles
         }
 
-        Ok(results)
+        Ok(())
     }
 }

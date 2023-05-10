@@ -9,9 +9,11 @@ use crate::{LintPass, LintPassResult};
 pub struct LintPassNonDefaultBlending {}
 
 impl LintPass for LintPassNonDefaultBlending {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
@@ -61,6 +63,6 @@ impl LintPass for LintPassNonDefaultBlending {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

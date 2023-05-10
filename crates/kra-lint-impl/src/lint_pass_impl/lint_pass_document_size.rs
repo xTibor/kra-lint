@@ -29,9 +29,11 @@ pub struct LintPassDocumentSize {
 }
 
 impl LintPass for LintPassDocumentSize {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_document_size = LintPassDocumentSizeEntry {
@@ -66,6 +68,6 @@ impl LintPass for LintPassDocumentSize {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

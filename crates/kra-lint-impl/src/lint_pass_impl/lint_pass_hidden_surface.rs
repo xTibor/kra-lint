@@ -12,9 +12,11 @@ pub struct LintPassHiddenSurface {
 }
 
 impl LintPass for LintPassHiddenSurface {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
@@ -52,6 +54,6 @@ impl LintPass for LintPassHiddenSurface {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

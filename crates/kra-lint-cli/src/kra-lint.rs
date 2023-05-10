@@ -58,9 +58,13 @@ fn main() -> ExitCode {
         for path in &args.paths {
             match KraArchive::from_path(path) {
                 Ok(kra_archive) => {
-                    match lint_config_collection.lint(&kra_archive) {
-                        Ok(results) => lint_results.extend(
-                            results
+                    let mut kra_results = vec![];
+
+                    match lint_config_collection
+                        .lint(&kra_archive, &mut kra_results)
+                    {
+                        Ok(()) => lint_results.extend(
+                            kra_results
                                 .into_iter()
                                 .map(|lint_message| (path, lint_message)),
                         ),

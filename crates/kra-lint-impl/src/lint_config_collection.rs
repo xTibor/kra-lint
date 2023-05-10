@@ -50,13 +50,15 @@ impl LintConfigCollection {
 }
 
 impl LintPass for LintConfigCollection {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         for lint_config in &self.lint_configs {
-            results.extend(lint_config.lint(kra_archive)?);
+            lint_config.lint(kra_archive, results)?;
         }
 
-        Ok(results)
+        Ok(())
     }
 }

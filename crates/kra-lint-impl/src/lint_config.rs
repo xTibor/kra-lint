@@ -37,13 +37,15 @@ pub struct LintConfig {
 }
 
 impl LintPass for LintConfig {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         macro_rules! lint_pass {
             ($lint_name:ident) => {{
                 if let Some($lint_name) = self.$lint_name.as_ref() {
-                    results.extend($lint_name.lint(kra_archive)?)
+                    $lint_name.lint(kra_archive, results)?;
                 }
             }};
         }
@@ -66,7 +68,7 @@ impl LintPass for LintConfig {
         lint_pass!(surface_names);
         lint_pass!(surface_type);
 
-        Ok(results)
+        Ok(())
     }
 }
 

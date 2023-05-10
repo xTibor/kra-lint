@@ -11,9 +11,11 @@ pub struct LintPassSoftwareVersion {
 }
 
 impl LintPass for LintPassSoftwareVersion {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_software_version = &kra_archive.main_doc.software_version;
@@ -26,6 +28,6 @@ impl LintPass for LintPassSoftwareVersion {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }

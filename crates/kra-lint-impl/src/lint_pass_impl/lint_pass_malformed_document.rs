@@ -9,9 +9,11 @@ use crate::{LintPass, LintPassResult};
 pub struct LintPassMalformedDocument {}
 
 impl LintPass for LintPassMalformedDocument {
-    fn lint(&self, kra_archive: &KraArchive) -> LintPassResult {
-        let mut results = vec![];
-
+    fn lint(
+        &self,
+        kra_archive: &KraArchive,
+        results: &mut Vec<String>,
+    ) -> LintPassResult {
         // Sub-pass #1
         {
             let mut zip_archive = kra_archive.zip_archive.borrow_mut();
@@ -118,6 +120,6 @@ impl LintPass for LintPassMalformedDocument {
             }
         }
 
-        Ok(results)
+        Ok(())
     }
 }
