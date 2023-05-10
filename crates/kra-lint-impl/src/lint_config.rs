@@ -34,6 +34,7 @@ pub struct LintConfig {
     pub software_version:         Option<lint_pass_impl::lint_pass_software_version        ::LintPassSoftwareVersion       >,
     pub surface_names:            Option<lint_pass_impl::lint_pass_surface_names           ::LintPassSurfaceNames          >,
     pub surface_type:             Option<lint_pass_impl::lint_pass_surface_type            ::LintPassSurfaceType           >,
+    pub vector_layers:            Option<lint_pass_impl::lint_pass_vector_layers           ::LintPassVectorLayers          >,
 }
 
 impl LintPass for LintConfig {
@@ -67,6 +68,7 @@ impl LintPass for LintConfig {
         lint_pass!(software_version);
         lint_pass!(surface_names);
         lint_pass!(surface_type);
+        lint_pass!(vector_layers);
 
         Ok(())
     }

@@ -41,6 +41,9 @@ styleable_layers = false
 file_formats = { or = ["kra", "tga"] }
 check_missing_files = true
 
+[vector_layers]
+font_family = { not = { regex = '^Noto Sans CJK (SC|TC)$' } }
+
 [surface_type]
     [surface_type.layer_types]
     paint_layers = false

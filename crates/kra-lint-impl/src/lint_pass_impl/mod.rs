@@ -15,3 +15,4 @@ pub mod lint_pass_prohibit_kseexpr;
 pub mod lint_pass_software_version;
 pub mod lint_pass_surface_names;
 pub mod lint_pass_surface_type;
+pub mod lint_pass_vector_layers;
