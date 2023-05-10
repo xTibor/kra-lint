@@ -11,23 +11,14 @@ pub struct LintPassFileName {
 }
 
 impl LintPass for LintPassFileName {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
-            let kra_file_name = kra_archive
-                .zip_path
-                .file_name()
-                .expect("Failed to get file name");
+            let kra_file_name = kra_archive.zip_path.file_name().expect("Failed to get file name");
 
             if !self.file_name.matches(kra_file_name) {
-                lint_messages.push(format!(
-                    "Incorrect file name (expected: {}, found: \"{}\")",
-                    self.file_name, kra_file_name,
-                ));
+                lint_messages
+                    .push(format!("Incorrect file name (expected: {}, found: \"{}\")", self.file_name, kra_file_name,));
             }
         }
 

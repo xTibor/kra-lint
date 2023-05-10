@@ -2,10 +2,7 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{
-    LintLayerProperty, LintMaskProperty, LintPass, LintPassResult,
-    LintStringMatchExpression,
-};
+use crate::{LintLayerProperty, LintMaskProperty, LintPass, LintPassResult, LintStringMatchExpression};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -15,11 +12,7 @@ pub struct LintPassSurfaceNames {
 }
 
 impl LintPass for LintPassSurfaceNames {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(layer_names) = self.layer_names.as_ref() {

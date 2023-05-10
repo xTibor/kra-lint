@@ -1,9 +1,7 @@
 use std::collections::VecDeque;
 
 use crate::kra_archive::KraArchive;
-use crate::kra_maindoc::{
-    KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask,
-};
+use crate::kra_maindoc::{KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -46,17 +44,16 @@ impl KraArchive {
         self.main_doc.image.layer_container.iter_recursive()
     }
 
-    pub fn all_masks(
-        &self,
-    ) -> impl Iterator<Item = (&KraMainDocLayer, &KraMainDocMask)> {
+    pub fn all_masks(&self) -> impl Iterator<Item = (&KraMainDocLayer, &KraMainDocMask)> {
         self.main_doc
             .image
             .layer_container
             .iter_recursive()
             .filter_map(|layer| {
-                layer.mask_container.as_ref().map(|mask_container| {
-                    mask_container.masks.iter().map(move |mask| (layer, mask))
-                })
+                layer
+                    .mask_container
+                    .as_ref()
+                    .map(|mask_container| mask_container.masks.iter().map(move |mask| (layer, mask)))
             })
             .flatten()
     }

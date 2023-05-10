@@ -9,21 +9,13 @@ use crate::{LintPass, LintPassResult};
 pub struct LintPassProhibitCompositions {}
 
 impl LintPass for LintPassProhibitCompositions {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
-            if let Some(composition_container) =
-                kra_archive.main_doc.image.composition_container.as_ref()
-            {
+            if let Some(composition_container) = kra_archive.main_doc.image.composition_container.as_ref() {
                 for composition in &composition_container.compositions {
-                    lint_messages.push(format!(
-                        "Prohibited use of compositions (composition name: \"{}\")",
-                        composition.name
-                    ));
+                    lint_messages
+                        .push(format!("Prohibited use of compositions (composition name: \"{}\")", composition.name));
                 }
             }
         }

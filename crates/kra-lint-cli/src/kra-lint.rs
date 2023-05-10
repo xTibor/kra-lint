@@ -36,14 +36,9 @@ fn main() -> ExitCode {
             return ExitCode::FAILURE;
         } else {
             for lint_config_path in config_paths {
-                eprintln!(
-                    "kra-lint: Using config file \"{}\"",
-                    lint_config_path
-                );
+                eprintln!("kra-lint: Using config file \"{}\"", lint_config_path);
 
-                if let Err(err) =
-                    lint_config_collection.load_config(&lint_config_path)
-                {
+                if let Err(err) = lint_config_collection.load_config(&lint_config_path) {
                     eprintln!("kra-lint: {}", err);
                     return ExitCode::FAILURE;
                 }
@@ -61,17 +56,10 @@ fn main() -> ExitCode {
                 Ok(kra_archive) => {
                     let mut lint_messages = vec![];
 
-                    match lint_config_collection
-                        .lint(&kra_archive, &mut lint_messages)
-                    {
-                        Ok(()) => all_lint_messages.extend(
-                            lint_messages
-                                .into_iter()
-                                .map(|lint_message| (kra_path, lint_message)),
-                        ),
-                        Err(err) => {
-                            all_lint_messages.push((kra_path, err.to_string()))
-                        }
+                    match lint_config_collection.lint(&kra_archive, &mut lint_messages) {
+                        Ok(()) => all_lint_messages
+                            .extend(lint_messages.into_iter().map(|lint_message| (kra_path, lint_message))),
+                        Err(err) => all_lint_messages.push((kra_path, err.to_string())),
                     }
                 }
                 Err(err) => all_lint_messages.push((kra_path, err.to_string())),

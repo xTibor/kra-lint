@@ -38,11 +38,7 @@ pub struct LintConfig {
 }
 
 impl LintPass for LintConfig {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         macro_rules! lint_pass {
             ($lint_name:ident) => {{
                 if let Some($lint_name) = self.$lint_name.as_ref() {
@@ -75,60 +71,30 @@ impl LintPass for LintConfig {
 }
 
 impl LintConfig {
-    pub fn from_path(
-        lint_config_path: &Utf8Path,
-    ) -> Result<LintConfig, LintError> {
+    pub fn from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintError> {
         if !lint_config_path.is_file() {
             return Err(LintError::ConfigNotFound(lint_config_path.to_owned()));
         }
 
         let lint_config_str = std::fs::read_to_string(lint_config_path)
-            .map_err(|io_error| {
-                LintError::FailedToReadConfig(
-                    lint_config_path.to_owned(),
-                    io_error,
-                )
-            })?;
+            .map_err(|io_error| LintError::FailedToReadConfig(lint_config_path.to_owned(), io_error))?;
 
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
-            None | Some("toml") => {
-                toml::from_str(&lint_config_str).map_err(|toml_error| {
-                    LintError::FailedToParseTomlConfig(
-                        lint_config_path.to_owned(),
-                        toml_error,
-                    )
-                })
-            }
+            None | Some("toml") => toml::from_str(&lint_config_str)
+                .map_err(|toml_error| LintError::FailedToParseTomlConfig(lint_config_path.to_owned(), toml_error)),
             Some("hjson" | "json") => deser_hjson::from_str(&lint_config_str)
-                .map_err(|hjson_error| {
-                    LintError::FailedToParseHjsonConfig(
-                        lint_config_path.to_owned(),
-                        hjson_error,
-                    )
-                }),
+                .map_err(|hjson_error| LintError::FailedToParseHjsonConfig(lint_config_path.to_owned(), hjson_error)),
             Some("ron") => {
-                let ron_options = ron::Options::default()
-                    .with_default_extension(
-                        ron::extensions::Extensions::IMPLICIT_SOME,
-                    );
+                let ron_options =
+                    ron::Options::default().with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
 
-                ron_options.from_str(&lint_config_str).map_err(|ron_error| {
-                    LintError::FailedToParseRonConfig(
-                        lint_config_path.to_owned(),
-                        ron_error,
-                    )
-                })
+                ron_options
+                    .from_str(&lint_config_str)
+                    .map_err(|ron_error| LintError::FailedToParseRonConfig(lint_config_path.to_owned(), ron_error))
             }
             Some("yaml" | "yml") => serde_yaml::from_str(&lint_config_str)
-                .map_err(|yaml_error| {
-                    LintError::FailedToParseYamlConfig(
-                        lint_config_path.to_owned(),
-                        yaml_error,
-                    )
-                }),
-            Some(extension) => {
-                Err(LintError::UnknownConfigFormat(extension.to_owned()))
-            }
+                .map_err(|yaml_error| LintError::FailedToParseYamlConfig(lint_config_path.to_owned(), yaml_error)),
+            Some(extension) => Err(LintError::UnknownConfigFormat(extension.to_owned())),
         }
     }
 }

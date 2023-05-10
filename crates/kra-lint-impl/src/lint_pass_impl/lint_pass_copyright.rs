@@ -15,46 +15,35 @@ pub struct LintPassCopyright {
 }
 
 impl LintPass for LintPassCopyright {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(copyright_line) = self.copyright_line.as_ref() {
-                let kra_copyright_line =
-                    &kra_archive.document_info.about.license;
+                let kra_copyright_line = &kra_archive.document_info.about.license;
 
                 if kra_copyright_line.is_empty() {
                     lint_messages.push("Missing copyright line".to_owned());
                 } else if !copyright_line.matches(kra_copyright_line) {
                     lint_messages.push(format!(
-                    "Incorrect copyright line (expected: {}, found: \"{}\")",
-                    copyright_line, kra_copyright_line,
-                ));
+                        "Incorrect copyright line (expected: {}, found: \"{}\")",
+                        copyright_line, kra_copyright_line,
+                    ));
                 }
             }
         }
 
         // Sub-pass #2
         {
-            if let Some(copyright_disclaimer) =
-                self.copyright_disclaimer.as_ref()
-            {
-                let kra_copyright_disclaimer =
-                    &kra_archive.document_info.about.r#abstract;
+            if let Some(copyright_disclaimer) = self.copyright_disclaimer.as_ref() {
+                let kra_copyright_disclaimer = &kra_archive.document_info.about.r#abstract;
 
                 if kra_copyright_disclaimer.is_empty() {
-                    lint_messages
-                        .push("Missing copyright disclaimer".to_owned());
-                } else if !copyright_disclaimer
-                    .matches(kra_copyright_disclaimer)
-                {
+                    lint_messages.push("Missing copyright disclaimer".to_owned());
+                } else if !copyright_disclaimer.matches(kra_copyright_disclaimer) {
                     lint_messages.push(format!(
-                    "Incorrect copyright disclaimer (expected: {}, found: \"{}\")",
-                    copyright_disclaimer, kra_copyright_disclaimer,
-                ));
+                        "Incorrect copyright disclaimer (expected: {}, found: \"{}\")",
+                        copyright_disclaimer, kra_copyright_disclaimer,
+                    ));
                 }
             }
         }
@@ -62,16 +51,10 @@ impl LintPass for LintPassCopyright {
         // Sub-pass #3
         {
             if self.ensure_initial_author_exists == Some(true) {
-                let kra_initial_creator =
-                    &kra_archive.document_info.about.initial_creator;
+                let kra_initial_creator = &kra_archive.document_info.about.initial_creator;
 
-                if kra_initial_creator.is_empty()
-                    || (kra_initial_creator == "Unknown")
-                {
-                    lint_messages.push(
-                        "Missing author information (Initial creator)"
-                            .to_owned(),
-                    );
+                if kra_initial_creator.is_empty() || (kra_initial_creator == "Unknown") {
+                    lint_messages.push("Missing author information (Initial creator)".to_owned());
                 }
             }
         }
@@ -79,39 +62,23 @@ impl LintPass for LintPassCopyright {
         // Sub-pass #4
         {
             if self.ensure_author_exists == Some(true) {
-                let kra_author_full_name =
-                    &kra_archive.document_info.author.full_name;
-
-                let kra_author_first_name =
-                    &kra_archive.document_info.author.creator_first_name;
-
-                let kra_author_last_name =
-                    &kra_archive.document_info.author.creator_last_name;
+                let kra_author_full_name = &kra_archive.document_info.author.full_name;
+                let kra_author_first_name = &kra_archive.document_info.author.creator_first_name;
+                let kra_author_last_name = &kra_archive.document_info.author.creator_last_name;
 
                 if kra_author_full_name.is_empty() {
-                    lint_messages.push(
-                        "Missing author information (Author full name)"
-                            .to_owned(),
-                    );
+                    lint_messages.push("Missing author information (Author full name)".to_owned());
                 }
 
                 if kra_author_first_name.is_empty() {
-                    lint_messages.push(
-                        "Missing author information (Author first name)"
-                            .to_owned(),
-                    );
+                    lint_messages.push("Missing author information (Author first name)".to_owned());
                 }
 
                 if kra_author_last_name.is_empty() {
-                    lint_messages.push(
-                        "Missing author information (Author last name)"
-                            .to_owned(),
-                    );
+                    lint_messages.push("Missing author information (Author last name)".to_owned());
                 }
 
-                if !kra_author_full_name.is_empty()
-                    && !kra_author_first_name.is_empty()
-                {
+                if !kra_author_full_name.is_empty() && !kra_author_first_name.is_empty() {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_first_name) {
                         lint_messages.push(format!(
@@ -121,9 +88,7 @@ impl LintPass for LintPassCopyright {
                     }
                 }
 
-                if !kra_author_full_name.is_empty()
-                    && !kra_author_last_name.is_empty()
-                {
+                if !kra_author_full_name.is_empty() && !kra_author_last_name.is_empty() {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_last_name) {
                         lint_messages.push(format!(

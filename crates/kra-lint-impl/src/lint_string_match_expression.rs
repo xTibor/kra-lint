@@ -40,28 +40,19 @@ impl LintStringMatchExpression {
         match self {
             LintStringMatchExpression::FullMatch(pattern) => value == pattern,
             LintStringMatchExpression::Regex { pattern } => {
-                let compiled_regex = regex::Regex::new(pattern)
-                    .expect("Failed to compile regular expression");
+                let compiled_regex = regex::Regex::new(pattern).expect("Failed to compile regular expression");
                 compiled_regex.is_match(value)
             }
-            LintStringMatchExpression::StartsWith { pattern } => {
-                value.starts_with(pattern)
-            }
-            LintStringMatchExpression::EndsWith { pattern } => {
-                value.ends_with(pattern)
-            }
-            LintStringMatchExpression::Contains { pattern } => {
-                value.contains(pattern)
-            }
+            LintStringMatchExpression::StartsWith { pattern } => value.starts_with(pattern),
+            LintStringMatchExpression::EndsWith { pattern } => value.ends_with(pattern),
+            LintStringMatchExpression::Contains { pattern } => value.contains(pattern),
             LintStringMatchExpression::BinaryOr { expressions } => {
                 expressions.iter().any(|expression| expression.matches(value))
             }
             LintStringMatchExpression::BinaryAnd { expressions } => {
                 expressions.iter().all(|expression| expression.matches(value))
             }
-            LintStringMatchExpression::BinaryNot { expression } => {
-                !expression.matches(value)
-            }
+            LintStringMatchExpression::BinaryNot { expression } => !expression.matches(value),
         }
     }
 }
@@ -85,19 +76,13 @@ impl std::fmt::Display for LintStringMatchExpression {
                 write!(f, "contains(\"{}\")", pattern)
             }
             LintStringMatchExpression::BinaryOr { expressions } => {
-                let param_list = expressions
-                    .iter()
-                    .map(LintStringMatchExpression::to_string)
-                    .collect::<Vec<_>>()
-                    .join(", ");
+                let param_list =
+                    expressions.iter().map(LintStringMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "or({})", param_list)
             }
             LintStringMatchExpression::BinaryAnd { expressions } => {
-                let param_list = expressions
-                    .iter()
-                    .map(LintStringMatchExpression::to_string)
-                    .collect::<Vec<_>>()
-                    .join(", ");
+                let param_list =
+                    expressions.iter().map(LintStringMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "and({})", param_list)
             }
             LintStringMatchExpression::BinaryNot { expression } => {

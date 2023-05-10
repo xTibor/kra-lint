@@ -11,11 +11,7 @@ pub struct LintPassDocumentName {
 }
 
 impl LintPass for LintPassDocumentName {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_document_name = &kra_archive.main_doc.image.name;

@@ -29,11 +29,7 @@ pub struct LintPassDocumentSize {
 }
 
 impl LintPass for LintPassDocumentSize {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
             let kra_document_size = LintPassDocumentSizeEntry {
@@ -45,11 +41,7 @@ impl LintPass for LintPassDocumentSize {
             if !self.document_sizes.contains(&kra_document_size) {
                 lint_messages.push(format!(
                     "Incorrect document size (expected: [{}], found: {})",
-                    self.document_sizes
-                        .iter()
-                        .map(LintPassDocumentSizeEntry::to_string)
-                        .collect::<Vec<_>>()
-                        .join(", "),
+                    self.document_sizes.iter().map(LintPassDocumentSizeEntry::to_string).collect::<Vec<_>>().join(", "),
                     kra_document_size,
                 ));
             }

@@ -9,18 +9,16 @@ use crate::{LintPass, LintPassResult};
 pub struct LintPassNonDefaultBlending {}
 
 impl LintPass for LintPassNonDefaultBlending {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
                 if layer.opacity != 255 {
                     lint_messages.push(format!(
                         "Non-default layer transparency (layer: \"{}\", expected: \"{:.0}%\", found: \"{:.0}%\")",
-                        layer.name, 100.0, (layer.opacity as f64 / 255.0 * 100.0),
+                        layer.name,
+                        100.0,
+                        (layer.opacity as f64 / 255.0 * 100.0),
                     ));
                 }
             }

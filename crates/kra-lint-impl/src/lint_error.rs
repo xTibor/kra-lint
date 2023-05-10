@@ -47,11 +47,7 @@ impl fmt::Display for LintError {
                 write!(f, "Config file not found \"{}\"", path)
             }
             LintError::ConfigIncludeNotFound(ref path, ref included_from) => {
-                write!(
-                    f,
-                    "Config include not found \"{}\" (included from: \"{}\")",
-                    path, included_from
-                )
+                write!(f, "Config include not found \"{}\" (included from: \"{}\")", path, included_from)
             }
             LintError::FailedToReadConfig(ref path, _) => {
                 write!(f, "Failed to read config file \"{}\"", path)

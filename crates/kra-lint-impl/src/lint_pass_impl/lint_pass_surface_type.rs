@@ -12,21 +12,14 @@ pub struct LintPassSurfaceType {
 }
 
 impl LintPass for LintPassSurfaceType {
-    fn lint(
-        &self,
-        kra_archive: &KraArchive,
-        lint_messages: &mut Vec<String>,
-    ) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
                 let (layer_opt, layer_display) = self.layer_types.get(layer)?;
 
                 if *layer_opt == Some(false) {
-                    lint_messages.push(format!(
-                        "Prohibited use of {} (layer: \"{}\")",
-                        layer_display, layer.name
-                    ));
+                    lint_messages.push(format!("Prohibited use of {} (layer: \"{}\")", layer_display, layer.name));
                 }
             }
         }
