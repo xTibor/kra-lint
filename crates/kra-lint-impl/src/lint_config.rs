@@ -76,6 +76,10 @@ impl LintConfig {
     pub fn from_path(
         lint_config_path: &Utf8Path,
     ) -> Result<LintConfig, LintError> {
+        if !lint_config_path.is_file() {
+            return Err(LintError::ConfigNotFound(lint_config_path.to_owned()));
+        }
+
         let lint_config_str = std::fs::read_to_string(lint_config_path)
             .map_err(|io_error| {
                 LintError::FailedToReadConfig(

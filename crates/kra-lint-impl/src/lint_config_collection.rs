@@ -15,6 +15,10 @@ impl LintConfigCollection {
         &mut self,
         lint_config_path: &Utf8Path,
     ) -> Result<(), LintError> {
+        if !lint_config_path.is_file() {
+            return Err(LintError::ConfigNotFound(lint_config_path.to_owned()));
+        }
+
         let lint_config_path = lint_config_path
             .canonicalize_utf8()
             .expect("Failed to canonicalize path");
@@ -30,16 +34,33 @@ impl LintConfigCollection {
         if let Some(lint_includes) = lint_config.includes.as_ref() {
             for include_path in &lint_includes.paths {
                 if include_path.is_absolute() {
+                    if !include_path.is_file() {
+                        return Err(LintError::ConfigIncludeNotFound(
+                            include_path.to_owned(),
+                            lint_config_path.to_owned(),
+                        ));
+                    }
+
                     self.load_config(include_path)?;
                 } else {
                     // Relative paths are relative to the config file they are defined in
-                    let resolved_include_path = &lint_config_path
+                    let resolved_include_path = lint_config_path
                         .parent()
                         .expect("Failed to get parent directory")
-                        .join(include_path)
+                        .join(include_path);
+
+                    if !resolved_include_path.is_file() {
+                        return Err(LintError::ConfigIncludeNotFound(
+                            resolved_include_path.to_owned(),
+                            lint_config_path.to_owned(),
+                        ));
+                    }
+
+                    let resolved_include_path = resolved_include_path
                         .canonicalize_utf8()
                         .expect("Failed to canonicalize path");
-                    self.load_config(resolved_include_path)?;
+
+                    self.load_config(&resolved_include_path)?;
                 }
             }
         }

@@ -5,6 +5,8 @@ use camino::Utf8PathBuf;
 #[derive(Debug)]
 pub enum LintError {
     UnknownConfigFormat(String),
+    ConfigNotFound(Utf8PathBuf),
+    ConfigIncludeNotFound(Utf8PathBuf, Utf8PathBuf),
     FailedToReadConfig(Utf8PathBuf, io::Error),
     FailedToParseTomlConfig(Utf8PathBuf, toml::de::Error),
     FailedToParseHjsonConfig(Utf8PathBuf, deser_hjson::Error),
@@ -18,6 +20,8 @@ impl error::Error for LintError {
     fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         match *self {
             LintError::UnknownConfigFormat(_) => None,
+            LintError::ConfigNotFound(_) => None,
+            LintError::ConfigIncludeNotFound(_, _) => None,
             LintError::FailedToReadConfig(_, ref err) => Some(err),
             LintError::FailedToParseTomlConfig(_, ref err) => Some(err),
             LintError::FailedToParseHjsonConfig(_, ref err) => Some(err),
@@ -34,6 +38,16 @@ impl fmt::Display for LintError {
         match *self {
             LintError::UnknownConfigFormat(ref extension) => {
                 write!(f, "Unknown config format \"{}\"", extension)
+            }
+            LintError::ConfigNotFound(ref path) => {
+                write!(f, "Config file not found \"{}\"", path)
+            }
+            LintError::ConfigIncludeNotFound(ref path, ref included_from) => {
+                write!(
+                    f,
+                    "Config include not found \"{}\" (included from: \"{}\")",
+                    path, included_from
+                )
             }
             LintError::FailedToReadConfig(ref path, _) => {
                 write!(f, "Failed to read config file \"{}\"", path)

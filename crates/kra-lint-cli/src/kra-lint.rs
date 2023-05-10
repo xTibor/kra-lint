@@ -44,7 +44,8 @@ fn main() -> ExitCode {
                 if let Err(err) =
                     lint_config_collection.load_config(&lint_config_path)
                 {
-                    eprintln!("kra-lint: {}", err)
+                    eprintln!("kra-lint: {}", err);
+                    return ExitCode::FAILURE;
                 }
             }
         }
