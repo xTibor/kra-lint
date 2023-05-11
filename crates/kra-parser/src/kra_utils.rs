@@ -62,6 +62,7 @@ impl KraArchive {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+#[derive(PartialEq)]
 pub enum KraLayerType {
     PaintLayer,
     GroupLayer,
@@ -98,6 +99,7 @@ impl KraMainDocLayer {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+#[derive(PartialEq)]
 pub enum KraMaskType {
     TransparencyMask,
     FilterMask,

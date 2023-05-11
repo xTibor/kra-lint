@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_utils::KraLayerType;
 use svg::node::element::tag::Type;
 use svg::parser::Event;
 
@@ -20,7 +21,7 @@ impl LintPass for LintPassVectorLayers {
                 let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
                 for layer in kra_archive.all_layers() {
-                    if layer.node_type.as_str() == "shapelayer" {
+                    if layer.layer_type()? == KraLayerType::VectorLayer {
                         let content_svg_path = format!(
                             "{}/layers/{}.shapelayer/content.svg",
                             kra_archive.main_doc.image.name, layer.file_name

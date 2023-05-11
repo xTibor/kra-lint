@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_utils::KraLayerType;
 
 use crate::{LintPass, LintPassResult};
 
@@ -13,7 +14,9 @@ impl LintPass for LintPassProhibitKSeExpr {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
-                if (layer.node_type == "generatorlayer") && (layer.generator_name.as_deref() == Some("seexpr")) {
+                if (layer.layer_type()? == KraLayerType::FillLayer)
+                    && (layer.generator_name.as_deref() == Some("seexpr"))
+                {
                     lint_messages.push(format!("Prohibited use of KSeExpr (layer: \"{}\")", layer.name));
                 }
             }

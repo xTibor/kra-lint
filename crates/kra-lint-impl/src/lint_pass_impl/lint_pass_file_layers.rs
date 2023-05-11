@@ -2,6 +2,7 @@ use camino::Utf8Path;
 use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_utils::KraLayerType;
 
 use crate::{LintPass, LintPassResult, LintStringMatchExpression};
 
@@ -18,7 +19,7 @@ impl LintPass for LintPassFileLayers {
         {
             if let Some(file_formats) = self.file_formats.as_ref() {
                 for layer in kra_archive.all_layers() {
-                    if layer.node_type.as_str() == "filelayer" {
+                    if layer.layer_type()? == KraLayerType::FileLayer {
                         if let Some(source) = layer.source.as_ref() {
                             if let Some(source_ext) = Utf8Path::new(source).extension() {
                                 if !file_formats.matches(source_ext) {
@@ -43,7 +44,7 @@ impl LintPass for LintPassFileLayers {
         {
             if self.check_missing_files == Some(true) {
                 for layer in kra_archive.all_layers() {
-                    if layer.node_type.as_str() == "filelayer" {
+                    if layer.layer_type()? == KraLayerType::FileLayer {
                         if let Some(source) = layer.source.as_ref() {
                             // File layers store relative paths, path traversal is intentional here.
                             let source_path =

@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_utils::KraLayerType;
 
 use crate::{LintPass, LintPassResult};
 
@@ -36,7 +37,7 @@ impl LintPass for LintPassMalformedDocument {
         // Sub-pass #3
         {
             for layer in kra_archive.all_layers() {
-                if layer.node_type == "clonelayer" {
+                if layer.layer_type()? == KraLayerType::CloneLayer {
                     if let Some(clone_from_uuid) = layer.clone_from_uuid.as_ref() {
                         if !kra_archive.all_layers().any(|target_layer| &target_layer.uuid == clone_from_uuid) {
                             lint_messages.push(format!(
@@ -66,7 +67,7 @@ impl LintPass for LintPassMalformedDocument {
         // Sub-pass #5
         {
             for layer in kra_archive.all_layers() {
-                if layer.node_type == "clonelayer" {
+                if layer.layer_type()? == KraLayerType::CloneLayer {
                     let uuid_root = &layer.uuid;
 
                     let mut uuid_todo: Vec<&String> = vec![uuid_root];
