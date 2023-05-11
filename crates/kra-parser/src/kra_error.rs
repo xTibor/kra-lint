@@ -11,6 +11,8 @@ pub enum KraError {
     XmlNotFound(ZipError, Utf8PathBuf, &'static str),
     XmlCannotRead(io::Error, Utf8PathBuf, &'static str),
     XmlCannotParse(XmlError, Utf8PathBuf, &'static str),
+    UnknownLayerNodeType(String),
+    UnknownMaskNodeType(String),
 }
 
 impl error::Error for KraError {
@@ -21,6 +23,8 @@ impl error::Error for KraError {
             KraError::XmlNotFound(ref err, _, _) => Some(err),
             KraError::XmlCannotRead(ref err, _, _) => Some(err),
             KraError::XmlCannotParse(ref err, _, _) => Some(err),
+            KraError::UnknownLayerNodeType(_) => None,
+            KraError::UnknownMaskNodeType(_) => None,
         }
     }
 }
@@ -42,6 +46,12 @@ impl fmt::Display for KraError {
             }
             KraError::XmlCannotParse(_, ref path, ref xml) => {
                 write!(f, "Cannot parse '{}' in '{}'", xml, path)
+            }
+            KraError::UnknownLayerNodeType(ref node_type) => {
+                write!(f, "Unknown layer node type \"{}\"", node_type)
+            }
+            KraError::UnknownMaskNodeType(ref node_type) => {
+                write!(f, "Unknown mask node type \"{}\"", node_type)
             }
         }
     }

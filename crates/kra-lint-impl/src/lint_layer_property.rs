@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 use kra_parser::kra_maindoc::KraMainDocLayer;
+use kra_parser::kra_utils::KraLayerType;
 
 use crate::LintError;
 
@@ -34,15 +35,14 @@ impl<T> LintLayerProperty<T> {
                 ref filter_layers,
                 ref fill_layers,
                 ref file_layers,
-            } => match layer.node_type.as_str() {
-                "paintlayer"      => Ok((paint_layers,  "paint layer" )),
-                "grouplayer"      => Ok((group_layers,  "group layer" )),
-                "clonelayer"      => Ok((clone_layers,  "clone layer" )),
-                "shapelayer"      => Ok((vector_layers, "vector layer")),
-                "adjustmentlayer" => Ok((filter_layers, "filter layer")),
-                "generatorlayer"  => Ok((fill_layers,   "fill layer"  )),
-                "filelayer"       => Ok((file_layers,   "file layer"  )),
-                _ => Err(LintError::UnknownLayerNodeType(layer.node_type.clone())),
+            } => match layer.layer_type()? {
+                KraLayerType::PaintLayer  => Ok((paint_layers,  "paint layer" )),
+                KraLayerType::GroupLayer  => Ok((group_layers,  "group layer" )),
+                KraLayerType::CloneLayer  => Ok((clone_layers,  "clone layer" )),
+                KraLayerType::VectorLayer => Ok((vector_layers, "vector layer")),
+                KraLayerType::FilterLayer => Ok((filter_layers, "filter layer")),
+                KraLayerType::FillLayer   => Ok((fill_layers,   "fill layer"  )),
+                KraLayerType::FileLayer   => Ok((file_layers,   "file layer"  )),
             },
         }
     }

@@ -12,10 +12,9 @@ pub enum LintError {
     FailedToParseHjsonConfig(Utf8PathBuf, deser_hjson::Error),
     FailedToParseRonConfig(Utf8PathBuf, ron::error::SpannedError),
     FailedToParseYamlConfig(Utf8PathBuf, serde_yaml::Error),
-    UnknownLayerNodeType(String),
-    UnknownMaskNodeType(String),
     ZipError(zip::result::ZipError),
     IoError(io::Error),
+    KraError(kra_parser::kra_error::KraError),
 }
 
 impl error::Error for LintError {
@@ -29,10 +28,9 @@ impl error::Error for LintError {
             LintError::FailedToParseHjsonConfig(_, ref err) => Some(err),
             LintError::FailedToParseRonConfig(_, ref err) => Some(err),
             LintError::FailedToParseYamlConfig(_, ref err) => Some(err),
-            LintError::UnknownLayerNodeType(_) => None,
-            LintError::UnknownMaskNodeType(_) => None,
             LintError::ZipError(ref err) => Some(err),
             LintError::IoError(ref err) => Some(err),
+            LintError::KraError(ref err) => Some(err),
         }
     }
 }
@@ -64,17 +62,14 @@ impl fmt::Display for LintError {
             LintError::FailedToParseYamlConfig(ref path, _) => {
                 write!(f, "Failed to parse YAML config file \"{}\"", path)
             }
-            LintError::UnknownLayerNodeType(ref node_type) => {
-                write!(f, "Unknown layer node type \"{}\"", node_type)
-            }
-            LintError::UnknownMaskNodeType(ref node_type) => {
-                write!(f, "Unknown mask node type \"{}\"", node_type)
-            }
             LintError::ZipError(_) => {
                 write!(f, "ZIP error")
             }
             LintError::IoError(_) => {
                 write!(f, "I/O error")
+            }
+            LintError::KraError(_) => {
+                write!(f, "KRA error")
             }
         }
     }
@@ -89,5 +84,11 @@ impl From<zip::result::ZipError> for LintError {
 impl From<io::Error> for LintError {
     fn from(io_error: io::Error) -> LintError {
         LintError::IoError(io_error)
+    }
+}
+
+impl From<kra_parser::kra_error::KraError> for LintError {
+    fn from(kra_error: kra_parser::kra_error::KraError) -> LintError {
+        LintError::KraError(kra_error)
     }
 }

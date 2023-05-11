@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 use kra_parser::kra_maindoc::KraMainDocMask;
+use kra_parser::kra_utils::KraMaskType;
 
 use crate::LintError;
 
@@ -30,13 +31,12 @@ impl<T> LintMaskProperty<T> {
                 ref colorize_masks,
                 ref transform_masks,
                 ref local_selections,
-            } => match mask.node_type.as_str() {
-                "transparencymask" => Ok((transparency_masks, "transparency mask")),
-                "filtermask"       => Ok((filter_masks,       "filter mask"      )),
-                "colorizemask"     => Ok((colorize_masks,     "colorize mask"    )),
-                "transformmask"    => Ok((transform_masks,    "transform mask"   )),
-                "selectionmask"    => Ok((local_selections,   "local selection"  )),
-                _ => Err(LintError::UnknownMaskNodeType(mask.node_type.clone())),
+            } => match mask.mask_type()? {
+                KraMaskType::TransparencyMask => Ok((transparency_masks, "transparency mask")),
+                KraMaskType::FilterMask       => Ok((filter_masks,       "filter mask"      )),
+                KraMaskType::ColorizeMask     => Ok((colorize_masks,     "colorize mask"    )),
+                KraMaskType::TransformMask    => Ok((transform_masks,    "transform mask"   )),
+                KraMaskType::LocalSelection   => Ok((local_selections,   "local selection"  )),
             },
         }
     }
