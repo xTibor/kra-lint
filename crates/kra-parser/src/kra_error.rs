@@ -4,6 +4,7 @@ use camino::Utf8PathBuf;
 use strong_xml::XmlError;
 use zip::result::ZipError;
 
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum KraError {
     ArchiveCannotOpen(io::Error, Utf8PathBuf),

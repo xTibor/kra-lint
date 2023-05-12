@@ -2,6 +2,7 @@ use std::{error, fmt, io};
 
 use camino::Utf8PathBuf;
 
+#[non_exhaustive]
 #[derive(Debug)]
 pub enum LintError {
     UnknownConfigFormat(String),
