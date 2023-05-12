@@ -2,14 +2,14 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintLayerProperty, LintMaskProperty, LintPass, LintPassResult};
+use crate::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassAnimation {
     pub animated_layers: LintLayerProperty<bool>,
     pub animated_masks: LintMaskProperty<bool>,
-    pub framerate: Option<usize>,
+    pub framerate: Option<LintNumberMatchExpression<usize>>,
 }
 
 impl LintPass for LintPassAnimation {
@@ -48,10 +48,10 @@ impl LintPass for LintPassAnimation {
 
         // Sub-pass #3
         {
-            if let Some(framerate) = self.framerate {
+            if let Some(framerate) = self.framerate.as_ref() {
                 let kra_framerate = kra_archive.main_doc.image.animation.framerate.value;
 
-                if kra_framerate != framerate {
+                if !framerate.matches(&kra_framerate) {
                     lint_messages.push(format!(
                         "Incorrect animation framerate (expected: {}fps, found: {}fps)",
                         framerate, kra_framerate
