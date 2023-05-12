@@ -85,9 +85,9 @@ impl LintConfig {
                 toml::from_str(&lint_config_str)
                     .map_err(|toml_error| LintError::FailedToParseTomlConfig(lint_config_path.to_owned(), toml_error))
             }
-            Some("hjson" | "json") => {
-                deser_hjson::from_str(&lint_config_str)
-                    .map_err(|hjson_error| LintError::FailedToParseHjsonConfig(lint_config_path.to_owned(), hjson_error))
+            Some("json") => {
+                serde_json::from_str(&lint_config_str)
+                    .map_err(|json_error| LintError::FailedToParseJsonConfig(lint_config_path.to_owned(), json_error))
             }
             Some("ron") => {
                 let ron_options = ron::Options::default()
@@ -115,8 +115,10 @@ impl LintConfig {
                     .map_err(LintError::FailedToSerializeTomlConfig)?;
                 Ok(lint_config_str)
             },
-            Some("hjson" | "json") => {
-                todo!("Switch to a JSON parser that supports serialization")
+            Some("json") => {
+                let lint_config_str = serde_json::to_string_pretty(&self)
+                    .map_err(LintError::FailedToSerializeJsonConfig)?;
+                Ok(lint_config_str)
             }
             Some("ron") => {
                 let ron_options = ron::Options::default()

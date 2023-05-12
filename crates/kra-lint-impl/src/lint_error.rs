@@ -10,10 +10,11 @@ pub enum LintError {
     ConfigIncludeNotFound(Utf8PathBuf, Utf8PathBuf),
     FailedToReadConfig(Utf8PathBuf, io::Error),
     FailedToParseTomlConfig(Utf8PathBuf, toml::de::Error),
-    FailedToParseHjsonConfig(Utf8PathBuf, deser_hjson::Error),
+    FailedToParseJsonConfig(Utf8PathBuf, serde_json::Error),
     FailedToParseRonConfig(Utf8PathBuf, ron::error::SpannedError),
     FailedToParseYamlConfig(Utf8PathBuf, serde_yaml::Error),
     FailedToSerializeTomlConfig(toml::ser::Error),
+    FailedToSerializeJsonConfig(serde_json::Error),
     FailedToSerializeRonConfig(ron::Error),
     FailedToSerializeYamlConfig(serde_yaml::Error),
     ZipError(zip::result::ZipError),
@@ -29,10 +30,11 @@ impl error::Error for LintError {
             LintError::ConfigIncludeNotFound(_, _) => None,
             LintError::FailedToReadConfig(_, ref err) => Some(err),
             LintError::FailedToParseTomlConfig(_, ref err) => Some(err),
-            LintError::FailedToParseHjsonConfig(_, ref err) => Some(err),
+            LintError::FailedToParseJsonConfig(_, ref err) => Some(err),
             LintError::FailedToParseRonConfig(_, ref err) => Some(err),
             LintError::FailedToParseYamlConfig(_, ref err) => Some(err),
             LintError::FailedToSerializeTomlConfig(ref err) => Some(err),
+            LintError::FailedToSerializeJsonConfig(ref err) => Some(err),
             LintError::FailedToSerializeRonConfig(ref err) => Some(err),
             LintError::FailedToSerializeYamlConfig(ref err) => Some(err),
             LintError::ZipError(ref err) => Some(err),
@@ -60,8 +62,8 @@ impl fmt::Display for LintError {
             LintError::FailedToParseTomlConfig(ref path, _) => {
                 write!(f, "Failed to parse TOML config file \"{}\"", path)
             }
-            LintError::FailedToParseHjsonConfig(ref path, _) => {
-                write!(f, "Failed to parse Hjson config file \"{}\"", path)
+            LintError::FailedToParseJsonConfig(ref path, _) => {
+                write!(f, "Failed to parse JSON config file \"{}\"", path)
             }
             LintError::FailedToParseRonConfig(ref path, _) => {
                 write!(f, "Failed to parse RON config file \"{}\"", path)
@@ -71,6 +73,9 @@ impl fmt::Display for LintError {
             }
             LintError::FailedToSerializeTomlConfig(_) => {
                 write!(f, "Failed to serialize TOML config")
+            }
+            LintError::FailedToSerializeJsonConfig(_) => {
+                write!(f, "Failed to serialize JSON config")
             }
             LintError::FailedToSerializeRonConfig(_) => {
                 write!(f, "Failed to serialize RON config")

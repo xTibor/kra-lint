@@ -1,7 +1,7 @@
 [includes]
 paths = [
     "kra-lint-01.toml",
-    "kra-lint-02.hjson",
+    "kra-lint-02.json",
     "kra-lint-03.ron",
     "kra-lint-04.yaml",
     "test-subfolder/kra-lint.toml",

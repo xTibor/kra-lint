@@ -1,10 +1,7 @@
-// Include test file
-
 {
     "includes": {
-        // Test circular includes
         "paths": [
-            "kra-lint-02.hjson",
+            "kra-lint-02.json",
             ".kra-lint"
         ]
     },
