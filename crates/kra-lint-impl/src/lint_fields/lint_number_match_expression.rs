@@ -102,7 +102,7 @@ where
             LintNumberMatchExpression::BinaryOr(expressions) => {
                 let param_list =
                     expressions.iter().map(LintNumberMatchExpression::to_string).collect::<Vec<_>>().join(", ");
-                write!(f, "or({})", param_list)
+                write!(f, "[{}]", param_list)
             }
             LintNumberMatchExpression::BinaryAnd { expressions } => {
                 let param_list =

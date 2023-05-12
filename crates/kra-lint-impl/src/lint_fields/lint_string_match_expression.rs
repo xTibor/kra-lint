@@ -87,7 +87,7 @@ impl std::fmt::Display for LintStringMatchExpression {
             LintStringMatchExpression::BinaryOr(expressions) => {
                 let param_list =
                     expressions.iter().map(LintStringMatchExpression::to_string).collect::<Vec<_>>().join(", ");
-                write!(f, "or({})", param_list)
+                write!(f, "[{}]", param_list)
             }
             LintStringMatchExpression::BinaryAnd { expressions } => {
                 let param_list =
