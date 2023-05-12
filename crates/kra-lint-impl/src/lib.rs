@@ -1,18 +1,12 @@
 mod lint_config;
 mod lint_config_collection;
 mod lint_error;
-mod lint_layer_property;
-mod lint_mask_property;
-mod lint_number_match_expression;
+mod lint_fields;
 mod lint_pass;
 mod lint_pass_impl;
-mod lint_string_match_expression;
 
 pub use lint_config::LintConfig;
 pub use lint_config_collection::LintConfigCollection;
 pub use lint_error::LintError;
-pub use lint_layer_property::LintLayerProperty;
-pub use lint_mask_property::LintMaskProperty;
-pub use lint_number_match_expression::LintNumberMatchExpression;
+pub use lint_fields::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression, LintStringMatchExpression};
 pub use lint_pass::{LintPass, LintPassResult};
-pub use lint_string_match_expression::LintStringMatchExpression;
