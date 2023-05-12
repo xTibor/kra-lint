@@ -41,7 +41,7 @@ impl LintPass for LintPassDocumentSize {
                 let document_size_list = self
                     .document_sizes
                     .iter()
-                    .map(|ds| format!("{}×{}px/{}dpi)", ds.width, ds.height, ds.resolution))
+                    .map(|ds| format!("{}×{}px/{}dpi", ds.width, ds.height, ds.resolution))
                     .collect::<Vec<_>>()
                     .join(", ");
 
