@@ -21,10 +21,7 @@ pub(crate) enum LintStringMatchExpression {
         #[serde(rename = "contains")]
         pattern: String,
     },
-    BinaryOr {
-        #[serde(rename = "or")]
-        expressions: Vec<LintStringMatchExpression>,
-    },
+    BinaryOr(Vec<LintStringMatchExpression>),
     BinaryAnd {
         #[serde(rename = "and")]
         expressions: Vec<LintStringMatchExpression>,
@@ -56,7 +53,7 @@ impl LintStringMatchExpression {
             LintStringMatchExpression::Contains { pattern } => {
                 input.contains(pattern)
             }
-            LintStringMatchExpression::BinaryOr { expressions } => {
+            LintStringMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
             }
             LintStringMatchExpression::BinaryAnd { expressions } => {
@@ -87,7 +84,7 @@ impl std::fmt::Display for LintStringMatchExpression {
             LintStringMatchExpression::Contains { pattern } => {
                 write!(f, "contains(\"{}\")", pattern)
             }
-            LintStringMatchExpression::BinaryOr { expressions } => {
+            LintStringMatchExpression::BinaryOr(expressions) => {
                 let param_list =
                     expressions.iter().map(LintStringMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "or({})", param_list)

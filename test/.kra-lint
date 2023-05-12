@@ -38,7 +38,7 @@ paths = [
 styleable_layers = false
 
 [file_layers]
-file_formats = { or = ["kra", "tga"] }
+file_formats = ["kra", "tga"]
 check_missing_files = true
 
 [vector_layers]
@@ -79,7 +79,7 @@ document_sizes = [
     { width = 2052, height = 1148, resolution = 186.0 },
     { width = 2208, height = 1236, resolution = 200.0 },
 
-    { width = { or = [128, 256, 512] }, height = { or = [128, 256, 512] }, resolution = 72.0 },
+    { width = [128, 256, 512], height = [128, 256, 512], resolution = 72.0 },
 ]
 
 [colorspace]
@@ -87,7 +87,7 @@ colorspace = "RGBA"
 profile = "sRGB-elle-V2-srgbtrc.icc"
 
 [software_version]
-software_versions = { or = ["5.1.3", "5.1.4"] }
+software_versions = ["5.1.3", "5.1.4"]
 
 [animation]
 framerate = 24

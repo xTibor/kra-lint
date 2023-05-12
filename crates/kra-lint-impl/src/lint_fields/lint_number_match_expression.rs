@@ -25,10 +25,7 @@ pub(crate) enum LintNumberMatchExpression<T> {
         #[serde(rename = "between")]
         value: (T, T),
     },
-    BinaryOr {
-        #[serde(rename = "or")]
-        expressions: Vec<LintNumberMatchExpression<T>>,
-    },
+    BinaryOr(Vec<LintNumberMatchExpression<T>>),
     BinaryAnd {
         #[serde(rename = "and")]
         expressions: Vec<LintNumberMatchExpression<T>>,
@@ -64,7 +61,7 @@ where
             LintNumberMatchExpression::Between { value: (value_low, value_high) } => {
                 (input >= value_low) && (input <= value_high)
             }
-            LintNumberMatchExpression::BinaryOr { expressions } => {
+            LintNumberMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
             }
             LintNumberMatchExpression::BinaryAnd { expressions } => {
@@ -102,7 +99,7 @@ where
             LintNumberMatchExpression::Between { value: (value_low, value_high) } => {
                 write!(f, "between({}, {})", value_low, value_high)
             }
-            LintNumberMatchExpression::BinaryOr { expressions } => {
+            LintNumberMatchExpression::BinaryOr(expressions) => {
                 let param_list =
                     expressions.iter().map(LintNumberMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "or({})", param_list)
