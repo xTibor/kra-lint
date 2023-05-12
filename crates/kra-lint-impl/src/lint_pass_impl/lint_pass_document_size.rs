@@ -2,22 +2,16 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintPass, LintPassResult};
+use crate::{LintNumberMatchExpression, LintPass, LintPassResult};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintPassDocumentSizeEntry {
-    pub width: usize,
-    pub height: usize,
-    pub resolution: f64,
-}
-
-impl std::fmt::Display for LintPassDocumentSizeEntry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}×{}px/{}dpi", self.width, self.height, self.resolution)
-    }
+    pub width: LintNumberMatchExpression<usize>,
+    pub height: LintNumberMatchExpression<usize>,
+    pub resolution: LintNumberMatchExpression<f64>,
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -32,17 +26,27 @@ impl LintPass for LintPassDocumentSize {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
         // Sub-pass #1
         {
-            let kra_document_size = LintPassDocumentSizeEntry {
-                width: kra_archive.main_doc.image.width,
-                height: kra_archive.main_doc.image.height,
-                resolution: kra_archive.main_doc.image.x_res,
-            };
+            let kra_document_width = kra_archive.main_doc.image.width;
+            let kra_document_height = kra_archive.main_doc.image.height;
+            let kra_document_resolution = kra_archive.main_doc.image.x_res;
 
-            if !self.document_sizes.contains(&kra_document_size) {
+            let document_size_matches = self.document_sizes.iter().any(|ds| {
+                ds.width.matches(&kra_document_width)
+                    && ds.height.matches(&kra_document_height)
+                    && ds.resolution.matches(&kra_document_resolution)
+            });
+
+            if !document_size_matches {
+                let document_size_list = self
+                    .document_sizes
+                    .iter()
+                    .map(|ds| format!("{}×{}px/{}dpi)", ds.width, ds.height, ds.resolution))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+
                 lint_messages.push(format!(
-                    "Incorrect document size (expected: [{}], found: {})",
-                    self.document_sizes.iter().map(LintPassDocumentSizeEntry::to_string).collect::<Vec<_>>().join(", "),
-                    kra_document_size,
+                    "Incorrect document size (expected: [{}], found: {}×{}px/{}dpi)",
+                    document_size_list, kra_document_width, kra_document_height, kra_document_resolution
                 ));
             }
         }

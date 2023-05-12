@@ -78,6 +78,8 @@ document_sizes = [
     { width = 1896, height = 1060, resolution = 172.0 },
     { width = 2052, height = 1148, resolution = 186.0 },
     { width = 2208, height = 1236, resolution = 200.0 },
+
+    { width = { or = [128, 256, 512] }, height = { or = [128, 256, 512] }, resolution = 72.0 },
 ]
 
 [colorspace]
