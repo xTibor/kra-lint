@@ -6,7 +6,7 @@ use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassProhibitCompositions {}
+pub(crate) struct LintPassProhibitCompositions {}
 
 impl LintPass for LintPassProhibitCompositions {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {

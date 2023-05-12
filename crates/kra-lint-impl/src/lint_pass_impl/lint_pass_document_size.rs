@@ -2,24 +2,25 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintNumberMatchExpression, LintPass, LintPassResult};
+use crate::lint_fields::LintNumberMatchExpression;
+use crate::{LintPass, LintPassResult};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassDocumentSizeEntry {
-    pub width: LintNumberMatchExpression<usize>,
-    pub height: LintNumberMatchExpression<usize>,
-    pub resolution: LintNumberMatchExpression<f64>,
+struct LintPassDocumentSizeEntry {
+    width: LintNumberMatchExpression<usize>,
+    height: LintNumberMatchExpression<usize>,
+    resolution: LintNumberMatchExpression<f64>,
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassDocumentSize {
-    pub document_sizes: Vec<LintPassDocumentSizeEntry>,
+pub(crate) struct LintPassDocumentSize {
+    document_sizes: Vec<LintPassDocumentSizeEntry>,
 }
 
 impl LintPass for LintPassDocumentSize {

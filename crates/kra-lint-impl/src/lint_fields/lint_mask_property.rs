@@ -9,7 +9,7 @@ use crate::LintError;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum LintMaskProperty<T> {
+pub(crate) enum LintMaskProperty<T> {
     All(Option<T>),
     ByType {
         transparency_masks: Option<T>,
@@ -22,7 +22,7 @@ pub enum LintMaskProperty<T> {
 
 impl<T> LintMaskProperty<T> {
     #[rustfmt::skip]
-    pub fn get<'a>(&'a self, mask: &KraMainDocMask) -> Result<(&'a Option<T>, &str), LintError> {
+    pub(crate) fn get<'a>(&'a self, mask: &KraMainDocMask) -> Result<(&'a Option<T>, &str), LintError> {
         match *self {
             LintMaskProperty::All(ref all_masks) => Ok((all_masks, "mask")),
             LintMaskProperty::ByType {

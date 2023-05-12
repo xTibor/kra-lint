@@ -2,13 +2,14 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintLayerProperty, LintMaskProperty, LintPass, LintPassResult};
+use crate::lint_fields::{LintLayerProperty, LintMaskProperty};
+use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassSurfaceType {
-    pub layer_types: LintLayerProperty<bool>,
-    pub mask_types: LintMaskProperty<bool>,
+pub(crate) struct LintPassSurfaceType {
+    layer_types: LintLayerProperty<bool>,
+    mask_types: LintMaskProperty<bool>,
 }
 
 impl LintPass for LintPassSurfaceType {

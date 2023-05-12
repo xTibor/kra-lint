@@ -3,7 +3,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum LintNumberMatchExpression<T> {
+pub(crate) enum LintNumberMatchExpression<T> {
     Value(T),
     LessThan {
         #[serde(rename = "less_than")]
@@ -44,7 +44,7 @@ where
     T: PartialEq<T> + PartialOrd<T>,
 {
     #[rustfmt::skip]
-    pub fn matches(&self, input: &T) -> bool {
+    pub(crate) fn matches(&self, input: &T) -> bool {
         match self {
             LintNumberMatchExpression::Value(value) => {
                 input == value

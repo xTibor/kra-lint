@@ -5,12 +5,13 @@ use kra_parser::kra_utils::KraLayerType;
 use svg::node::element::tag::Type;
 use svg::parser::Event;
 
-use crate::{LintPass, LintPassResult, LintStringMatchExpression};
+use crate::lint_fields::LintStringMatchExpression;
+use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassVectorLayers {
-    pub font_family: Option<LintStringMatchExpression>,
+pub(crate) struct LintPassVectorLayers {
+    font_family: Option<LintStringMatchExpression>,
 }
 
 impl LintPass for LintPassVectorLayers {

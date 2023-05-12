@@ -3,7 +3,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum LintStringMatchExpression {
+pub(crate) enum LintStringMatchExpression {
     FullMatch(String),
     Regex {
         #[serde(rename = "regex")]
@@ -37,7 +37,7 @@ pub enum LintStringMatchExpression {
 
 impl LintStringMatchExpression {
     #[rustfmt::skip]
-    pub fn matches(&self, input: &str) -> bool {
+    pub(crate) fn matches(&self, input: &str) -> bool {
         match self {
             LintStringMatchExpression::FullMatch(pattern) => {
                 input == pattern

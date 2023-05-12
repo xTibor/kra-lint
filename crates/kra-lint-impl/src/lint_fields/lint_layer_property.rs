@@ -9,7 +9,7 @@ use crate::LintError;
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub enum LintLayerProperty<T> {
+pub(crate) enum LintLayerProperty<T> {
     All(Option<T>),
     ByType {
         paint_layers:  Option<T>,
@@ -24,7 +24,7 @@ pub enum LintLayerProperty<T> {
 
 impl<T> LintLayerProperty<T> {
     #[rustfmt::skip]
-    pub fn get<'a>(&'a self, layer: &KraMainDocLayer) -> Result<(&'a Option<T>, &str), LintError> {
+    pub(crate) fn get<'a>(&'a self, layer: &KraMainDocLayer) -> Result<(&'a Option<T>, &str), LintError> {
         match *self {
             LintLayerProperty::All(ref all_layers) => Ok((all_layers, "layer")),
             LintLayerProperty::ByType {

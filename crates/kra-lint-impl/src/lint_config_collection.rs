@@ -6,8 +6,8 @@ use crate::{LintConfig, LintError, LintPass, LintPassResult};
 
 #[derive(Default)]
 pub struct LintConfigCollection {
-    pub lint_config_paths: Vec<Utf8PathBuf>,
-    pub lint_configs: Vec<LintConfig>,
+    lint_config_paths: Vec<Utf8PathBuf>,
+    lint_configs: Vec<LintConfig>,
 }
 
 impl LintConfigCollection {

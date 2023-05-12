@@ -6,7 +6,7 @@ use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassProhibitCustomPalettes {}
+pub(crate) struct LintPassProhibitCustomPalettes {}
 
 impl LintPass for LintPassProhibitCustomPalettes {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {

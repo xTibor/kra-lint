@@ -7,7 +7,7 @@ use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassMalformedDocument {}
+pub(crate) struct LintPassMalformedDocument {}
 
 impl LintPass for LintPassMalformedDocument {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {

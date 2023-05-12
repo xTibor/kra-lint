@@ -4,13 +4,14 @@ use serde::Deserialize;
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_utils::KraLayerType;
 
-use crate::{LintPass, LintPassResult, LintStringMatchExpression};
+use crate::lint_fields::LintStringMatchExpression;
+use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassFileLayers {
-    pub file_formats: Option<LintStringMatchExpression>,
-    pub check_missing_files: Option<bool>,
+pub(crate) struct LintPassFileLayers {
+    file_formats: Option<LintStringMatchExpression>,
+    check_missing_files: Option<bool>,
 }
 
 impl LintPass for LintPassFileLayers {

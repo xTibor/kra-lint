@@ -2,14 +2,15 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression, LintPass, LintPassResult};
+use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression};
+use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassAnimation {
-    pub animated_layers: LintLayerProperty<bool>,
-    pub animated_masks: LintMaskProperty<bool>,
-    pub framerate: Option<LintNumberMatchExpression<usize>>,
+pub(crate) struct LintPassAnimation {
+    animated_layers: LintLayerProperty<bool>,
+    animated_masks: LintMaskProperty<bool>,
+    framerate: Option<LintNumberMatchExpression<usize>>,
 }
 
 impl LintPass for LintPassAnimation {

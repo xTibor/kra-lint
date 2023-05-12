@@ -7,7 +7,7 @@ use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassNonDefaultBlending {}
+pub(crate) struct LintPassNonDefaultBlending {}
 
 impl LintPass for LintPassNonDefaultBlending {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {

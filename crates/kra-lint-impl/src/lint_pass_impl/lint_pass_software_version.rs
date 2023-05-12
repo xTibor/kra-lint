@@ -2,12 +2,13 @@ use serde::Deserialize;
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintPass, LintPassResult, LintStringMatchExpression};
+use crate::lint_fields::LintStringMatchExpression;
+use crate::{LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct LintPassSoftwareVersion {
-    pub software_versions: LintStringMatchExpression,
+pub(crate) struct LintPassSoftwareVersion {
+    software_versions: LintStringMatchExpression,
 }
 
 impl LintPass for LintPassSoftwareVersion {
