@@ -23,7 +23,7 @@ impl LintConfigCollection {
             return Ok(());
         }
 
-        let lint_config = LintConfig::from_path(&lint_config_path)?;
+        let lint_config = LintConfig::load_from_path(&lint_config_path)?;
         self.lint_config_paths.push(lint_config_path.clone());
 
         if let Some(lint_includes) = lint_config.includes.as_ref() {

@@ -1,18 +1,18 @@
 use camino::{Utf8Path, Utf8PathBuf};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
 use crate::{lint_pass_impl, LintError, LintPass, LintPassResult};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintIncludes {
     pub(crate) paths: Vec<Utf8PathBuf>,
 }
 
 #[rustfmt::skip]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct LintConfig {
     pub(crate) includes:      Option<LintIncludes>,
@@ -71,7 +71,8 @@ impl LintPass for LintConfig {
 }
 
 impl LintConfig {
-    pub fn from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintError> {
+    #[rustfmt::skip]
+    pub fn load_from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintError> {
         if !lint_config_path.is_file() {
             return Err(LintError::ConfigNotFound(lint_config_path.to_owned()));
         }
@@ -80,21 +81,63 @@ impl LintConfig {
             .map_err(|io_error| LintError::FailedToReadConfig(lint_config_path.to_owned(), io_error))?;
 
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
-            None | Some("toml") => toml::from_str(&lint_config_str)
-                .map_err(|toml_error| LintError::FailedToParseTomlConfig(lint_config_path.to_owned(), toml_error)),
-            Some("hjson" | "json") => deser_hjson::from_str(&lint_config_str)
-                .map_err(|hjson_error| LintError::FailedToParseHjsonConfig(lint_config_path.to_owned(), hjson_error)),
+            None | Some("toml") => {
+                toml::from_str(&lint_config_str)
+                    .map_err(|toml_error| LintError::FailedToParseTomlConfig(lint_config_path.to_owned(), toml_error))
+            }
+            Some("hjson" | "json") => {
+                deser_hjson::from_str(&lint_config_str)
+                    .map_err(|hjson_error| LintError::FailedToParseHjsonConfig(lint_config_path.to_owned(), hjson_error))
+            }
             Some("ron") => {
-                let ron_options =
-                    ron::Options::default().with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
+                let ron_options = ron::Options::default()
+                    .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
 
                 ron_options
                     .from_str(&lint_config_str)
                     .map_err(|ron_error| LintError::FailedToParseRonConfig(lint_config_path.to_owned(), ron_error))
             }
-            Some("yaml" | "yml") => serde_yaml::from_str(&lint_config_str)
-                .map_err(|yaml_error| LintError::FailedToParseYamlConfig(lint_config_path.to_owned(), yaml_error)),
-            Some(extension) => Err(LintError::UnknownConfigFormat(extension.to_owned())),
+            Some("yaml" | "yml") => {
+                serde_yaml::from_str(&lint_config_str)
+                    .map_err(|yaml_error| LintError::FailedToParseYamlConfig(lint_config_path.to_owned(), yaml_error))
+            }
+            Some(extension) => {
+                Err(LintError::UnknownConfigFormat(extension.to_owned()))
+            }
         }
+    }
+
+    #[rustfmt::skip]
+    pub fn save_to_path(&self, lint_config_path: &Utf8Path) -> Result<(), LintError> {
+        let lint_config_str = match lint_config_path.extension().map(str::to_lowercase).as_deref() {
+            None | Some("toml") => {
+                let lint_config_str = toml::to_string(&self)
+                    .map_err(LintError::FailedToSerializeTomlConfig)?;
+                Ok(lint_config_str)
+            },
+            Some("hjson" | "json") => {
+                todo!("Switch to a JSON parser that supports serialization")
+            }
+            Some("ron") => {
+                let ron_options = ron::Options::default()
+                    .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
+                let ron_pretty_config = ron::ser::PrettyConfig::default();
+
+                let lint_config_str = ron_options.to_string_pretty(&self, ron_pretty_config)
+                    .map_err(LintError::FailedToSerializeRonConfig)?;
+                Ok(lint_config_str)
+            }
+            Some("yaml" | "yml") => {
+                let lint_config_str = serde_yaml::to_string(&self)
+                    .map_err(LintError::FailedToSerializeYamlConfig)?;
+                Ok(lint_config_str)
+            }
+            Some(extension) => {
+                Err(LintError::UnknownConfigFormat(extension.to_owned()))
+            }
+        }?;
+
+        std::fs::write(lint_config_path, lint_config_str)?;
+        Ok(())
     }
 }

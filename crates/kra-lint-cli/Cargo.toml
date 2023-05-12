@@ -4,10 +4,15 @@ version = "0.1.0"
 authors = ["Nagy Tibor <xnagytibor@protonmail.com>"]
 license = "MIT"
 edition = "2021"
+default-run = "kra-lint"
 
 [[bin]]
 name = "kra-lint"
 path = "src/kra-lint.rs"
+
+[[bin]]
+name = "kra-lint-convert"
+path = "src/kra-lint-convert.rs"
 
 [dependencies]
 kra-parser = { path = "../kra-parser/" }

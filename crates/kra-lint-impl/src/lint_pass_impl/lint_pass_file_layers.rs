@@ -1,5 +1,5 @@
 use camino::Utf8Path;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_utils::KraLayerType;
@@ -7,7 +7,7 @@ use kra_parser::kra_utils::KraLayerType;
 use crate::lint_fields::LintStringMatchExpression;
 use crate::{LintPass, LintPassResult};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassFileLayers {
     file_formats: Option<LintStringMatchExpression>,

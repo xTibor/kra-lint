@@ -13,6 +13,9 @@ pub enum LintError {
     FailedToParseHjsonConfig(Utf8PathBuf, deser_hjson::Error),
     FailedToParseRonConfig(Utf8PathBuf, ron::error::SpannedError),
     FailedToParseYamlConfig(Utf8PathBuf, serde_yaml::Error),
+    FailedToSerializeTomlConfig(toml::ser::Error),
+    FailedToSerializeRonConfig(ron::Error),
+    FailedToSerializeYamlConfig(serde_yaml::Error),
     ZipError(zip::result::ZipError),
     IoError(io::Error),
     KraError(kra_parser::kra_error::KraError),
@@ -29,6 +32,9 @@ impl error::Error for LintError {
             LintError::FailedToParseHjsonConfig(_, ref err) => Some(err),
             LintError::FailedToParseRonConfig(_, ref err) => Some(err),
             LintError::FailedToParseYamlConfig(_, ref err) => Some(err),
+            LintError::FailedToSerializeTomlConfig(ref err) => Some(err),
+            LintError::FailedToSerializeRonConfig(ref err) => Some(err),
+            LintError::FailedToSerializeYamlConfig(ref err) => Some(err),
             LintError::ZipError(ref err) => Some(err),
             LintError::IoError(ref err) => Some(err),
             LintError::KraError(ref err) => Some(err),
@@ -62,6 +68,15 @@ impl fmt::Display for LintError {
             }
             LintError::FailedToParseYamlConfig(ref path, _) => {
                 write!(f, "Failed to parse YAML config file \"{}\"", path)
+            }
+            LintError::FailedToSerializeTomlConfig(_) => {
+                write!(f, "Failed to serialize TOML config")
+            }
+            LintError::FailedToSerializeRonConfig(_) => {
+                write!(f, "Failed to serialize RON config")
+            }
+            LintError::FailedToSerializeYamlConfig(_) => {
+                write!(f, "Failed to serialize YAML config")
             }
             LintError::ZipError(_) => {
                 write!(f, "ZIP error")

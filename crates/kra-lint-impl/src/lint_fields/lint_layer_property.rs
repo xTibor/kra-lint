@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_maindoc::KraMainDocLayer;
 use kra_parser::kra_utils::KraLayerType;
@@ -6,7 +6,7 @@ use kra_parser::kra_utils::KraLayerType;
 use crate::LintError;
 
 #[rustfmt::skip]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
 pub(crate) enum LintLayerProperty<T> {
