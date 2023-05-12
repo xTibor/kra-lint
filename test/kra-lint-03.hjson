@@ -1,0 +1,12 @@
+// Include test file
+
+{
+    "includes": {
+        // Test circular includes
+        "paths": [
+            "kra-lint-03.hjson",
+            ".kra-lint"
+        ]
+    },
+    "prohibit_kseexpr": {}
+}

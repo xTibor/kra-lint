@@ -89,6 +89,10 @@ impl LintConfig {
                 serde_json::from_str(&lint_config_str)
                     .map_err(|json_error| LintError::FailedToParseJsonConfig(lint_config_path.to_owned(), json_error))
             }
+            Some("hjson") => {
+                deser_hjson::from_str(&lint_config_str)
+                    .map_err(|hjson_error| LintError::FailedToParseHjsonConfig(lint_config_path.to_owned(), hjson_error))
+            }
             Some("ron") => {
                 let ron_options = ron::Options::default()
                     .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);

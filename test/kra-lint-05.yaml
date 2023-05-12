@@ -3,6 +3,6 @@
 includes:
   # Test circular includes
   paths:
-    - "kra-lint-04.yaml"
+    - "kra-lint-05.yaml"
     - ".kra-lint"
 prohibit_kseexpr:

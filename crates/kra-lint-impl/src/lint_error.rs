@@ -11,6 +11,7 @@ pub enum LintError {
     FailedToReadConfig(Utf8PathBuf, io::Error),
     FailedToParseTomlConfig(Utf8PathBuf, toml::de::Error),
     FailedToParseJsonConfig(Utf8PathBuf, serde_json::Error),
+    FailedToParseHjsonConfig(Utf8PathBuf, deser_hjson::Error),
     FailedToParseRonConfig(Utf8PathBuf, ron::error::SpannedError),
     FailedToParseYamlConfig(Utf8PathBuf, serde_yaml::Error),
     FailedToSerializeTomlConfig(toml::ser::Error),
@@ -31,6 +32,7 @@ impl error::Error for LintError {
             LintError::FailedToReadConfig(_, ref err) => Some(err),
             LintError::FailedToParseTomlConfig(_, ref err) => Some(err),
             LintError::FailedToParseJsonConfig(_, ref err) => Some(err),
+            LintError::FailedToParseHjsonConfig(_, ref err) => Some(err),
             LintError::FailedToParseRonConfig(_, ref err) => Some(err),
             LintError::FailedToParseYamlConfig(_, ref err) => Some(err),
             LintError::FailedToSerializeTomlConfig(ref err) => Some(err),
@@ -64,6 +66,9 @@ impl fmt::Display for LintError {
             }
             LintError::FailedToParseJsonConfig(ref path, _) => {
                 write!(f, "Failed to parse JSON config file \"{}\"", path)
+            }
+            LintError::FailedToParseHjsonConfig(ref path, _) => {
+                write!(f, "Failed to parse Hjson config file \"{}\"", path)
             }
             LintError::FailedToParseRonConfig(ref path, _) => {
                 write!(f, "Failed to parse RON config file \"{}\"", path)

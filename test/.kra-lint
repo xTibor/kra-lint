@@ -2,8 +2,9 @@
 paths = [
     "kra-lint-01.toml",
     "kra-lint-02.json",
-    "kra-lint-03.ron",
-    "kra-lint-04.yaml",
+    "kra-lint-03.hjson",
+    "kra-lint-04.ron",
+    "kra-lint-05.yaml",
     "test-subfolder/kra-lint.toml",
 ]
 

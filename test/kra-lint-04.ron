@@ -4,7 +4,7 @@
     includes: (
         // Test circular includes
         paths: [
-            "kra-lint-03.ron",
+            "kra-lint-04.ron",
             ".kra-lint",
         ],
     ),

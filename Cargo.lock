@@ -121,6 +121,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "deser-hjson"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4141a83522b248ef3f7c5d251ef2702c169400aa9f4312320974ff49d7054e34"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "flate2"
 version = "1.0.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -179,6 +188,7 @@ name = "kra-lint-impl"
 version = "0.1.0"
 dependencies = [
  "camino",
+ "deser-hjson",
  "kra-parser",
  "regex",
  "ron",
