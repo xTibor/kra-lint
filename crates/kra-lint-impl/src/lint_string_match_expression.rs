@@ -36,23 +36,35 @@ pub enum LintStringMatchExpression {
 }
 
 impl LintStringMatchExpression {
-    pub fn matches(&self, value: &str) -> bool {
+    #[rustfmt::skip]
+    pub fn matches(&self, input: &str) -> bool {
         match self {
-            LintStringMatchExpression::FullMatch(pattern) => value == pattern,
-            LintStringMatchExpression::Regex { pattern } => {
-                let compiled_regex = regex::Regex::new(pattern).expect("Failed to compile regular expression");
-                compiled_regex.is_match(value)
+            LintStringMatchExpression::FullMatch(pattern) => {
+                input == pattern
             }
-            LintStringMatchExpression::StartsWith { pattern } => value.starts_with(pattern),
-            LintStringMatchExpression::EndsWith { pattern } => value.ends_with(pattern),
-            LintStringMatchExpression::Contains { pattern } => value.contains(pattern),
+            LintStringMatchExpression::Regex { pattern } => {
+                let compiled_regex = regex::Regex::new(pattern)
+                    .expect("Failed to compile regular expression");
+                compiled_regex.is_match(input)
+            }
+            LintStringMatchExpression::StartsWith { pattern } => {
+                input.starts_with(pattern)
+            }
+            LintStringMatchExpression::EndsWith { pattern } => {
+                input.ends_with(pattern)
+            }
+            LintStringMatchExpression::Contains { pattern } => {
+                input.contains(pattern)
+            }
             LintStringMatchExpression::BinaryOr { expressions } => {
-                expressions.iter().any(|expression| expression.matches(value))
+                expressions.iter().any(|expression| expression.matches(input))
             }
             LintStringMatchExpression::BinaryAnd { expressions } => {
-                expressions.iter().all(|expression| expression.matches(value))
+                expressions.iter().all(|expression| expression.matches(input))
             }
-            LintStringMatchExpression::BinaryNot { expression } => !expression.matches(value),
+            LintStringMatchExpression::BinaryNot { expression } => {
+                !expression.matches(input)
+            }
         }
     }
 }
