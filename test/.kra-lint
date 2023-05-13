@@ -104,3 +104,22 @@ Reproduction in whole or in part without permission is prohibited.
 studio_name = "<example-studio>"
 ensure_initial_author_exists = true
 ensure_author_exists = true
+
+[[document_structure.layers]]
+layer_name = "Test 1"
+layer_type = "paint_layer"
+[[document_structure.layers]]
+layer_name = "Group 1"
+layer_type = "group_layer"
+    [[document_structure.layers.layers]]
+    layer_name = "Test 2"
+    layer_type = "paint_layer"
+[[document_structure.layers]]
+layer_name = "Group 2"
+layer_type = "group_layer"
+    [[document_structure.layers.layers]]
+    layer_name = "Test 3"
+    layer_type = "paint_layer"
+[[document_structure.layers]]
+layer_name = "Background"
+layer_type = ["fill_layer", "paint_layer"]

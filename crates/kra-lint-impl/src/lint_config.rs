@@ -22,6 +22,7 @@ pub struct LintConfig {
     copyright:                Option<lint_pass_impl::lint_pass_copyright               ::LintPassCopyright             >,
     document_name:            Option<lint_pass_impl::lint_pass_document_name           ::LintPassDocumentName          >,
     document_size:            Option<lint_pass_impl::lint_pass_document_size           ::LintPassDocumentSize          >,
+    document_structure:       Option<lint_pass_impl::lint_pass_document_structure      ::LintPassDocumentStructure     >,
     file_layers:              Option<lint_pass_impl::lint_pass_file_layers             ::LintPassFileLayers            >,
     file_name:                Option<lint_pass_impl::lint_pass_file_name               ::LintPassFileName              >,
     hidden_surface:           Option<lint_pass_impl::lint_pass_hidden_surface          ::LintPassHiddenSurface         >,
@@ -52,6 +53,7 @@ impl LintPass for LintConfig {
         lint_pass!(copyright);
         lint_pass!(document_name);
         lint_pass!(document_size);
+        lint_pass!(document_structure);
         lint_pass!(file_layers);
         lint_pass!(file_name);
         lint_pass!(hidden_surface);

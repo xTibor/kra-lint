@@ -1,5 +1,7 @@
 use std::collections::VecDeque;
 
+use serde::{Deserialize, Serialize};
+
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
 use crate::kra_maindoc::{KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask};
@@ -62,7 +64,8 @@ impl KraArchive {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum KraLayerType {
     PaintLayer,
     GroupLayer,
@@ -73,12 +76,10 @@ pub enum KraLayerType {
     FileLayer,
 }
 
-impl TryFrom<&str> for KraLayerType {
-    type Error = KraError;
-
+impl KraMainDocLayer {
     #[rustfmt::skip]
-    fn try_from(value: &str) -> Result<KraLayerType, KraError> {
-        match value {
+    pub fn layer_type(&self) -> Result<KraLayerType, KraError> {
+        match self.node_type.as_str() {
             "paintlayer"      => Ok(KraLayerType::PaintLayer ),
             "grouplayer"      => Ok(KraLayerType::GroupLayer ),
             "clonelayer"      => Ok(KraLayerType::CloneLayer ),
@@ -86,20 +87,15 @@ impl TryFrom<&str> for KraLayerType {
             "adjustmentlayer" => Ok(KraLayerType::FilterLayer),
             "generatorlayer"  => Ok(KraLayerType::FillLayer  ),
             "filelayer"       => Ok(KraLayerType::FileLayer  ),
-            _ => Err(KraError::UnknownLayerNodeType(value.to_string())),
+            _ => Err(KraError::UnknownLayerNodeType(self.node_type.clone())),
         }
-    }
-}
-
-impl KraMainDocLayer {
-    pub fn layer_type(&self) -> Result<KraLayerType, KraError> {
-        self.node_type.as_str().try_into()
     }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum KraMaskType {
     TransparencyMask,
     FilterMask,
@@ -108,24 +104,16 @@ pub enum KraMaskType {
     LocalSelection,
 }
 
-impl TryFrom<&str> for KraMaskType {
-    type Error = KraError;
-
+impl KraMainDocMask {
     #[rustfmt::skip]
-    fn try_from(value: &str) -> Result<KraMaskType, KraError> {
-        match value {
+    pub fn mask_type(&self) -> Result<KraMaskType, KraError> {
+        match self.node_type.as_str() {
             "transparencymask" => Ok(KraMaskType::TransparencyMask),
             "filtermask"       => Ok(KraMaskType::FilterMask      ),
             "colorizemask"     => Ok(KraMaskType::ColorizeMask    ),
             "transformmask"    => Ok(KraMaskType::TransformMask   ),
             "selectionmask"    => Ok(KraMaskType::LocalSelection  ),
-            _ => Err(KraError::UnknownMaskNodeType(value.to_string())),
+            _ => Err(KraError::UnknownMaskNodeType(self.node_type.clone())),
         }
-    }
-}
-
-impl KraMainDocMask {
-    pub fn mask_type(&self) -> Result<KraMaskType, KraError> {
-        self.node_type.as_str().try_into()
     }
 }

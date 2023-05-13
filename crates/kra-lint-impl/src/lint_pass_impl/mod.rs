@@ -3,6 +3,7 @@ pub(crate) mod lint_pass_colorspace;
 pub(crate) mod lint_pass_copyright;
 pub(crate) mod lint_pass_document_name;
 pub(crate) mod lint_pass_document_size;
+pub(crate) mod lint_pass_document_structure;
 pub(crate) mod lint_pass_file_layers;
 pub(crate) mod lint_pass_file_name;
 pub(crate) mod lint_pass_hidden_surface;

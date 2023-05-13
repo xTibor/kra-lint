@@ -205,6 +205,7 @@ name = "kra-parser"
 version = "0.1.0"
 dependencies = [
  "camino",
+ "serde",
  "strong-xml",
  "zip",
 ]
