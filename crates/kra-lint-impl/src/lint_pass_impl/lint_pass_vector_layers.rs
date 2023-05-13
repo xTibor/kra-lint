@@ -6,7 +6,7 @@ use svg::node::element::tag::Type;
 use svg::parser::Event;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::{LintPass, LintPassResult};
+use crate::{LintMessages, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -15,7 +15,7 @@ pub(crate) struct LintPassVectorLayers {
 }
 
 impl LintPass for LintPassVectorLayers {
-    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(font_family) = self.font_family.as_ref() {

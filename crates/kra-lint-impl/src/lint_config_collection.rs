@@ -2,7 +2,7 @@ use camino::{Utf8Path, Utf8PathBuf};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{LintConfig, LintError, LintPass, LintPassResult};
+use crate::{LintConfig, LintError, LintMessages, LintPass, LintPassResult};
 
 #[derive(Default)]
 pub struct LintConfigCollection {
@@ -55,7 +55,7 @@ impl LintConfigCollection {
 }
 
 impl LintPass for LintConfigCollection {
-    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         for lint_config in &self.lint_configs {
             lint_config.lint(kra_archive, lint_messages)?;
         }

@@ -5,7 +5,7 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_utils::KraLayerType;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::{LintPass, LintPassResult};
+use crate::{LintMessages, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -15,7 +15,7 @@ pub(crate) struct LintPassFileLayers {
 }
 
 impl LintPass for LintPassFileLayers {
-    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
             if let Some(file_formats) = self.file_formats.as_ref() {

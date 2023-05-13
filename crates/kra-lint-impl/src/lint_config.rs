@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::{lint_pass_impl, LintError, LintPass, LintPassResult};
+use crate::{lint_pass_impl, LintError, LintMessages, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -38,7 +38,7 @@ pub struct LintConfig {
 }
 
 impl LintPass for LintConfig {
-    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut Vec<String>) -> LintPassResult {
+    fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         macro_rules! lint_pass {
             ($lint_name:ident) => {{
                 if let Some($lint_name) = self.$lint_name.as_ref() {

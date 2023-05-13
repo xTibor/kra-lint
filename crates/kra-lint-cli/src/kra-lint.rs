@@ -3,7 +3,7 @@ use std::process::ExitCode;
 use camino::Utf8PathBuf;
 use clap::Parser;
 
-use kra_lint_impl::{LintConfigCollection, LintPass};
+use kra_lint_impl::{LintConfigCollection, LintMessages, LintPass};
 use kra_parser::kra_archive::KraArchive;
 
 #[derive(Parser, Debug)]
@@ -54,7 +54,7 @@ fn main() -> ExitCode {
         for kra_path in &args.paths {
             match KraArchive::from_path(kra_path) {
                 Ok(kra_archive) => {
-                    let mut lint_messages = vec![];
+                    let mut lint_messages = LintMessages::default();
 
                     match lint_config_collection.lint(&kra_archive, &mut lint_messages) {
                         Ok(()) => all_lint_messages
