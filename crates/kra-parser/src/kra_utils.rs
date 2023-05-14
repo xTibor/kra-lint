@@ -117,3 +117,20 @@ impl KraMainDocMask {
         }
     }
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+impl KraMainDocLayer {
+    pub fn content_svg(&self, kra_archive: &KraArchive) -> Result<String, KraError> {
+        assert_eq!(self.layer_type()?, KraLayerType::VectorLayer);
+
+        let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+        let content_svg_file = zip_archive.by_name(&format!(
+            "{}/layers/{}.shapelayer/content.svg",
+            kra_archive.main_doc.image.name, self.file_name
+        ))?;
+
+        Ok(std::io::read_to_string(content_svg_file)?)
+    }
+}
