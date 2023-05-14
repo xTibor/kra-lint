@@ -12,6 +12,7 @@ use crate::{LintMessages, LintPass, LintPassResult};
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassVectorLayers {
     font_family: Option<LintStringMatchExpression>,
+    placeholder_text: Option<LintStringMatchExpression>,
 }
 
 impl LintPass for LintPassVectorLayers {
@@ -33,6 +34,29 @@ impl LintPass for LintPassVectorLayers {
                                             layer.name, font_family, svg_font_family,
                                         ));
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Sub-pass #2
+        {
+            if let Some(placeholder_text) = self.placeholder_text.as_ref() {
+                for layer in kra_archive.all_layers() {
+                    if layer.layer_type()? == KraLayerType::VectorLayer {
+                        let content_svg_data = layer.content_svg(kra_archive)?;
+                        let content_svg_parser = svg::read(&content_svg_data)?;
+
+                        for svg_event in content_svg_parser {
+                            if let Event::Text(svg_text) = svg_event {
+                                if placeholder_text.matches(svg_text) {
+                                    lint_messages.push(format!(
+                                        "Prohibited placeholder text on vector layer (layer: \"{}\", placeholder text: \"{}\")",
+                                        layer.name, svg_text,
+                                    ));
                                 }
                             }
                         }

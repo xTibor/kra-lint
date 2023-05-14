@@ -44,6 +44,15 @@ check_missing_files = true
 
 [vector_layers]
 font_family = { not = { regex = '^Noto Sans CJK (SC|TC)$' } }
+placeholder_text = [
+    { regex    = '(?i)XXX'                               },
+    { regex    = '(?i)TO[\s_-]*DO'                       },
+    { regex    = '(?i)FIX[\s_-]*ME'                      },
+    { regex    = '(?i)REPLACE[\s_-]*ME'                  },
+    { regex    = '(?i)LOREM\s*IPSUM(\s*DOLOR(\s*SIT)?)?' },
+    { regex    = '(?i)(QWERT[YZ]|ASDF|[ZY]XCV)'          },
+    { contains = '123456'                                },
+]
 
 [surface_type]
     [surface_type.layer_types]
