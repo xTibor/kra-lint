@@ -14,6 +14,7 @@ pub enum KraError {
     XmlCannotParse(XmlError, Utf8PathBuf, &'static str),
     UnknownLayerNodeType(String),
     UnknownMaskNodeType(String),
+    UnknownColorLabel(String),
     ZipError(zip::result::ZipError),
     IoError(io::Error),
 }
@@ -28,6 +29,7 @@ impl error::Error for KraError {
             KraError::XmlCannotParse(ref err, _, _) => Some(err),
             KraError::UnknownLayerNodeType(_) => None,
             KraError::UnknownMaskNodeType(_) => None,
+            KraError::UnknownColorLabel(_) => None,
             KraError::ZipError(ref err) => Some(err),
             KraError::IoError(ref err) => Some(err),
         }
@@ -57,6 +59,9 @@ impl fmt::Display for KraError {
             }
             KraError::UnknownMaskNodeType(ref node_type) => {
                 write!(f, "Unknown mask node type \"{}\"", node_type)
+            }
+            KraError::UnknownColorLabel(ref color_label) => {
+                write!(f, "Unknown color label \"{}\"", color_label)
             }
             KraError::ZipError(_) => {
                 write!(f, "ZIP error")

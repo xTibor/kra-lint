@@ -84,7 +84,7 @@ pub struct KraMainDocLayer {
     pub collapsed: usize,
 
     #[xml(attr = "colorlabel")]
-    pub color_label: usize,
+    pub color_label: KraColorLabel,
 
     #[xml(attr = "colorspacename")]
     pub colorspace_name: Option<String>,
@@ -190,7 +190,7 @@ pub struct KraMainDocMask {
     pub cleanup: Option<usize>,
 
     #[xml(attr = "colorlabel")]
-    pub color_label: Option<usize>,
+    pub color_label: Option<KraColorLabel>,
 
     #[xml(attr = "colorspacename")]
     pub colorspace_name: Option<String>,
@@ -365,6 +365,42 @@ impl FromStr for KraMaskType {
             "transformmask"    => Ok(KraMaskType::TransformMask   ),
             "selectionmask"    => Ok(KraMaskType::LocalSelection  ),
             _ => Err(KraError::UnknownMaskNodeType(mask_type.to_owned())),
+        }
+    }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum KraColorLabel {
+    None,
+    Blue,
+    Green,
+    Yellow,
+    Orange,
+    Brown,
+    Red,
+    Purple,
+    Black,
+}
+
+impl FromStr for KraColorLabel {
+    type Err = KraError;
+
+    #[rustfmt::skip]
+    fn from_str(color_label: &str) -> Result<KraColorLabel, KraError> {
+        match color_label {
+            "0" => Ok(KraColorLabel::None  ),
+            "1" => Ok(KraColorLabel::Blue  ),
+            "2" => Ok(KraColorLabel::Green ),
+            "3" => Ok(KraColorLabel::Yellow),
+            "4" => Ok(KraColorLabel::Orange),
+            "5" => Ok(KraColorLabel::Brown ),
+            "6" => Ok(KraColorLabel::Red   ),
+            "7" => Ok(KraColorLabel::Purple),
+            "8" => Ok(KraColorLabel::Black ),
+            _ => Err(KraError::UnknownColorLabel(color_label.to_owned())),
         }
     }
 }
