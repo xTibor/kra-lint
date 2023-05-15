@@ -45,6 +45,10 @@ impl KraArchive {
         self.main_doc.image.layer_container.iter_recursive()
     }
 
+    pub fn all_layers_by_type(&self, layer_type: KraLayerType) -> impl Iterator<Item = &KraMainDocLayer> {
+        self.all_layers().filter(move |kra_layer| kra_layer.layer_type == layer_type)
+    }
+
     pub fn all_masks(&self) -> impl Iterator<Item = (&KraMainDocLayer, &KraMainDocMask)> {
         self.main_doc
             .image

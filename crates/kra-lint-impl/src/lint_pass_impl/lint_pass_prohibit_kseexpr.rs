@@ -13,9 +13,8 @@ impl LintPass for LintPassProhibitKSeExpr {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
-            for layer in kra_archive.all_layers() {
-                if (layer.layer_type == KraLayerType::FillLayer) && (layer.generator_name.as_deref() == Some("seexpr"))
-                {
+            for layer in kra_archive.all_layers_by_type(KraLayerType::FillLayer) {
+                if layer.generator_name.as_deref() == Some("seexpr") {
                     lint_messages.push(format!("Prohibited use of KSeExpr (layer: \"{}\")", layer.name));
                 }
             }
