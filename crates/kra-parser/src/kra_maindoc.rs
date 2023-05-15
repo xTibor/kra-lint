@@ -1,4 +1,9 @@
+use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
 use strong_xml::XmlRead;
+
+use crate::kra_error::KraError;
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "DOC")]
@@ -106,7 +111,7 @@ pub struct KraMainDocLayer {
     pub name: String,
 
     #[xml(attr = "nodetype")]
-    pub node_type: String,
+    pub layer_type: KraLayerType,
 
     #[xml(attr = "onionskin")]
     pub onion_skin: Option<String>,
@@ -224,7 +229,7 @@ pub struct KraMainDocMask {
     pub name: String,
 
     #[xml(attr = "nodetype")]
-    pub node_type: String,
+    pub mask_type: KraMaskType,
 
     #[xml(attr = "show-coloring")]
     pub show_coloring: Option<usize>,
@@ -302,4 +307,64 @@ pub struct KraMainDocCompositionValue {
 
     #[xml(attr = "uuid")]
     pub uuid: String,
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum KraLayerType {
+    PaintLayer,
+    GroupLayer,
+    CloneLayer,
+    VectorLayer,
+    FilterLayer,
+    FillLayer,
+    FileLayer,
+}
+
+impl FromStr for KraLayerType {
+    type Err = KraError;
+
+    #[rustfmt::skip]
+    fn from_str(layer_type: &str) -> Result<KraLayerType, KraError> {
+        match layer_type {
+            "paintlayer"      => Ok(KraLayerType::PaintLayer ),
+            "grouplayer"      => Ok(KraLayerType::GroupLayer ),
+            "clonelayer"      => Ok(KraLayerType::CloneLayer ),
+            "shapelayer"      => Ok(KraLayerType::VectorLayer),
+            "adjustmentlayer" => Ok(KraLayerType::FilterLayer),
+            "generatorlayer"  => Ok(KraLayerType::FillLayer  ),
+            "filelayer"       => Ok(KraLayerType::FileLayer  ),
+            _ => Err(KraError::UnknownLayerNodeType(layer_type.to_owned())),
+        }
+    }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum KraMaskType {
+    TransparencyMask,
+    FilterMask,
+    ColorizeMask,
+    TransformMask,
+    LocalSelection,
+}
+
+impl FromStr for KraMaskType {
+    type Err = KraError;
+
+    #[rustfmt::skip]
+    fn from_str(mask_type: &str) -> Result<KraMaskType, KraError> {
+        match mask_type {
+            "transparencymask" => Ok(KraMaskType::TransparencyMask),
+            "filtermask"       => Ok(KraMaskType::FilterMask      ),
+            "colorizemask"     => Ok(KraMaskType::ColorizeMask    ),
+            "transformmask"    => Ok(KraMaskType::TransformMask   ),
+            "selectionmask"    => Ok(KraMaskType::LocalSelection  ),
+            _ => Err(KraError::UnknownMaskNodeType(mask_type.to_owned())),
+        }
+    }
 }

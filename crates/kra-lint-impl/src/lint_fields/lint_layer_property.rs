@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use kra_parser::kra_maindoc::KraMainDocLayer;
-use kra_parser::kra_utils::KraLayerType;
+use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer};
 
 use crate::LintError;
 
@@ -35,7 +34,7 @@ impl<T> LintLayerProperty<T> {
                 ref filter_layers,
                 ref fill_layers,
                 ref file_layers,
-            } => match layer.layer_type()? {
+            } => match layer.layer_type {
                 KraLayerType::PaintLayer  => Ok((paint_layers,  "paint layer" )),
                 KraLayerType::GroupLayer  => Ok((group_layers,  "group layer" )),
                 KraLayerType::CloneLayer  => Ok((clone_layers,  "clone layer" )),

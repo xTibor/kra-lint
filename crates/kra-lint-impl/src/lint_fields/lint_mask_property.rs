@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use kra_parser::kra_maindoc::KraMainDocMask;
-use kra_parser::kra_utils::KraMaskType;
+use kra_parser::kra_maindoc::{KraMainDocMask, KraMaskType};
 
 use crate::LintError;
 
@@ -31,7 +30,7 @@ impl<T> LintMaskProperty<T> {
                 ref colorize_masks,
                 ref transform_masks,
                 ref local_selections,
-            } => match mask.mask_type()? {
+            } => match mask.mask_type {
                 KraMaskType::TransparencyMask => Ok((transparency_masks, "transparency mask")),
                 KraMaskType::FilterMask       => Ok((filter_masks,       "filter mask"      )),
                 KraMaskType::ColorizeMask     => Ok((colorize_masks,     "colorize mask"    )),

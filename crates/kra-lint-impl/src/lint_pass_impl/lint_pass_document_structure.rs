@@ -2,8 +2,7 @@ use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::{KraMainDocLayer, KraMainDocLayerContainer};
-use kra_parser::kra_utils::KraLayerType;
+use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocLayerContainer};
 
 use crate::lint_fields::{LintGenericMatchExpression, LintNumberMatchExpression, LintStringMatchExpression};
 use crate::{LintMessages, LintPass, LintPassResult};
@@ -23,7 +22,7 @@ struct DocumentStructureLayer {
 
 impl DocumentStructureLayer {
     fn matches(&self, kra_layer: &KraMainDocLayer) -> bool {
-        self.layer_name.matches(&kra_layer.name) && self.layer_type.matches(&kra_layer.layer_type().unwrap())
+        self.layer_name.matches(&kra_layer.name) && self.layer_type.matches(&kra_layer.layer_type)
     }
 }
 
@@ -56,7 +55,7 @@ impl LintPass for LintPassDocumentStructure {
 
                     if layer_count.matches(&kra_matching_layers.len()) {
                         for kra_layer in kra_matching_layers {
-                            if kra_layer.layer_type()? == KraLayerType::GroupLayer {
+                            if kra_layer.layer_type == KraLayerType::GroupLayer {
                                 compare_layers(
                                     kra_layer.layer_container.as_ref().unwrap(),
                                     lint_layer.layers.as_ref().unwrap(),

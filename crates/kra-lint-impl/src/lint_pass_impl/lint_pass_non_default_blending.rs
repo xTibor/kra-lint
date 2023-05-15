@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_utils::{KraLayerType, KraMaskType};
+use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
 use crate::{LintMessages, LintPass, LintPassResult};
 
@@ -28,7 +28,7 @@ impl LintPass for LintPassNonDefaultBlending {
         // Sub-pass #2
         {
             for layer in kra_archive.all_layers() {
-                let expected_blending_mode = match layer.layer_type()? {
+                let expected_blending_mode = match layer.layer_type {
                     KraLayerType::FilterLayer => "copy",
                     _ => "normal",
                 };
@@ -45,7 +45,7 @@ impl LintPass for LintPassNonDefaultBlending {
         // Sub-pass #3
         {
             for (layer, mask) in kra_archive.all_masks() {
-                let expected_blending_mode = match mask.mask_type()? {
+                let expected_blending_mode = match mask.mask_type {
                     KraMaskType::ColorizeMask => Some("behind"),
                     _ => None,
                 };

@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
-
-use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_utils::KraLayerType;
 use svg::node::element::tag::Type;
 use svg::parser::Event;
+
+use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::{LintMessages, LintPass, LintPassResult};
@@ -21,7 +21,7 @@ impl LintPass for LintPassVectorLayers {
         {
             if let Some(font_family) = self.font_family.as_ref() {
                 for layer in kra_archive.all_layers() {
-                    if layer.layer_type()? == KraLayerType::VectorLayer {
+                    if layer.layer_type == KraLayerType::VectorLayer {
                         let content_svg_data = layer.content_svg(kra_archive)?;
                         let content_svg_parser = svg::read(&content_svg_data)?;
 
@@ -46,7 +46,7 @@ impl LintPass for LintPassVectorLayers {
         {
             if let Some(placeholder_text) = self.placeholder_text.as_ref() {
                 for layer in kra_archive.all_layers() {
-                    if layer.layer_type()? == KraLayerType::VectorLayer {
+                    if layer.layer_type == KraLayerType::VectorLayer {
                         let content_svg_data = layer.content_svg(kra_archive)?;
                         let content_svg_parser = svg::read(&content_svg_data)?;
 
