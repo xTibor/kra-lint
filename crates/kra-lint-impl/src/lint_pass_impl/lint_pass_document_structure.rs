@@ -86,6 +86,13 @@ impl LintPass for LintPassDocumentStructure {
                     }
                 }
 
+                for kra_extra_layer in kra_layer_iterator {
+                    lint_messages.push(format!(
+                        "Incorrect document structure (Extra layer, layer: \"{}\")",
+                        kra_extra_layer.name
+                    ));
+                }
+
                 Ok(())
             }
 
