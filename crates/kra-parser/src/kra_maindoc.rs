@@ -61,7 +61,7 @@ pub struct KraMainDocImage {
     pub animation: KraMainDocAnimation,
 }
 
-#[derive(Debug, XmlRead)]
+#[derive(Debug, XmlRead, Default)]
 #[xml(tag = "layers")]
 pub struct KraMainDocLayerContainer {
     #[xml(child = "layer")]
@@ -170,7 +170,7 @@ pub struct KraMainDocAnimationFramerate {
     pub value: usize,
 }
 
-#[derive(Debug, XmlRead)]
+#[derive(Debug, XmlRead, Default)]
 #[xml(tag = "masks")]
 pub struct KraMainDocMaskContainer {
     #[xml(child = "mask")]
