@@ -1,10 +1,6 @@
-use std::str::FromStr;
-
 use serde::{Deserialize, Serialize};
 use strong_xml::XmlRead;
-use strum::Display;
-
-use crate::kra_error::KraError;
+use strum::{Display, EnumString};
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "DOC")]
@@ -310,101 +306,77 @@ pub struct KraMainDocCompositionValue {
     pub uuid: String,
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#[derive(Debug, PartialEq, Deserialize, Serialize, Display)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display, EnumString)]
 #[serde(rename_all = "snake_case")]
-#[strum(serialize_all = "snake_case")]
 pub enum KraLayerType {
+    #[strum(serialize = "paintlayer", to_string = "paint_layer")]
     PaintLayer,
+
+    #[strum(serialize = "grouplayer", to_string = "group_layer")]
     GroupLayer,
+
+    #[strum(serialize = "clonelayer", to_string = "clone_layer")]
     CloneLayer,
+
+    #[strum(serialize = "shapelayer", to_string = "vector_layer")]
     VectorLayer,
+
+    #[strum(serialize = "adjustmentlayer", to_string = "filter_layer")]
     FilterLayer,
+
+    #[strum(serialize = "generatorlayer", to_string = "fill_layer")]
     FillLayer,
+
+    #[strum(serialize = "filelayer", to_string = "file_layer")]
     FileLayer,
 }
 
-impl FromStr for KraLayerType {
-    type Err = KraError;
-
-    #[rustfmt::skip]
-    fn from_str(layer_type: &str) -> Result<KraLayerType, KraError> {
-        match layer_type {
-            "paintlayer"      => Ok(KraLayerType::PaintLayer ),
-            "grouplayer"      => Ok(KraLayerType::GroupLayer ),
-            "clonelayer"      => Ok(KraLayerType::CloneLayer ),
-            "shapelayer"      => Ok(KraLayerType::VectorLayer),
-            "adjustmentlayer" => Ok(KraLayerType::FilterLayer),
-            "generatorlayer"  => Ok(KraLayerType::FillLayer  ),
-            "filelayer"       => Ok(KraLayerType::FileLayer  ),
-            _ => Err(KraError::UnknownLayerNodeType(layer_type.to_owned())),
-        }
-    }
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#[derive(Debug, PartialEq, Deserialize, Serialize, Display)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display, EnumString)]
 #[serde(rename_all = "snake_case")]
-#[strum(serialize_all = "snake_case")]
 pub enum KraMaskType {
+    #[strum(serialize = "transparencymask", to_string = "transparency_mask")]
     TransparencyMask,
+
+    #[strum(serialize = "filtermask", to_string = "filter_mask")]
     FilterMask,
+
+    #[strum(serialize = "colorizemask", to_string = "colorize_mask")]
     ColorizeMask,
+
+    #[strum(serialize = "transformmask", to_string = "transform_mask")]
     TransformMask,
+
+    #[strum(serialize = "selectionmask", to_string = "local_selection")]
     LocalSelection,
 }
 
-impl FromStr for KraMaskType {
-    type Err = KraError;
-
-    #[rustfmt::skip]
-    fn from_str(mask_type: &str) -> Result<KraMaskType, KraError> {
-        match mask_type {
-            "transparencymask" => Ok(KraMaskType::TransparencyMask),
-            "filtermask"       => Ok(KraMaskType::FilterMask      ),
-            "colorizemask"     => Ok(KraMaskType::ColorizeMask    ),
-            "transformmask"    => Ok(KraMaskType::TransformMask   ),
-            "selectionmask"    => Ok(KraMaskType::LocalSelection  ),
-            _ => Err(KraError::UnknownMaskNodeType(mask_type.to_owned())),
-        }
-    }
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#[derive(Debug, PartialEq, Deserialize, Serialize, Display)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display, EnumString)]
 #[serde(rename_all = "snake_case")]
-#[strum(serialize_all = "snake_case")]
 pub enum KraColorLabel {
+    #[strum(serialize = "0", to_string = "none")]
     None,
+
+    #[strum(serialize = "1", to_string = "blue")]
     Blue,
+
+    #[strum(serialize = "2", to_string = "green")]
     Green,
+
+    #[strum(serialize = "3", to_string = "yellow")]
     Yellow,
+
+    #[strum(serialize = "4", to_string = "orange")]
     Orange,
+
+    #[strum(serialize = "5", to_string = "brown")]
     Brown,
+
+    #[strum(serialize = "6", to_string = "red")]
     Red,
+
+    #[strum(serialize = "7", to_string = "purple")]
     Purple,
+
+    #[strum(serialize = "8", to_string = "black")]
     Black,
-}
-
-impl FromStr for KraColorLabel {
-    type Err = KraError;
-
-    #[rustfmt::skip]
-    fn from_str(color_label: &str) -> Result<KraColorLabel, KraError> {
-        match color_label {
-            "0" => Ok(KraColorLabel::None  ),
-            "1" => Ok(KraColorLabel::Blue  ),
-            "2" => Ok(KraColorLabel::Green ),
-            "3" => Ok(KraColorLabel::Yellow),
-            "4" => Ok(KraColorLabel::Orange),
-            "5" => Ok(KraColorLabel::Brown ),
-            "6" => Ok(KraColorLabel::Red   ),
-            "7" => Ok(KraColorLabel::Purple),
-            "8" => Ok(KraColorLabel::Black ),
-            _ => Err(KraError::UnknownColorLabel(color_label.to_owned())),
-        }
-    }
 }
