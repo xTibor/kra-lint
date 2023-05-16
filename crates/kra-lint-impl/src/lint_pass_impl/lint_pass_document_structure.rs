@@ -2,7 +2,7 @@ use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocLayerContainer};
+use kra_parser::kra_maindoc::{KraColorLabel, KraLayerType, KraMainDocLayer, KraMainDocLayerContainer};
 
 use crate::lint_fields::{LintGenericMatchExpression, LintNumberMatchExpression, LintStringMatchExpression};
 use crate::{LintMessages, LintPass, LintPassResult};
@@ -14,15 +14,28 @@ struct DocumentStructureLayerContainer(Vec<DocumentStructureLayer>);
 
 #[derive(Debug, Deserialize, Serialize)]
 struct DocumentStructureLayer {
-    layer_name: LintStringMatchExpression,
-    layer_type: LintGenericMatchExpression<KraLayerType>,
+    layer_name: Option<LintStringMatchExpression>,
+    layer_type: Option<LintGenericMatchExpression<KraLayerType>>,
+    layer_color: Option<LintGenericMatchExpression<KraColorLabel>>,
     layer_count: Option<LintNumberMatchExpression<usize>>,
     layers: Option<DocumentStructureLayerContainer>,
 }
 
 impl DocumentStructureLayer {
     fn matches(&self, kra_layer: &KraMainDocLayer) -> bool {
-        self.layer_name.matches(&kra_layer.name) && self.layer_type.matches(&kra_layer.layer_type)
+        // TODO: Option::is_none_or()
+        self.layer_name.as_ref().map_or(true, |m| m.matches(&kra_layer.name))
+            && self.layer_type.as_ref().map_or(true, |m| m.matches(&kra_layer.layer_type))
+            && self.layer_color.as_ref().map_or(true, |m| m.matches(&kra_layer.color_label))
+    }
+
+    fn message_fmt(&self) -> String {
+        let fields = [
+            self.layer_name.as_ref().map(|layer_name| format!("layer name: {}", layer_name)),
+            self.layer_type.as_ref().map(|layer_type| format!("layer type: {}", layer_type)),
+            self.layer_color.as_ref().map(|layer_color| format!("layer color: {}", layer_color)),
+        ];
+        fields.iter().flatten().join(", ")
     }
 }
 
@@ -65,8 +78,8 @@ impl LintPass for LintPassDocumentStructure {
                         }
                     } else {
                         lint_messages.push(format!(
-                            "Incorrect document structure (Layer repetition mismatch, layer: {}, expected: {}, found: {})",
-                            lint_layer.layer_name, layer_count, kra_matching_layers.len(),
+                            "Incorrect document structure (Layer repetition mismatch, layer: ({}), expected: {}, found: {})",
+                            lint_layer.message_fmt(), layer_count, kra_matching_layers.len(),
                         ));
                         // Bail out after the first mismatch, otherwise this lint may generate false messages.
                         return Ok(());

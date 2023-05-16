@@ -1,9 +1,14 @@
+use std::fmt::{Display, Formatter, Result};
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub(crate) enum LintNumberMatchExpression<T> {
+pub(crate) enum LintNumberMatchExpression<T>
+where
+    T: Display,
+{
     Value(T),
     LessThan {
         #[serde(rename = "less_than")]
@@ -38,7 +43,7 @@ pub(crate) enum LintNumberMatchExpression<T> {
 
 impl<T> LintNumberMatchExpression<T>
 where
-    T: PartialEq<T> + PartialOrd<T>,
+    T: PartialEq<T> + PartialOrd<T> + Display,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
@@ -74,12 +79,12 @@ where
     }
 }
 
-impl<T> std::fmt::Display for LintNumberMatchExpression<T>
+impl<T> Display for LintNumberMatchExpression<T>
 where
-    T: std::fmt::Display,
+    T: Display,
 {
     #[rustfmt::skip]
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             LintNumberMatchExpression::Value(value) => {
                 write!(f, "{}", value)

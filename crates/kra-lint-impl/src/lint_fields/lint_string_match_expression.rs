@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter, Result};
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -66,8 +68,8 @@ impl LintStringMatchExpression {
     }
 }
 
-impl std::fmt::Display for LintStringMatchExpression {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl Display for LintStringMatchExpression {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             LintStringMatchExpression::FullMatch(pattern) => {
                 write!(f, "\"{}\"", pattern)

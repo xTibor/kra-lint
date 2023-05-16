@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 use strong_xml::XmlRead;
+use strum::Display;
 
 use crate::kra_error::KraError;
 
@@ -311,8 +312,9 @@ pub struct KraMainDocCompositionValue {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display)]
 #[serde(rename_all = "snake_case")]
+#[strum(serialize_all = "snake_case")]
 pub enum KraLayerType {
     PaintLayer,
     GroupLayer,
@@ -343,8 +345,9 @@ impl FromStr for KraLayerType {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display)]
 #[serde(rename_all = "snake_case")]
+#[strum(serialize_all = "snake_case")]
 pub enum KraMaskType {
     TransparencyMask,
     FilterMask,
@@ -371,8 +374,9 @@ impl FromStr for KraMaskType {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display)]
 #[serde(rename_all = "snake_case")]
+#[strum(serialize_all = "snake_case")]
 pub enum KraColorLabel {
     None,
     Blue,

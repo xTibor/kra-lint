@@ -1,9 +1,14 @@
+use std::fmt::{Display, Formatter, Result};
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub(crate) enum LintGenericMatchExpression<T> {
+pub(crate) enum LintGenericMatchExpression<T>
+where
+    T: Display,
+{
     Value(T),
     BinaryOr(Vec<LintGenericMatchExpression<T>>),
     BinaryAnd {
@@ -18,7 +23,7 @@ pub(crate) enum LintGenericMatchExpression<T> {
 
 impl<T> LintGenericMatchExpression<T>
 where
-    T: PartialEq<T>,
+    T: PartialEq<T> + Display,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
@@ -39,12 +44,12 @@ where
     }
 }
 
-impl<T> std::fmt::Display for LintGenericMatchExpression<T>
+impl<T> Display for LintGenericMatchExpression<T>
 where
-    T: std::fmt::Display,
+    T: Display,
 {
     #[rustfmt::skip]
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             LintGenericMatchExpression::Value(value) => {
                 write!(f, "{}", value)
