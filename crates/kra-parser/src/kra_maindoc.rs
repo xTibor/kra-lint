@@ -61,12 +61,13 @@ pub struct KraMainDocImage {
     pub animation: KraMainDocAnimation,
 }
 
+#[rustfmt::skip]
 #[derive(Debug, XmlRead, Default)]
 #[xml(tag = "layers")]
-pub struct KraMainDocLayerContainer {
+pub struct KraMainDocLayerContainer (
     #[xml(child = "layer")]
-    pub layers: Vec<KraMainDocLayer>,
-}
+    pub Vec<KraMainDocLayer>,
+);
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "layer")]
@@ -170,12 +171,13 @@ pub struct KraMainDocAnimationFramerate {
     pub value: usize,
 }
 
+#[rustfmt::skip]
 #[derive(Debug, XmlRead, Default)]
 #[xml(tag = "masks")]
-pub struct KraMainDocMaskContainer {
+pub struct KraMainDocMaskContainer (
     #[xml(child = "mask")]
-    pub masks: Vec<KraMainDocMask>,
-}
+    pub Vec<KraMainDocMask>,
+);
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "mask")]
@@ -250,12 +252,13 @@ pub struct KraMainDocMask {
     pub keyframes: Option<String>,
 }
 
+#[rustfmt::skip]
 #[derive(Debug, XmlRead)]
 #[xml(tag = "Palettes")]
-pub struct KraMainDocPaletteContainer {
+pub struct KraMainDocPaletteContainer (
     #[xml(child = "resource")]
-    pub resources: Vec<KraMainDocResource>,
-}
+    pub Vec<KraMainDocResource>,
+);
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "resource")]
@@ -273,12 +276,13 @@ pub struct KraMainDocResource {
     pub r#type: String,
 }
 
+#[rustfmt::skip]
 #[derive(Debug, XmlRead)]
 #[xml(tag = "compositions")]
-pub struct KraMainDocCompositionContainer {
+pub struct KraMainDocCompositionContainer (
     #[xml(child = "composition")]
-    pub compositions: Vec<KraMainDocComposition>,
-}
+    pub Vec<KraMainDocComposition>,
+);
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "composition")]
