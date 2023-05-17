@@ -55,7 +55,10 @@ impl KraArchive {
             .layer_container
             .iter_recursive()
             .filter_map(|layer| {
-                layer.mask_container.as_ref().map(|mask_container| mask_container.into_iter().map(move |mask| (layer, mask)))
+                layer
+                    .mask_container
+                    .as_ref()
+                    .map(|mask_container| mask_container.into_iter().map(move |mask| (layer, mask)))
             })
             .flatten()
     }
