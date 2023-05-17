@@ -199,12 +199,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "kra-lint-derive"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "kra-lint-impl"
 version = "0.1.0"
 dependencies = [
  "camino",
  "deser-hjson",
  "itertools",
+ "kra-lint-derive",
  "kra-parser",
  "regex",
  "ron",
@@ -221,6 +230,7 @@ name = "kra-parser"
 version = "0.1.0"
 dependencies = [
  "camino",
+ "kra-lint-derive",
  "serde",
  "strong-xml",
  "strum",

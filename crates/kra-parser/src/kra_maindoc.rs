@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use strong_xml::XmlRead;
 use strum::{Display, EnumString};
 
+use kra_lint_derive::NewTypeIter;
+
 #[derive(Debug, XmlRead)]
 #[xml(tag = "DOC")]
 pub struct KraMainDoc {
@@ -62,7 +64,7 @@ pub struct KraMainDocImage {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead, Default)]
+#[derive(Debug, XmlRead, Default, NewTypeIter)]
 #[xml(tag = "layers")]
 pub struct KraMainDocLayerContainer (
     #[xml(child = "layer")]
@@ -172,7 +174,7 @@ pub struct KraMainDocAnimationFramerate {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead, Default)]
+#[derive(Debug, XmlRead, Default, NewTypeIter)]
 #[xml(tag = "masks")]
 pub struct KraMainDocMaskContainer (
     #[xml(child = "mask")]
@@ -253,7 +255,7 @@ pub struct KraMainDocMask {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead)]
+#[derive(Debug, XmlRead, NewTypeIter)]
 #[xml(tag = "Palettes")]
 pub struct KraMainDocPaletteContainer (
     #[xml(child = "resource")]
@@ -277,7 +279,7 @@ pub struct KraMainDocResource {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead)]
+#[derive(Debug, XmlRead, NewTypeIter)]
 #[xml(tag = "compositions")]
 pub struct KraMainDocCompositionContainer (
     #[xml(child = "composition")]

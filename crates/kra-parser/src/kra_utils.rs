@@ -2,40 +2,7 @@ use std::collections::VecDeque;
 
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
-use crate::kra_maindoc::{
-    KraLayerType, KraMainDocComposition, KraMainDocCompositionContainer, KraMainDocLayer, KraMainDocLayerContainer,
-    KraMainDocMask, KraMainDocMaskContainer, KraMainDocPaletteContainer, KraMainDocResource,
-};
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// TODO: #[derive(Iterator)]
-impl KraMainDocLayerContainer {
-    pub fn iter(&self) -> impl Iterator<Item = &KraMainDocLayer> {
-        self.0.iter()
-    }
-}
-
-// TODO: #[derive(Iterator)]
-impl KraMainDocMaskContainer {
-    pub fn iter(&self) -> impl Iterator<Item = &KraMainDocMask> {
-        self.0.iter()
-    }
-}
-
-// TODO: #[derive(Iterator)]
-impl KraMainDocPaletteContainer {
-    pub fn iter(&self) -> impl Iterator<Item = &KraMainDocResource> {
-        self.0.iter()
-    }
-}
-
-// TODO: #[derive(Iterator)]
-impl KraMainDocCompositionContainer {
-    pub fn iter(&self) -> impl Iterator<Item = &KraMainDocComposition> {
-        self.0.iter()
-    }
-}
+use crate::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
+use kra_lint_derive::NewTypeIter;
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{
     KraColorLabel, KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMainDocMaskContainer,
@@ -12,15 +13,8 @@ use crate::{LintMessages, LintPass, LintPassResult};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, Deserialize, Serialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, NewTypeIter)]
 struct DocumentStructureMaskContainer(Vec<DocumentStructureMask>);
-
-// TODO: #[derive(Iterator)]
-impl DocumentStructureMaskContainer {
-    pub fn iter(&self) -> impl Iterator<Item = &DocumentStructureMask> {
-        self.0.iter()
-    }
-}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -55,15 +49,8 @@ impl DocumentStructureMask {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, Deserialize, Serialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, NewTypeIter)]
 struct DocumentStructureLayerContainer(Vec<DocumentStructureLayer>);
-
-// TODO: #[derive(Iterator)]
-impl DocumentStructureLayerContainer {
-    pub fn iter(&self) -> impl Iterator<Item = &DocumentStructureLayer> {
-        self.0.iter()
-    }
-}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
