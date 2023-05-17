@@ -73,9 +73,12 @@ pub enum LintError {
     #[display(fmt = "Failed to serialize YAML config")]
     FailedToSerializeYamlConfig(serde_yaml::Error),
 
+    #[from]
     ZipError(zip::result::ZipError),
 
+    #[from]
     IoError(io::Error),
 
+    #[from]
     KraError(kra_parser::kra_error::KraError),
 }
