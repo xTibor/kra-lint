@@ -9,44 +9,42 @@ use zip::result::ZipError;
 #[non_exhaustive]
 #[derive(Debug, Display, Error, From)]
 pub enum KraError {
-    #[display(fmt = "Cannot open KRA document \"{}\"", _1)]
-    ArchiveCannotOpen (
-        #[error(source)] io::Error,
-        Utf8PathBuf,
-    ),
+    #[display(fmt = "Cannot open KRA document \"{path:}\"")]
+    ArchiveCannotOpen {
+        path: Utf8PathBuf,
+        source: io::Error,
+    },
 
-    #[display(fmt = "Cannot read KRA document \"{}\"", _1)]
-    ArchiveCannotRead (
-        #[error(source)] ZipError,
-        Utf8PathBuf,
-    ),
+    #[display(fmt = "Cannot read KRA document \"{path:}\"")]
+    ArchiveCannotRead {
+        path: Utf8PathBuf,
+        source: ZipError,
+    },
 
-    #[display(fmt = "Cannot find '{}' in '{}'", _2, _1)]
-    XmlNotFound(
-        #[error(source)] ZipError,
-        Utf8PathBuf,
-        &'static str,
-    ),
+    #[display(fmt = "Cannot find '{xml_path:}' in '{path:}'")]
+    XmlNotFound {
+        path: Utf8PathBuf,
+        xml_path: &'static str,
+        source: ZipError,
+    },
 
-    #[display(fmt = "Cannot read '{}' in '{}'", _2, _1)]
-    XmlCannotRead (
-        #[error(source)] io::Error,
-        Utf8PathBuf,
-        &'static str,
-    ),
+    #[display(fmt = "Cannot read '{xml_path:}' in '{path:}'")]
+    XmlCannotRead {
+        path: Utf8PathBuf,
+        xml_path: &'static str,
+        source: io::Error,
+    },
 
-    #[display(fmt = "Cannot parse '{}' in '{}'", _2, _1)]
-    XmlCannotParse (
-        #[error(source)] XmlError,
-        Utf8PathBuf,
-        &'static str,
-    ),
+    #[display(fmt = "Cannot parse '{xml_path:}' in '{path:}'")]
+    XmlCannotParse {
+        path: Utf8PathBuf,
+        xml_path: &'static str,
+        source: XmlError,
+    },
 
-    ZipError (
-        #[error(source)] zip::result::ZipError,
-    ),
+    #[from]
+    ZipError(zip::result::ZipError),
 
-    IoError (
-        #[error(source)] io::Error,
-    ),
+    #[from]
+    IoError(io::Error),
 }

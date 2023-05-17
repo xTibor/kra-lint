@@ -20,21 +20,31 @@ pub struct KraArchive {
 
 impl KraArchive {
     pub fn from_path(path: &Utf8Path) -> Result<Self, KraError> {
-        let zip_file = File::open(path).map_err(|io_error| KraError::ArchiveCannotOpen(io_error, path.to_owned()))?;
+        let zip_file =
+            File::open(path).map_err(|source| KraError::ArchiveCannotOpen { path: path.to_owned(), source })?;
 
         let mut zip_archive = zip::ZipArchive::new(zip_file)
-            .map_err(|zip_error| KraError::ArchiveCannotRead(zip_error, path.to_owned()))?;
+            .map_err(|source| KraError::ArchiveCannotRead { path: path.to_owned(), source })?;
 
         macro_rules! kra_xml {
-            ($t:ident, $p:expr) => {{
-                let file = zip_archive
-                    .by_name($p)
-                    .map_err(|zip_error| KraError::XmlNotFound(zip_error, path.to_owned(), $p))?;
+            ($xml_type:ident, $xml_path:expr) => {{
+                let file = zip_archive.by_name($xml_path).map_err(|source| KraError::XmlNotFound {
+                    path: path.to_owned(),
+                    xml_path: $xml_path,
+                    source,
+                })?;
 
-                let data = io::read_to_string(file)
-                    .map_err(|io_error| KraError::XmlCannotRead(io_error, path.to_owned(), $p))?;
+                let data = io::read_to_string(file).map_err(|source| KraError::XmlCannotRead {
+                    path: path.to_owned(),
+                    xml_path: $xml_path,
+                    source,
+                })?;
 
-                $t::from_str(&data).map_err(|xml_error| KraError::XmlCannotParse(xml_error, path.to_owned(), $p))?
+                $xml_type::from_str(&data).map_err(|source| KraError::XmlCannotParse {
+                    path: path.to_owned(),
+                    xml_path: $xml_path,
+                    source,
+                })?
             }};
         }
 
