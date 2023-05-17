@@ -1,71 +1,29 @@
-use std::{error, fmt, io};
+use std::io;
 
 use camino::Utf8PathBuf;
+use derive_more::{Display, Error, From};
 use strong_xml::XmlError;
 use zip::result::ZipError;
 
 #[non_exhaustive]
-#[derive(Debug)]
+#[derive(Debug, Display, Error, From)]
 pub enum KraError {
-    ArchiveCannotOpen(io::Error, Utf8PathBuf),
-    ArchiveCannotRead(ZipError, Utf8PathBuf),
-    XmlNotFound(ZipError, Utf8PathBuf, &'static str),
-    XmlCannotRead(io::Error, Utf8PathBuf, &'static str),
-    XmlCannotParse(XmlError, Utf8PathBuf, &'static str),
-    ZipError(zip::result::ZipError),
-    IoError(io::Error),
-}
+    #[display(fmt = "Cannot open KRA document \"{}\"", _1)]
+    ArchiveCannotOpen(#[error(source)] io::Error, Utf8PathBuf),
 
-impl error::Error for KraError {
-    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
-        match *self {
-            KraError::ArchiveCannotOpen(ref err, _) => Some(err),
-            KraError::ArchiveCannotRead(ref err, _) => Some(err),
-            KraError::XmlNotFound(ref err, _, _) => Some(err),
-            KraError::XmlCannotRead(ref err, _, _) => Some(err),
-            KraError::XmlCannotParse(ref err, _, _) => Some(err),
-            KraError::ZipError(ref err) => Some(err),
-            KraError::IoError(ref err) => Some(err),
-        }
-    }
-}
+    #[display(fmt = "Cannot read KRA document \"{}\"", _1)]
+    ArchiveCannotRead(#[error(source)] ZipError, Utf8PathBuf),
 
-impl fmt::Display for KraError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            KraError::ArchiveCannotOpen(_, ref path) => {
-                write!(f, "Cannot open KRA document \"{}\"", path)
-            }
-            KraError::ArchiveCannotRead(_, ref path) => {
-                write!(f, "Cannot read KRA document \"{}\"", path)
-            }
-            KraError::XmlNotFound(_, ref path, ref xml) => {
-                write!(f, "Cannot find '{}' in '{}'", xml, path)
-            }
-            KraError::XmlCannotRead(_, ref path, ref xml) => {
-                write!(f, "Cannot read '{}' in '{}'", xml, path)
-            }
-            KraError::XmlCannotParse(_, ref path, ref xml) => {
-                write!(f, "Cannot parse '{}' in '{}'", xml, path)
-            }
-            KraError::ZipError(_) => {
-                write!(f, "ZIP error")
-            }
-            KraError::IoError(_) => {
-                write!(f, "I/O error")
-            }
-        }
-    }
-}
+    #[display(fmt = "Cannot find '{}' in '{}'", _2, _1)]
+    XmlNotFound(#[error(source)] ZipError, Utf8PathBuf, &'static str),
 
-impl From<zip::result::ZipError> for KraError {
-    fn from(zip_error: zip::result::ZipError) -> KraError {
-        KraError::ZipError(zip_error)
-    }
-}
+    #[display(fmt = "Cannot read '{}' in '{}'", _2, _1)]
+    XmlCannotRead(#[error(source)] io::Error, Utf8PathBuf, &'static str),
 
-impl From<io::Error> for KraError {
-    fn from(io_error: io::Error) -> KraError {
-        KraError::IoError(io_error)
-    }
+    #[display(fmt = "Cannot parse '{}' in '{}'", _2, _1)]
+    XmlCannotParse(#[error(source)] XmlError, Utf8PathBuf, &'static str),
+
+    ZipError(#[error(source)] zip::result::ZipError),
+
+    IoError(#[error(source)] io::Error),
 }
