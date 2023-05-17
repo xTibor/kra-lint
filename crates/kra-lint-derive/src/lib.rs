@@ -30,7 +30,7 @@ fn impl_newtype_iter(ast: &syn::DeriveInput) -> TokenStream {
 
     let gen = quote! {
         impl #container_type {
-            pub fn iter(&self) -> impl Iterator<Item = &#field_type> {
+            pub fn iter(&self) -> std::slice::Iter<'_, #field_type> {
                 self.0.iter()
             }
         }

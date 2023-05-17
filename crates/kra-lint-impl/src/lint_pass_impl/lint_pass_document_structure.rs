@@ -104,7 +104,6 @@ impl LintPass for LintPassDocumentStructure {
                 for lint_mask in lint_mask_container.iter() {
                     let kra_matching_masks = kra_mask_iterator
                         .by_ref()
-                        .peekable()
                         .peeking_take_while(|kra_mask| lint_mask.matches(kra_mask))
                         .collect::<Vec<_>>();
 
@@ -143,7 +142,6 @@ impl LintPass for LintPassDocumentStructure {
                 for lint_layer in lint_layer_container.iter() {
                     let kra_matching_layers = kra_layer_iterator
                         .by_ref()
-                        .peekable()
                         .peeking_take_while(|kra_layer| lint_layer.matches(kra_layer))
                         .collect::<Vec<_>>();
 
