@@ -13,7 +13,7 @@ pub struct LintConfigCollection {
 impl LintConfigCollection {
     pub fn load_config(&mut self, lint_config_path: &Utf8Path) -> Result<(), LintError> {
         if !lint_config_path.is_file() {
-            return Err(LintError::ConfigNotFound(lint_config_path.to_owned()));
+            return Err(LintError::ConfigNotFound { path: lint_config_path.to_owned() });
         }
 
         let lint_config_path = lint_config_path.canonicalize_utf8()?;
@@ -30,7 +30,10 @@ impl LintConfigCollection {
             for include_path in &lint_includes.paths {
                 if include_path.is_absolute() {
                     if !include_path.is_file() {
-                        return Err(LintError::ConfigIncludeNotFound(include_path.to_owned(), lint_config_path));
+                        return Err(LintError::ConfigIncludeNotFound {
+                            path: include_path.to_owned(),
+                            included_from: lint_config_path,
+                        });
                     }
 
                     self.load_config(include_path)?;
@@ -40,7 +43,10 @@ impl LintConfigCollection {
                         lint_config_path.parent().expect("Failed to get parent directory").join(include_path);
 
                     if !resolved_include_path.is_file() {
-                        return Err(LintError::ConfigIncludeNotFound(resolved_include_path, lint_config_path));
+                        return Err(LintError::ConfigIncludeNotFound {
+                            path: resolved_include_path,
+                            included_from: lint_config_path,
+                        });
                     }
 
                     let resolved_include_path = resolved_include_path.canonicalize_utf8()?;
