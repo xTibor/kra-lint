@@ -1,8 +1,7 @@
+use derive_more::IntoIterator;
 use serde::{Deserialize, Serialize};
 use strong_xml::XmlRead;
 use strum::{Display, EnumString};
-
-use kra_lint_derive::NewTypeIter;
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "DOC")]
@@ -64,9 +63,10 @@ pub struct KraMainDocImage {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead, Default, NewTypeIter)]
+#[derive(Debug, XmlRead, Default, IntoIterator)]
 #[xml(tag = "layers")]
 pub struct KraMainDocLayerContainer (
+    #[into_iterator(ref)]
     #[xml(child = "layer")]
     pub Vec<KraMainDocLayer>,
 );
@@ -174,9 +174,10 @@ pub struct KraMainDocAnimationFramerate {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead, Default, NewTypeIter)]
+#[derive(Debug, XmlRead, Default, IntoIterator)]
 #[xml(tag = "masks")]
 pub struct KraMainDocMaskContainer (
+    #[into_iterator(ref)]
     #[xml(child = "mask")]
     pub Vec<KraMainDocMask>,
 );
@@ -255,9 +256,10 @@ pub struct KraMainDocMask {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead, NewTypeIter)]
+#[derive(Debug, XmlRead, IntoIterator)]
 #[xml(tag = "Palettes")]
 pub struct KraMainDocPaletteContainer (
+    #[into_iterator(ref)]
     #[xml(child = "resource")]
     pub Vec<KraMainDocResource>,
 );
@@ -279,9 +281,10 @@ pub struct KraMainDocResource {
 }
 
 #[rustfmt::skip]
-#[derive(Debug, XmlRead, NewTypeIter)]
+#[derive(Debug, XmlRead, IntoIterator)]
 #[xml(tag = "compositions")]
 pub struct KraMainDocCompositionContainer (
+    #[into_iterator(ref)]
     #[xml(child = "composition")]
     pub Vec<KraMainDocComposition>,
 );

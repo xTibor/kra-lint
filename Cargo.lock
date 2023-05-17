@@ -121,6 +121,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "derive_more"
+version = "0.99.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4fb810d30a7c1953f91334de7244731fc3f3c10d7fe163338a35b9f640960321"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "deser-hjson"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -199,21 +210,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "kra-lint-derive"
-version = "0.1.0"
-dependencies = [
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
 name = "kra-lint-impl"
 version = "0.1.0"
 dependencies = [
  "camino",
+ "derive_more",
  "deser-hjson",
  "itertools",
- "kra-lint-derive",
  "kra-parser",
  "regex",
  "ron",
@@ -230,7 +233,7 @@ name = "kra-parser"
 version = "0.1.0"
 dependencies = [
  "camino",
- "kra-lint-derive",
+ "derive_more",
  "serde",
  "strong-xml",
  "strum",

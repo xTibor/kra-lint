@@ -6,10 +6,10 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-kra-lint-derive = { path = "../kra-lint-derive/" }
 kra-parser = { path = "../kra-parser/" }
 
 camino = { version = "1.1.4", features = ["serde1"] }
+derive_more = { version = "0.99.17", default-features = false, features = ["into_iterator"] }
 itertools = "0.10.5"
 regex = "1.8.1"
 svg = "0.13.1"

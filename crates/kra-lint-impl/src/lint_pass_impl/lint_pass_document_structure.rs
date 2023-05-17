@@ -1,7 +1,7 @@
+use derive_more::IntoIterator;
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
-use kra_lint_derive::NewTypeIter;
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{
     KraColorLabel, KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMainDocMaskContainer,
@@ -13,8 +13,12 @@ use crate::{LintMessages, LintPass, LintPassResult};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, Deserialize, Serialize, Default, NewTypeIter)]
-struct DocumentStructureMaskContainer(Vec<DocumentStructureMask>);
+#[rustfmt::skip]
+#[derive(Debug, Deserialize, Serialize, Default, IntoIterator)]
+struct DocumentStructureMaskContainer (
+    #[into_iterator(ref)]
+    Vec<DocumentStructureMask>,
+);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -49,8 +53,12 @@ impl DocumentStructureMask {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#[derive(Debug, Deserialize, Serialize, Default, NewTypeIter)]
-struct DocumentStructureLayerContainer(Vec<DocumentStructureLayer>);
+#[rustfmt::skip]
+#[derive(Debug, Deserialize, Serialize, Default, IntoIterator)]
+struct DocumentStructureLayerContainer (
+    #[into_iterator(ref)]
+    Vec<DocumentStructureLayer>,
+);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -99,9 +107,9 @@ impl LintPass for LintPassDocumentStructure {
                 lint_mask_container: &DocumentStructureMaskContainer,
                 lint_messages: &mut LintMessages,
             ) -> LintPassResult {
-                let mut kra_mask_iterator = kra_mask_container.iter();
+                let mut kra_mask_iterator = kra_mask_container.into_iter();
 
-                for lint_mask in lint_mask_container.iter() {
+                for lint_mask in lint_mask_container.into_iter() {
                     let kra_matching_masks = kra_mask_iterator
                         .by_ref()
                         .peeking_take_while(|kra_mask| lint_mask.matches(kra_mask))
@@ -137,9 +145,9 @@ impl LintPass for LintPassDocumentStructure {
                 let dummy_lint_layer_container = DocumentStructureLayerContainer::default();
                 let dummy_lint_mask_container = DocumentStructureMaskContainer::default();
 
-                let mut kra_layer_iterator = kra_layer_container.iter();
+                let mut kra_layer_iterator = kra_layer_container.into_iter();
 
-                for lint_layer in lint_layer_container.iter() {
+                for lint_layer in lint_layer_container.into_iter() {
                     let kra_matching_layers = kra_layer_iterator
                         .by_ref()
                         .peeking_take_while(|kra_layer| lint_layer.matches(kra_layer))

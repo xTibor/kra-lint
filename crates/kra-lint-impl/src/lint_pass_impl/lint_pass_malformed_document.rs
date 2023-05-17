@@ -56,7 +56,7 @@ impl LintPass for LintPassMalformedDocument {
         // Sub-pass #4
         {
             if let Some(composition_container) = kra_archive.main_doc.image.composition_container.as_ref() {
-                if composition_container.iter().any(|composition| composition.name.contains('/')) {
+                if composition_container.into_iter().any(|composition| composition.name.contains('/')) {
                     lint_messages.push("Malformed document (Compositions path traversal vulnerability)".to_owned());
                 }
             }
