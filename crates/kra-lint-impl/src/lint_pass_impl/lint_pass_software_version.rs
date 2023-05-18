@@ -8,20 +8,52 @@ use crate::{LintMessages, LintPass, LintPassResult};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassSoftwareVersion {
-    software_versions: LintStringMatchExpression,
+    software_name: Option<LintStringMatchExpression>,
+    software_version: Option<LintStringMatchExpression>,
+    syntax_version: Option<LintStringMatchExpression>,
 }
 
 impl LintPass for LintPassSoftwareVersion {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
-            let kra_software_version = &kra_archive.main_doc.software_version;
+            if let Some(software_name) = self.software_name.as_ref() {
+                let kra_software_name = &kra_archive.main_doc.editor;
 
-            if !self.software_versions.matches(kra_software_version) {
-                lint_messages.push(format!(
-                    "Incorrect software version (expected: {}, found: \"{}\")",
-                    self.software_versions, kra_software_version
-                ));
+                if !software_name.matches(kra_software_name) {
+                    lint_messages.push(format!(
+                        "Incorrect software name (expected: {}, found: \"{}\")",
+                        software_name, kra_software_name
+                    ));
+                }
+            }
+        }
+
+        // Sub-pass #2
+        {
+            if let Some(software_version) = self.software_version.as_ref() {
+                let kra_software_version = &kra_archive.main_doc.software_version;
+
+                if !software_version.matches(kra_software_version) {
+                    lint_messages.push(format!(
+                        "Incorrect software version (expected: {}, found: \"{}\")",
+                        software_version, kra_software_version
+                    ));
+                }
+            }
+        }
+
+        // Sub-pass #3
+        {
+            if let Some(syntax_version) = self.syntax_version.as_ref() {
+                let kra_syntax_version = &kra_archive.main_doc.syntax_version;
+
+                if !syntax_version.matches(kra_syntax_version) {
+                    lint_messages.push(format!(
+                        "Incorrect document syntax version (expected: {}, found: \"{}\")",
+                        syntax_version, kra_syntax_version
+                    ));
+                }
             }
         }
 
