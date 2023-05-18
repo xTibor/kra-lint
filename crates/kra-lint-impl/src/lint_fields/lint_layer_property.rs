@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer};
 
-use crate::LintError;
-
 #[rustfmt::skip]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -23,9 +21,9 @@ pub(crate) enum LintLayerProperty<T> {
 
 impl<T> LintLayerProperty<T> {
     #[rustfmt::skip]
-    pub(crate) fn get<'a>(&'a self, layer: &KraMainDocLayer) -> Result<(&'a Option<T>, &str), LintError> {
+    pub(crate) fn get<'a>(&'a self, layer: &KraMainDocLayer) -> (&'a Option<T>, &str) {
         match *self {
-            LintLayerProperty::All(ref all_layers) => Ok((all_layers, "layer")),
+            LintLayerProperty::All(ref all_layers) => (all_layers, "layer"),
             LintLayerProperty::ByType {
                 ref paint_layers,
                 ref group_layers,
@@ -35,13 +33,13 @@ impl<T> LintLayerProperty<T> {
                 ref fill_layers,
                 ref file_layers,
             } => match layer.layer_type {
-                KraLayerType::PaintLayer  => Ok((paint_layers,  "paint layer" )),
-                KraLayerType::GroupLayer  => Ok((group_layers,  "group layer" )),
-                KraLayerType::CloneLayer  => Ok((clone_layers,  "clone layer" )),
-                KraLayerType::VectorLayer => Ok((vector_layers, "vector layer")),
-                KraLayerType::FilterLayer => Ok((filter_layers, "filter layer")),
-                KraLayerType::FillLayer   => Ok((fill_layers,   "fill layer"  )),
-                KraLayerType::FileLayer   => Ok((file_layers,   "file layer"  )),
+                KraLayerType::PaintLayer  => (paint_layers,  "paint layer" ),
+                KraLayerType::GroupLayer  => (group_layers,  "group layer" ),
+                KraLayerType::CloneLayer  => (clone_layers,  "clone layer" ),
+                KraLayerType::VectorLayer => (vector_layers, "vector layer"),
+                KraLayerType::FilterLayer => (filter_layers, "filter layer"),
+                KraLayerType::FillLayer   => (fill_layers,   "fill layer"  ),
+                KraLayerType::FileLayer   => (file_layers,   "file layer"  ),
             },
         }
     }

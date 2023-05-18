@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_maindoc::{KraMainDocMask, KraMaskType};
 
-use crate::LintError;
-
 #[rustfmt::skip]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -21,9 +19,9 @@ pub(crate) enum LintMaskProperty<T> {
 
 impl<T> LintMaskProperty<T> {
     #[rustfmt::skip]
-    pub(crate) fn get<'a>(&'a self, mask: &KraMainDocMask) -> Result<(&'a Option<T>, &str), LintError> {
+    pub(crate) fn get<'a>(&'a self, mask: &KraMainDocMask) -> (&'a Option<T>, &str) {
         match *self {
-            LintMaskProperty::All(ref all_masks) => Ok((all_masks, "mask")),
+            LintMaskProperty::All(ref all_masks) => (all_masks, "mask"),
             LintMaskProperty::ByType {
                 ref transparency_masks,
                 ref filter_masks,
@@ -31,11 +29,11 @@ impl<T> LintMaskProperty<T> {
                 ref transform_masks,
                 ref local_selections,
             } => match mask.mask_type {
-                KraMaskType::TransparencyMask => Ok((transparency_masks, "transparency mask")),
-                KraMaskType::FilterMask       => Ok((filter_masks,       "filter mask"      )),
-                KraMaskType::ColorizeMask     => Ok((colorize_masks,     "colorize mask"    )),
-                KraMaskType::TransformMask    => Ok((transform_masks,    "transform mask"   )),
-                KraMaskType::LocalSelection   => Ok((local_selections,   "local selection"  )),
+                KraMaskType::TransparencyMask => (transparency_masks, "transparency mask"),
+                KraMaskType::FilterMask       => (filter_masks,       "filter mask"      ),
+                KraMaskType::ColorizeMask     => (colorize_masks,     "colorize mask"    ),
+                KraMaskType::TransformMask    => (transform_masks,    "transform mask"   ),
+                KraMaskType::LocalSelection   => (local_selections,   "local selection"  ),
             },
         }
     }

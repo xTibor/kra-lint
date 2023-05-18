@@ -16,7 +16,7 @@ impl LintPass for LintPassLayerStyles {
         // Sub-pass #1
         {
             for layer in kra_archive.all_layers() {
-                let (layer_opt, layer_display) = self.styleable_layers.get(layer)?;
+                let (layer_opt, layer_display) = self.styleable_layers.get(layer);
 
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
