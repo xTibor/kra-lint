@@ -22,10 +22,10 @@ impl LintPass for LintPassSurfaceNames {
 
                     if let Some(string_match_expr) = layer_opt.as_ref() {
                         if !string_match_expr.matches(&layer.name) {
-                            lint_messages.push(format!(
-                                "Incorrect {} name (layer: \"{}\", expected: {})",
-                                layer_display, layer.name, string_match_expr,
-                            ));
+                            lint_messages.push(
+                                format!("Incorrect {} name", layer_display),
+                                format!("Layer: \"{}\", Expected: {}", layer.name, string_match_expr),
+                            );
                         }
                     }
                 }
@@ -40,10 +40,13 @@ impl LintPass for LintPassSurfaceNames {
 
                     if let Some(string_match_expr) = mask_opt.as_ref() {
                         if !string_match_expr.matches(&mask.name) {
-                            lint_messages.push(format!(
-                                "Incorrect {} name (layer: \"{}\", mask: \"{}\", expected: {})",
-                                mask_display, layer.name, mask.name, string_match_expr,
-                            ));
+                            lint_messages.push(
+                                format!("Incorrect {} name", mask_display),
+                                format!(
+                                    "Layer: \"{}\", Mask: \"{}\", Expected: {}",
+                                    layer.name, mask.name, string_match_expr
+                                ),
+                            );
                         }
                     }
                 }

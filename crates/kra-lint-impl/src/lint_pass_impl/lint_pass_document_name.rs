@@ -18,12 +18,12 @@ impl LintPass for LintPassDocumentName {
             let kra_document_name = &kra_archive.main_doc.image.name;
 
             if kra_document_name.is_empty() {
-                lint_messages.push("Missing document name".to_owned());
+                lint_messages.push("Missing document name", format!("Expected: {}", self.document_name));
             } else if !self.document_name.matches(kra_document_name) {
-                lint_messages.push(format!(
-                    "Incorrect document name (expected: {}, found: \"{}\")",
-                    self.document_name, kra_document_name,
-                ));
+                lint_messages.push(
+                    "Incorrect document name",
+                    format!("Expected: {}, Found: \"{}\"", self.document_name, kra_document_name),
+                );
             }
         }
 

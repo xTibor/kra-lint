@@ -23,12 +23,12 @@ impl LintPass for LintPassCopyright {
                 let kra_copyright_line = &kra_archive.document_info.about.license;
 
                 if kra_copyright_line.is_empty() {
-                    lint_messages.push("Missing copyright line".to_owned());
+                    lint_messages.push("Missing copyright line", format!("Expected: {}", copyright_line));
                 } else if !copyright_line.matches(kra_copyright_line) {
-                    lint_messages.push(format!(
-                        "Incorrect copyright line (expected: {}, found: \"{}\")",
-                        copyright_line, kra_copyright_line,
-                    ));
+                    lint_messages.push(
+                        "Incorrect copyright line",
+                        format!("Expected: {}, Found: \"{}\"", copyright_line, kra_copyright_line),
+                    );
                 }
             }
         }
@@ -39,12 +39,12 @@ impl LintPass for LintPassCopyright {
                 let kra_copyright_disclaimer = &kra_archive.document_info.about.r#abstract;
 
                 if kra_copyright_disclaimer.is_empty() {
-                    lint_messages.push("Missing copyright disclaimer".to_owned());
+                    lint_messages.push("Missing copyright disclaimer", format!("Expected: {}", copyright_disclaimer));
                 } else if !copyright_disclaimer.matches(kra_copyright_disclaimer) {
-                    lint_messages.push(format!(
-                        "Incorrect copyright disclaimer (expected: {}, found: \"{}\")",
-                        copyright_disclaimer, kra_copyright_disclaimer,
-                    ));
+                    lint_messages.push(
+                        "Incorrect copyright disclaimer",
+                        format!("Expected: {}, Found: \"{}\"", copyright_disclaimer, kra_copyright_disclaimer),
+                    );
                 }
             }
         }
@@ -55,7 +55,7 @@ impl LintPass for LintPassCopyright {
                 let kra_initial_creator = &kra_archive.document_info.about.initial_creator;
 
                 if kra_initial_creator.is_empty() || (kra_initial_creator == "Unknown") {
-                    lint_messages.push("Missing author information (Initial creator)".to_owned());
+                    lint_messages.push("Missing author information", "Initial creator");
                 }
             }
         }
@@ -68,34 +68,37 @@ impl LintPass for LintPassCopyright {
                 let kra_author_last_name = &kra_archive.document_info.author.creator_last_name;
 
                 if kra_author_full_name.is_empty() {
-                    lint_messages.push("Missing author information (Author full name)".to_owned());
+                    lint_messages.push("Missing author information", "Author full name");
                 }
 
                 if kra_author_first_name.is_empty() {
-                    lint_messages.push("Missing author information (Author first name)".to_owned());
+                    lint_messages.push("Missing author information", "Author first name");
                 }
 
                 if kra_author_last_name.is_empty() {
-                    lint_messages.push("Missing author information (Author last name)".to_owned());
+                    lint_messages.push("Missing author information", "Author last name");
                 }
 
                 if !kra_author_full_name.is_empty() && !kra_author_first_name.is_empty() {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_first_name) {
-                        lint_messages.push(format!(
-                            "Inconsistent author information (first name: \"{}\", full name: \"{}\")",
-                            kra_author_first_name, kra_author_full_name
-                        ));
+                        lint_messages.push(
+                            "Inconsistent author information",
+                            format!(
+                                "First name: \"{}\", Full name: \"{}\"",
+                                kra_author_first_name, kra_author_full_name
+                            ),
+                        );
                     }
                 }
 
                 if !kra_author_full_name.is_empty() && !kra_author_last_name.is_empty() {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_last_name) {
-                        lint_messages.push(format!(
-                            "Inconsistent author information (last name: \"{}\", full name: \"{}\")",
-                            kra_author_last_name, kra_author_full_name
-                        ));
+                        lint_messages.push(
+                            "Inconsistent author information",
+                            format!("Last name: \"{}\", Full name: \"{}\"", kra_author_last_name, kra_author_full_name),
+                        );
                     }
                 }
             }
@@ -107,12 +110,12 @@ impl LintPass for LintPassCopyright {
                 let kra_studio_name = &kra_archive.document_info.author.company;
 
                 if kra_studio_name.is_empty() {
-                    lint_messages.push("Missing studio name".to_owned());
+                    lint_messages.push("Missing studio name", format!("Expected: {}", studio_name));
                 } else if !studio_name.matches(kra_studio_name) {
-                    lint_messages.push(format!(
-                        "Incorrect studio name (expected: {}, found: \"{}\")",
-                        studio_name, kra_studio_name,
-                    ));
+                    lint_messages.push(
+                        "Incorrect studio name",
+                        format!("Expected: {}, Found: \"{}\"", studio_name, kra_studio_name),
+                    );
                 }
             }
         }

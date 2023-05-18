@@ -19,9 +19,7 @@ impl LintPass for LintPassMalformedDocument {
             let documentinfo_xml = std::io::read_to_string(zip_file)?;
 
             if documentinfo_xml.matches("]]>").count() > 1 {
-                lint_messages.push(
-                    "Potentially malformed document (Unescaped documentinfo.xml <abstract> tag, Bug 446376)".to_owned(),
-                );
+                lint_messages.push("Malformed document", "Unescaped documentinfo.xml <abstract> tag, Bug 446376");
             }
         }
 
@@ -30,7 +28,7 @@ impl LintPass for LintPassMalformedDocument {
             let zip_archive = kra_archive.zip_archive.borrow();
 
             if zip_archive.file_names().any(|file_name| file_name.contains("../")) {
-                lint_messages.push("Malformed document (Path traversal vulnerability, Bug 429925)".to_owned());
+                lint_messages.push("Malformed document", "Path traversal vulnerability, Bug 429925");
             }
         }
 
@@ -39,16 +37,16 @@ impl LintPass for LintPassMalformedDocument {
             for layer in kra_archive.all_layers_by_type(KraLayerType::CloneLayer) {
                 if let Some(clone_from_uuid) = layer.clone_from_uuid.as_ref() {
                     if !kra_archive.all_layers().any(|target_layer| &target_layer.uuid == clone_from_uuid) {
-                        lint_messages.push(format!(
-                            "Malformed document (Missing clone layer target layer, layer: \"{}\", Bug 414699)",
-                            layer.name
-                        ));
+                        lint_messages.push(
+                            "Malformed document",
+                            format!("Missing clone layer target layer, Layer: \"{}\", Bug 414699", layer.name),
+                        );
                     }
                 } else {
-                    lint_messages.push(format!(
-                        "Malformed document (Missing clone layer target field, layer: \"{}\")",
-                        layer.name
-                    ));
+                    lint_messages.push(
+                        "Malformed document",
+                        format!("Missing clone layer target field, Layer: \"{}\"", layer.name),
+                    );
                 }
             }
         }
@@ -57,7 +55,7 @@ impl LintPass for LintPassMalformedDocument {
         {
             if let Some(composition_container) = kra_archive.main_doc.image.composition_container.as_ref() {
                 if composition_container.into_iter().any(|composition| composition.name.contains('/')) {
-                    lint_messages.push("Malformed document (Compositions path traversal vulnerability)".to_owned());
+                    lint_messages.push("Malformed document", "Compositions path traversal vulnerability");
                 }
             }
         }
@@ -81,7 +79,8 @@ impl LintPass for LintPassMalformedDocument {
                         .collect::<Vec<_>>();
 
                     if referencing_uuid.contains(&uuid_root) {
-                        lint_messages.push(format!("Malformed document (Clone layer loop, layer: \"{}\")", layer.name));
+                        lint_messages
+                            .push("Malformed document", format!("Clone layer loop, Layer: \"{}\"", layer.name));
                         break;
                     }
 

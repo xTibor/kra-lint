@@ -19,7 +19,7 @@ impl LintPass for LintPassFileName {
 
             if !self.file_name.matches(kra_file_name) {
                 lint_messages
-                    .push(format!("Incorrect file name (expected: {}, found: \"{}\")", self.file_name, kra_file_name,));
+                    .push("Incorrect file name", format!("Expected: {}, Found: \"{}\"", self.file_name, kra_file_name));
             }
         }
 

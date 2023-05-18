@@ -23,8 +23,10 @@ impl LintPass for LintPassAnimation {
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
                     if layer.keyframes.is_some() {
-                        lint_messages
-                            .push(format!("Prohibited use of animated {} (layer: \"{}\")", layer_display, layer.name));
+                        lint_messages.push(
+                            format!("Prohibited use of animated {}", layer_display),
+                            format!("Layer: \"{}\"", layer.name),
+                        );
                     }
                 }
             }
@@ -38,10 +40,10 @@ impl LintPass for LintPassAnimation {
                 #[allow(clippy::collapsible_if)]
                 if *mask_opt == Some(false) {
                     if mask.keyframes.is_some() {
-                        lint_messages.push(format!(
-                            "Prohibited use of animated {} (layer: \"{}\", mask: \"{}\")",
-                            mask_display, layer.name, mask.name
-                        ));
+                        lint_messages.push(
+                            format!("Prohibited use of animated {}", mask_display),
+                            format!("Layer: \"{}\", Mask: \"{}\"", layer.name, mask.name),
+                        );
                     }
                 }
             }
@@ -53,10 +55,10 @@ impl LintPass for LintPassAnimation {
                 let kra_framerate = kra_archive.main_doc.image.animation.framerate.value;
 
                 if !framerate.matches(&kra_framerate) {
-                    lint_messages.push(format!(
-                        "Incorrect animation framerate (expected: {}fps, found: {}fps)",
-                        framerate, kra_framerate
-                    ));
+                    lint_messages.push(
+                        "Incorrect animation framerate",
+                        format!("Expected: {}fps, Found: {}fps", framerate, kra_framerate),
+                    );
                 }
             }
         }

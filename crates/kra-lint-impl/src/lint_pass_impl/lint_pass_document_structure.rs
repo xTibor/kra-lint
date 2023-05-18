@@ -118,17 +118,22 @@ impl LintPass for LintPassDocumentStructure {
                     let mask_count = lint_mask.mask_count.as_ref().unwrap_or(&LintNumberMatchExpression::Value(1));
 
                     if !mask_count.matches(&kra_matching_masks.len()) {
-                        lint_messages.push(format!(
-                            "Incorrect document structure (Mask repetition mismatch, mask: ({}), expected: {}, found: {})",
-                            lint_mask.message_fmt(), mask_count, kra_matching_masks.len(),
-                        ));
+                        lint_messages.push(
+                            "Incorrect document structure",
+                            format!(
+                                "Mask repetition mismatch, Mask: ({}), Expected: {}, Found: {}",
+                                lint_mask.message_fmt(),
+                                mask_count,
+                                kra_matching_masks.len()
+                            ),
+                        );
                         return Ok(());
                     }
                 }
 
                 for kra_extra_mask in kra_mask_iterator {
                     lint_messages
-                        .push(format!("Incorrect document structure (Extra mask, mask: \"{}\")", kra_extra_mask.name));
+                        .push("Incorrect document structure", format!("Extra mask, Mask: \"{}\"", kra_extra_mask.name));
                 }
 
                 Ok(())
@@ -178,19 +183,24 @@ impl LintPass for LintPassDocumentStructure {
                             }
                         }
                     } else {
-                        lint_messages.push(format!(
-                            "Incorrect document structure (Layer repetition mismatch, layer: ({}), expected: {}, found: {})",
-                            lint_layer.message_fmt(), layer_count, kra_matching_layers.len(),
-                        ));
+                        lint_messages.push(
+                            "Incorrect document structure",
+                            format!(
+                                "Layer repetition mismatch, Layer: ({}), Expected: {}, Found: {}",
+                                lint_layer.message_fmt(),
+                                layer_count,
+                                kra_matching_layers.len()
+                            ),
+                        );
                         return Ok(());
                     }
                 }
 
                 for kra_extra_layer in kra_layer_iterator {
-                    lint_messages.push(format!(
-                        "Incorrect document structure (Extra layer, layer: \"{}\")",
-                        kra_extra_layer.name
-                    ));
+                    lint_messages.push(
+                        "Incorrect document structure",
+                        format!("Extra layer, Layer: \"{}\"", kra_extra_layer.name),
+                    );
                 }
 
                 Ok(())

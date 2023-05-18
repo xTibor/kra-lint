@@ -15,12 +15,15 @@ impl LintPass for LintPassNonDefaultBlending {
         {
             for layer in kra_archive.all_layers() {
                 if layer.opacity != 255 {
-                    lint_messages.push(format!(
-                        "Non-default layer transparency (layer: \"{}\", expected: \"{:.0}%\", found: \"{:.0}%\")",
-                        layer.name,
-                        100.0,
-                        (layer.opacity as f64 / 255.0 * 100.0),
-                    ));
+                    lint_messages.push(
+                        "Non-default layer transparency",
+                        format!(
+                            "Layer: \"{}\", Expected: \"{:.0}%\", Found: \"{:.0}%\"",
+                            layer.name,
+                            100.0,
+                            (layer.opacity as f64 / 255.0 * 100.0),
+                        ),
+                    );
                 }
             }
         }
@@ -34,10 +37,13 @@ impl LintPass for LintPassNonDefaultBlending {
                 };
 
                 if layer.composite_op != expected_blending_mode {
-                    lint_messages.push(format!(
-                        "Non-default layer blending mode (layer: \"{}\", expected: \"{}\", found: \"{}\")",
-                        layer.name, expected_blending_mode, layer.composite_op,
-                    ));
+                    lint_messages.push(
+                        "Non-default layer blending mode",
+                        format!(
+                            "Layer: \"{}\", Expected: \"{}\", Found: \"{}\"",
+                            layer.name, expected_blending_mode, layer.composite_op,
+                        ),
+                    );
                 }
             }
         }
@@ -51,13 +57,16 @@ impl LintPass for LintPassNonDefaultBlending {
                 };
 
                 if mask.composite_op.as_deref() != expected_blending_mode {
-                    lint_messages.push(format!(
-                        "Non-default mask blending mode (layer: \"{}\", mask: \"{}\", expected: \"{}\", found: \"{}\")",
-                        layer.name,
-                        mask.name,
-                        expected_blending_mode.unwrap_or("none"),
-                        mask.composite_op.as_deref().unwrap_or("none"),
-                    ));
+                    lint_messages.push(
+                        "Non-default mask blending mode",
+                        format!(
+                            "Layer: \"{}\", Mask: \"{}\", Expected: \"{}\", Found: \"{}\"",
+                            layer.name,
+                            mask.name,
+                            expected_blending_mode.unwrap_or("none"),
+                            mask.composite_op.as_deref().unwrap_or("none"),
+                        ),
+                    );
                 }
             }
         }

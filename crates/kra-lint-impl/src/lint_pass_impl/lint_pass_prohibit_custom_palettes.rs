@@ -15,7 +15,7 @@ impl LintPass for LintPassProhibitCustomPalettes {
             if let Some(kra_palette_container) = kra_archive.main_doc.image.palette_container.as_ref() {
                 for kra_palette in kra_palette_container.into_iter() {
                     lint_messages
-                        .push(format!("Prohibited use of custom palettes (palette: \"{}\")", kra_palette.name));
+                        .push("Prohibited use of custom palettes", format!("Palette: \"{}\"", kra_palette.name));
                 }
             }
         }

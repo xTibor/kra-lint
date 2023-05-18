@@ -15,7 +15,7 @@ impl LintPass for LintPassProhibitKSeExpr {
         {
             for layer in kra_archive.all_layers_by_type(KraLayerType::FillLayer) {
                 if layer.generator_name.as_deref() == Some("seexpr") {
-                    lint_messages.push(format!("Prohibited use of KSeExpr (layer: \"{}\")", layer.name));
+                    lint_messages.push("Prohibited use of KSeExpr", format!("Layer: \"{}\"", layer.name));
                 }
             }
         }

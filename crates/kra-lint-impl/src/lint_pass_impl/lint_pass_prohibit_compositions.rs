@@ -15,7 +15,7 @@ impl LintPass for LintPassProhibitCompositions {
             if let Some(composition_container) = kra_archive.main_doc.image.composition_container.as_ref() {
                 for composition in composition_container.into_iter() {
                     lint_messages
-                        .push(format!("Prohibited use of compositions (composition name: \"{}\")", composition.name));
+                        .push("Prohibited use of compositions", format!("Composition name: \"{}\"", composition.name));
                 }
             }
         }

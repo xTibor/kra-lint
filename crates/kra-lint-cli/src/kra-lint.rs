@@ -57,12 +57,15 @@ fn main() -> ExitCode {
                     let mut lint_messages = LintMessages::default();
 
                     match lint_config_collection.lint(&kra_archive, &mut lint_messages) {
-                        Ok(()) => all_lint_messages
-                            .extend(lint_messages.into_iter().map(|lint_message| (kra_path, lint_message))),
-                        Err(err) => all_lint_messages.push((kra_path, err.to_string())),
+                        Ok(()) => all_lint_messages.extend(
+                            lint_messages
+                                .into_iter()
+                                .map(|(lint_title, lint_message)| (kra_path, lint_title, lint_message)),
+                        ),
+                        Err(err) => all_lint_messages.push((kra_path, "Error".to_string(), err.to_string())),
                     }
                 }
-                Err(err) => all_lint_messages.push((kra_path, err.to_string())),
+                Err(err) => all_lint_messages.push((kra_path, "Error".to_string(), err.to_string())),
             }
         }
 
@@ -74,8 +77,10 @@ fn main() -> ExitCode {
     if all_lint_messages.is_empty() {
         ExitCode::SUCCESS
     } else {
-        for (kra_path, lint_message) in all_lint_messages {
-            eprintln!("{}: {}", kra_path, lint_message);
+        for (kra_path, lint_title, lint_message) in all_lint_messages {
+            eprintln!("{}: {}", kra_path, lint_title);
+            eprintln!("{}", lint_message);
+            eprintln!();
         }
         ExitCode::FAILURE
     }

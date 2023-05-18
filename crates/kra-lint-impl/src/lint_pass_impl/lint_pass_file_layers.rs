@@ -23,16 +23,19 @@ impl LintPass for LintPassFileLayers {
                     if let Some(source) = layer.source.as_ref() {
                         if let Some(source_ext) = Utf8Path::new(source).extension() {
                             if !file_formats.matches(source_ext) {
-                                lint_messages.push(format!(
-                                    "Incorrect file layer source image format (layer: \"{}\", expected: {}, found: \"{}\")",
-                                    layer.name, file_formats, source_ext,
-                                ));
+                                lint_messages.push(
+                                    "Incorrect file layer source image format",
+                                    format!(
+                                        "Layer: \"{}\", Expected: {}, Found: \"{}\"",
+                                        layer.name, file_formats, source_ext
+                                    ),
+                                );
                             }
                         } else {
-                            lint_messages.push(format!(
-                                "File layer source image has no file extension (layer: \"{}\", expected: {})",
-                                layer.name, file_formats,
-                            ));
+                            lint_messages.push(
+                                "File layer source image has no file extension",
+                                format!("Layer: \"{}\", Expected: {}", layer.name, file_formats),
+                            );
                         }
                     }
                 }
@@ -49,10 +52,10 @@ impl LintPass for LintPassFileLayers {
                             kra_archive.zip_path.parent().expect("Failed to get parent directory").join(source);
 
                         if !source_path.is_file() {
-                            lint_messages.push(format!(
-                                "Missing file layer source image (layer: \"{}\", source: \"{}\")",
-                                layer.name, source,
-                            ));
+                            lint_messages.push(
+                                "Missing file layer source image",
+                                format!("Layer: \"{}\", Source: \"{}\"", layer.name, source),
+                            );
                         }
                     }
                 }

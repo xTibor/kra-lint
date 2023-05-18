@@ -20,7 +20,8 @@ impl LintPass for LintPassSurfaceType {
                 let (layer_opt, layer_display) = self.layer_types.get(layer);
 
                 if *layer_opt == Some(false) {
-                    lint_messages.push(format!("Prohibited use of {} (layer: \"{}\")", layer_display, layer.name));
+                    lint_messages
+                        .push(format!("Prohibited use of {}", layer_display), format!("Layer: \"{}\"", layer.name));
                 }
             }
         }
@@ -31,10 +32,10 @@ impl LintPass for LintPassSurfaceType {
                 let (mask_opt, mask_display) = self.mask_types.get(mask);
 
                 if *mask_opt == Some(false) {
-                    lint_messages.push(format!(
-                        "Prohibited use of {} (layer: \"{}\", mask: \"{}\")",
-                        mask_display, layer.name, mask.name
-                    ));
+                    lint_messages.push(
+                        format!("Prohibited use of {}", mask_display),
+                        format!("Layer: \"{}\", Mask: \"{}\"", layer.name, mask.name),
+                    );
                 }
             }
         }

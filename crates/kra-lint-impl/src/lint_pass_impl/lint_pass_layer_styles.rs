@@ -24,10 +24,8 @@ impl LintPass for LintPassLayerStyles {
                         // Bug: When removing all layer styles this KRA field does
                         //  not get cleared, interface still acts like layer styles
                         //  are present.
-                        lint_messages.push(format!(
-                            "Prohibited use of layer styles on {} (layer: \"{}\")",
-                            layer_display, layer.name
-                        ));
+                        lint_messages
+                            .push(format!("Prohibited {} styles", layer_display), format!("Layer: \"{}\"", layer.name));
                     }
                 }
             }

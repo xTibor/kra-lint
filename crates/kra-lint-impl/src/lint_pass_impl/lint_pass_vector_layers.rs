@@ -28,10 +28,13 @@ impl LintPass for LintPassVectorLayers {
                         if let Event::Tag("text" | "tspan", Type::Start, svg_attributes) = svg_event {
                             if let Some(svg_font_family) = svg_attributes.get("font-family") {
                                 if !font_family.matches(svg_font_family) {
-                                    lint_messages.push(format!(
-                                        "Prohibited font family on vector layer (layer: \"{}\", expected: {}, found: \"{}\")",
-                                        layer.name, font_family, svg_font_family,
-                                    ));
+                                    lint_messages.push(
+                                        "Prohibited font family on vector layer",
+                                        format!(
+                                            "Layer: \"{}\", Expected: {}, Found: \"{}\"",
+                                            layer.name, font_family, svg_font_family
+                                        ),
+                                    );
                                 }
                             }
                         }
@@ -50,10 +53,10 @@ impl LintPass for LintPassVectorLayers {
                     for svg_event in content_svg_parser {
                         if let Event::Text(svg_text) = svg_event {
                             if placeholder_text.matches(svg_text) {
-                                lint_messages.push(format!(
-                                    "Prohibited placeholder text on vector layer (layer: \"{}\", placeholder text: \"{}\")",
-                                    layer.name, svg_text,
-                                ));
+                                lint_messages.push(
+                                    "Prohibited placeholder text on vector layer",
+                                    format!("Layer: \"{}\", Placeholder text: \"{}\"", layer.name, svg_text),
+                                );
                             }
                         }
                     }
