@@ -39,13 +39,16 @@ impl LintPass for LintPassMalformedDocument {
                     if !kra_archive.all_layers().any(|target_layer| &target_layer.uuid == clone_from_uuid) {
                         lint_messages.push(
                             "Malformed document",
-                            format!("Missing clone layer target layer, Layer: \"{}\", Bug 414699", layer.name),
+                            format!(
+                                "Missing clone layer target layer, Layer: \"{}\", Bug 414699",
+                                layer.name.escape_debug()
+                            ),
                         );
                     }
                 } else {
                     lint_messages.push(
                         "Malformed document",
-                        format!("Missing clone layer target field, Layer: \"{}\"", layer.name),
+                        format!("Missing clone layer target field, Layer: \"{}\"", layer.name.escape_debug()),
                     );
                 }
             }
@@ -79,8 +82,10 @@ impl LintPass for LintPassMalformedDocument {
                         .collect::<Vec<_>>();
 
                     if referencing_uuid.contains(&uuid_root) {
-                        lint_messages
-                            .push("Malformed document", format!("Clone layer loop, Layer: \"{}\"", layer.name));
+                        lint_messages.push(
+                            "Malformed document",
+                            format!("Clone layer loop, Layer: \"{}\"", layer.name.escape_debug()),
+                        );
                         break;
                     }
 

@@ -27,7 +27,7 @@ impl LintPass for LintPassCopyright {
                 } else if !copyright_line.matches(kra_copyright_line) {
                     lint_messages.push(
                         "Incorrect copyright line",
-                        format!("Expected: {}, Found: \"{}\"", copyright_line, kra_copyright_line),
+                        format!("Expected: {}, Found: \"{}\"", copyright_line, kra_copyright_line.escape_debug()),
                     );
                 }
             }
@@ -43,7 +43,11 @@ impl LintPass for LintPassCopyright {
                 } else if !copyright_disclaimer.matches(kra_copyright_disclaimer) {
                     lint_messages.push(
                         "Incorrect copyright disclaimer",
-                        format!("Expected: {}, Found: \"{}\"", copyright_disclaimer, kra_copyright_disclaimer),
+                        format!(
+                            "Expected: {}, Found: \"{}\"",
+                            copyright_disclaimer,
+                            kra_copyright_disclaimer.escape_debug()
+                        ),
                     );
                 }
             }
@@ -86,7 +90,8 @@ impl LintPass for LintPassCopyright {
                             "Inconsistent author information",
                             format!(
                                 "First name: \"{}\", Full name: \"{}\"",
-                                kra_author_first_name, kra_author_full_name
+                                kra_author_first_name.escape_debug(),
+                                kra_author_full_name.escape_debug()
                             ),
                         );
                     }
@@ -97,7 +102,11 @@ impl LintPass for LintPassCopyright {
                     if !kra_author_full_name.contains(kra_author_last_name) {
                         lint_messages.push(
                             "Inconsistent author information",
-                            format!("Last name: \"{}\", Full name: \"{}\"", kra_author_last_name, kra_author_full_name),
+                            format!(
+                                "Last name: \"{}\", Full name: \"{}\"",
+                                kra_author_last_name.escape_debug(),
+                                kra_author_full_name.escape_debug()
+                            ),
                         );
                     }
                 }
@@ -114,7 +123,7 @@ impl LintPass for LintPassCopyright {
                 } else if !studio_name.matches(kra_studio_name) {
                     lint_messages.push(
                         "Incorrect studio name",
-                        format!("Expected: {}, Found: \"{}\"", studio_name, kra_studio_name),
+                        format!("Expected: {}, Found: \"{}\"", studio_name, kra_studio_name.escape_debug()),
                     );
                 }
             }

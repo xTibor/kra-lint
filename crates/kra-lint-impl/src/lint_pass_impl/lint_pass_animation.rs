@@ -25,7 +25,7 @@ impl LintPass for LintPassAnimation {
                     if layer.keyframes.is_some() {
                         lint_messages.push(
                             format!("Prohibited use of animated {}", layer_display),
-                            format!("Layer: \"{}\"", layer.name),
+                            format!("Layer: \"{}\"", layer.name.escape_debug()),
                         );
                     }
                 }
@@ -42,7 +42,7 @@ impl LintPass for LintPassAnimation {
                     if mask.keyframes.is_some() {
                         lint_messages.push(
                             format!("Prohibited use of animated {}", mask_display),
-                            format!("Layer: \"{}\", Mask: \"{}\"", layer.name, mask.name),
+                            format!("Layer: \"{}\", Mask: \"{}\"", layer.name.escape_debug(), mask.name.escape_debug()),
                         );
                     }
                 }

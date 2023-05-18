@@ -22,8 +22,10 @@ impl LintPass for LintPassHiddenSurface {
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
                     if (layer.visible == 0) || (layer.opacity == 0) {
-                        lint_messages
-                            .push(format!("Prohibited hidden {}", layer_display), format!("Layer: \"{}\"", layer.name));
+                        lint_messages.push(
+                            format!("Prohibited hidden {}", layer_display),
+                            format!("Layer: \"{}\"", layer.name.escape_debug()),
+                        );
                     }
                 }
             }
@@ -41,7 +43,7 @@ impl LintPass for LintPassHiddenSurface {
                     if mask.visible == 0 {
                         lint_messages.push(
                             format!("Prohibited hidden {}", mask_display),
-                            format!("Layer: \"{}\", Mask: \"{}\"", layer.name, mask.name),
+                            format!("Layer: \"{}\", Mask: \"{}\"", layer.name.escape_debug(), mask.name.escape_debug()),
                         );
                     }
                 }

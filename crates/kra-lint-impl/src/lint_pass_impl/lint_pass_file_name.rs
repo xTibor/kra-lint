@@ -18,8 +18,10 @@ impl LintPass for LintPassFileName {
             let kra_file_name = kra_archive.zip_path.file_name().expect("Failed to get file name");
 
             if !self.file_name.matches(kra_file_name) {
-                lint_messages
-                    .push("Incorrect file name", format!("Expected: {}, Found: \"{}\"", self.file_name, kra_file_name));
+                lint_messages.push(
+                    "Incorrect file name",
+                    format!("Expected: {}, Found: \"{}\"", self.file_name, kra_file_name.escape_debug()),
+                );
             }
         }
 

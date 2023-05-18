@@ -21,7 +21,7 @@ impl LintPass for LintPassColorspace {
             if !self.colorspace.matches(kra_colorspace) {
                 lint_messages.push(
                     "Incorrect document color space",
-                    format!("Expected: {}, Found: \"{}\"", self.colorspace, kra_colorspace),
+                    format!("Expected: {}, Found: \"{}\"", self.colorspace, kra_colorspace.escape_debug()),
                 );
             }
         }
@@ -35,7 +35,9 @@ impl LintPass for LintPassColorspace {
                             "Incorrect layer color space",
                             format!(
                                 "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                layer.name, self.colorspace, layer_colorspace
+                                layer.name.escape_debug(),
+                                self.colorspace,
+                                layer_colorspace.escape_debug()
                             ),
                         );
                     }
@@ -52,7 +54,10 @@ impl LintPass for LintPassColorspace {
                             "Incorrect mask color space",
                             format!(
                                 "Layer: \"{}\", Mask: \"{}\", Expected: {}, Found: \"{}\"",
-                                layer.name, mask.name, self.colorspace, mask_colorspace
+                                layer.name.escape_debug(),
+                                mask.name.escape_debug(),
+                                self.colorspace,
+                                mask_colorspace.escape_debug()
                             ),
                         );
                     }
@@ -67,7 +72,7 @@ impl LintPass for LintPassColorspace {
             if !self.profile.matches(kra_profile) {
                 lint_messages.push(
                     "Incorrect document color profile",
-                    format!("Expected: {}, Found: \"{}\"", self.profile, kra_profile),
+                    format!("Expected: {}, Found: \"{}\"", self.profile, kra_profile.escape_debug()),
                 );
             }
         }

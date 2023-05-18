@@ -132,8 +132,10 @@ impl LintPass for LintPassDocumentStructure {
                 }
 
                 for kra_extra_mask in kra_mask_iterator {
-                    lint_messages
-                        .push("Incorrect document structure", format!("Extra mask, Mask: \"{}\"", kra_extra_mask.name));
+                    lint_messages.push(
+                        "Incorrect document structure",
+                        format!("Extra mask, Mask: \"{}\"", kra_extra_mask.name.escape_debug()),
+                    );
                 }
 
                 Ok(())
@@ -199,7 +201,7 @@ impl LintPass for LintPassDocumentStructure {
                 for kra_extra_layer in kra_layer_iterator {
                     lint_messages.push(
                         "Incorrect document structure",
-                        format!("Extra layer, Layer: \"{}\"", kra_extra_layer.name),
+                        format!("Extra layer, Layer: \"{}\"", kra_extra_layer.name.escape_debug()),
                     );
                 }
 

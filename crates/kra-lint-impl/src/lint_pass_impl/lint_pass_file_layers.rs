@@ -27,14 +27,16 @@ impl LintPass for LintPassFileLayers {
                                     "Incorrect file layer source image format",
                                     format!(
                                         "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                        layer.name, file_formats, source_ext
+                                        layer.name.escape_debug(),
+                                        file_formats,
+                                        source_ext.escape_debug()
                                     ),
                                 );
                             }
                         } else {
                             lint_messages.push(
                                 "File layer source image has no file extension",
-                                format!("Layer: \"{}\", Expected: {}", layer.name, file_formats),
+                                format!("Layer: \"{}\", Expected: {}", layer.name.escape_debug(), file_formats),
                             );
                         }
                     }
@@ -54,7 +56,11 @@ impl LintPass for LintPassFileLayers {
                         if !source_path.is_file() {
                             lint_messages.push(
                                 "Missing file layer source image",
-                                format!("Layer: \"{}\", Source: \"{}\"", layer.name, source),
+                                format!(
+                                    "Layer: \"{}\", Source: \"{}\"",
+                                    layer.name.escape_debug(),
+                                    source.escape_debug()
+                                ),
                             );
                         }
                     }

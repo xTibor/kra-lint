@@ -32,7 +32,9 @@ impl LintPass for LintPassVectorLayers {
                                         "Prohibited font family on vector layer",
                                         format!(
                                             "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                            layer.name, font_family, svg_font_family
+                                            layer.name.escape_debug(),
+                                            font_family,
+                                            svg_font_family.escape_debug()
                                         ),
                                     );
                                 }
@@ -55,7 +57,11 @@ impl LintPass for LintPassVectorLayers {
                             if placeholder_text.matches(svg_text) {
                                 lint_messages.push(
                                     "Prohibited placeholder text on vector layer",
-                                    format!("Layer: \"{}\", Placeholder text: \"{}\"", layer.name, svg_text),
+                                    format!(
+                                        "Layer: \"{}\", Placeholder text: \"{}\"",
+                                        layer.name.escape_debug(),
+                                        svg_text.escape_debug()
+                                    ),
                                 );
                             }
                         }

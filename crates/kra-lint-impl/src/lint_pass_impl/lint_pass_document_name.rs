@@ -22,7 +22,7 @@ impl LintPass for LintPassDocumentName {
             } else if !self.document_name.matches(kra_document_name) {
                 lint_messages.push(
                     "Incorrect document name",
-                    format!("Expected: {}, Found: \"{}\"", self.document_name, kra_document_name),
+                    format!("Expected: {}, Found: \"{}\"", self.document_name, kra_document_name.escape_debug()),
                 );
             }
         }

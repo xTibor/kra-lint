@@ -19,7 +19,7 @@ impl LintPass for LintPassNonDefaultBlending {
                         "Non-default layer transparency",
                         format!(
                             "Layer: \"{}\", Expected: \"{:.0}%\", Found: \"{:.0}%\"",
-                            layer.name,
+                            layer.name.escape_debug(),
                             100.0,
                             (layer.opacity as f64 / 255.0 * 100.0),
                         ),
@@ -41,7 +41,9 @@ impl LintPass for LintPassNonDefaultBlending {
                         "Non-default layer blending mode",
                         format!(
                             "Layer: \"{}\", Expected: \"{}\", Found: \"{}\"",
-                            layer.name, expected_blending_mode, layer.composite_op,
+                            layer.name.escape_debug(),
+                            expected_blending_mode,
+                            layer.composite_op.escape_debug(),
                         ),
                     );
                 }
@@ -61,10 +63,10 @@ impl LintPass for LintPassNonDefaultBlending {
                         "Non-default mask blending mode",
                         format!(
                             "Layer: \"{}\", Mask: \"{}\", Expected: \"{}\", Found: \"{}\"",
-                            layer.name,
-                            mask.name,
+                            layer.name.escape_debug(),
+                            mask.name.escape_debug(),
                             expected_blending_mode.unwrap_or("none"),
-                            mask.composite_op.as_deref().unwrap_or("none"),
+                            mask.composite_op.as_deref().unwrap_or("none").escape_debug(),
                         ),
                     );
                 }
