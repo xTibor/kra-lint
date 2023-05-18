@@ -2,6 +2,8 @@ use std::process::ExitCode;
 
 use camino::Utf8PathBuf;
 use clap::Parser;
+use itertools::Itertools;
+use unicode_width::UnicodeWidthStr;
 
 use kra_lint_impl::{LintConfigCollection, LintMessages, LintPass};
 use kra_parser::kra_archive::KraArchive;
@@ -77,11 +79,19 @@ fn main() -> ExitCode {
     if all_lint_messages.is_empty() {
         ExitCode::SUCCESS
     } else {
-        for (kra_path, lint_title, lint_message) in all_lint_messages {
+        for ((kra_path, lint_title), group) in
+            &all_lint_messages.iter().group_by(|(kra_path, lint_title, _)| (kra_path, lint_title))
+        {
+            let indent_size = kra_path.to_string().width();
+            let indent_str = format!("{}  | ", " ".repeat(indent_size));
+
             eprintln!("{}: {}", kra_path, lint_title);
-            eprintln!("{}", lint_message);
+            for (_, _, lint_message) in group {
+                eprintln!("{}{}", indent_str, lint_message);
+            }
             eprintln!();
         }
+
         ExitCode::FAILURE
     }
 }
