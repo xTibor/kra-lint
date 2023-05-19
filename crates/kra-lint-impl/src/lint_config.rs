@@ -1,3 +1,6 @@
+use std::fs::File;
+use std::io::Write;
+
 use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
 
@@ -80,20 +83,24 @@ impl LintConfig {
             return Err(LintError::ConfigNotFound { path: lint_config_path.to_owned()});
         }
 
-        let lint_config_str = std::fs::read_to_string(lint_config_path)
-            .map_err(|source| LintError::FailedToReadConfig { path: lint_config_path.to_owned(), source })?;
+        let reader = File::open(lint_config_path)
+            .map_err(|source| LintError::FailedToOpenConfig { path: lint_config_path.to_owned(), source })?;
 
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
             None | Some("toml") => {
-                toml::from_str(&lint_config_str)
+                // TODO: toml::from_reader (https://github.com/toml-rs/toml/pull/349)
+                let tmp_string = std::io::read_to_string(reader)?;
+                toml::from_str(&tmp_string)
                     .map_err(|source| LintError::FailedToParseTomlConfig { path: lint_config_path.to_owned(), source })
             }
             Some("json") => {
-                serde_json::from_str(&lint_config_str)
+                serde_json::from_reader(&reader)
                     .map_err(|source| LintError::FailedToParseJsonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("hjson") => {
-                deser_hjson::from_str(&lint_config_str)
+                // TODO: deser_hjson::from_reader (https://github.com/Canop/deser-hjson)
+                let tmp_string = std::io::read_to_string(reader)?;
+                deser_hjson::from_str(&tmp_string)
                     .map_err(|source| LintError::FailedToParseHjsonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("ron") => {
@@ -101,12 +108,18 @@ impl LintConfig {
                     .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
 
                 ron_options
-                    .from_str(&lint_config_str)
+                    .from_reader(&reader)
                     .map_err(|source| LintError::FailedToParseRonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("yaml" | "yml") => {
-                serde_yaml::from_str(&lint_config_str)
+                serde_yaml::from_reader(&reader)
                     .map_err(|source| LintError::FailedToParseYamlConfig { path: lint_config_path.to_owned(), source })
+            }
+            Some("pickle") => {
+                let pickle_options = serde_pickle::DeOptions::default();
+
+                serde_pickle::from_reader(reader, pickle_options)
+                    .map_err(|source| LintError::FailedToParsePickleConfig { path: lint_config_path.to_owned(), source })
             }
             Some(extension) => {
                 Err(LintError::UnknownConfigFormat { extension: extension.to_owned() })
@@ -116,37 +129,41 @@ impl LintConfig {
 
     #[rustfmt::skip]
     pub fn save_to_path(&self, lint_config_path: &Utf8Path) -> Result<(), LintError> {
-        let lint_config_str = match lint_config_path.extension().map(str::to_lowercase).as_deref() {
+        let mut writer = File::create(lint_config_path)
+            .map_err(|source| LintError::FailedToCreateConfig { path: lint_config_path.to_owned(), source })?;
+
+        match lint_config_path.extension().map(str::to_lowercase).as_deref() {
             None | Some("toml") => {
-                let lint_config_str = toml::to_string(&self)
+                // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
+                let tmp_string = toml::ser::to_string_pretty(self)
                     .map_err(LintError::FailedToSerializeTomlConfig)?;
-                Ok(lint_config_str)
+                Ok(writer.write_all(tmp_string.as_bytes())?)
             },
             Some("json") => {
-                let lint_config_str = serde_json::to_string_pretty(&self)
-                    .map_err(LintError::FailedToSerializeJsonConfig)?;
-                Ok(lint_config_str)
+                serde_json::to_writer(writer, self)
+                    .map_err(LintError::FailedToSerializeJsonConfig)
             }
             Some("ron") => {
                 let ron_options = ron::Options::default()
                     .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
                 let ron_pretty_config = ron::ser::PrettyConfig::default();
 
-                let lint_config_str = ron_options.to_string_pretty(&self, ron_pretty_config)
-                    .map_err(LintError::FailedToSerializeRonConfig)?;
-                Ok(lint_config_str)
+                ron_options.to_writer_pretty(writer, self, ron_pretty_config)
+                    .map_err(LintError::FailedToSerializeRonConfig)
             }
             Some("yaml" | "yml") => {
-                let lint_config_str = serde_yaml::to_string(&self)
-                    .map_err(LintError::FailedToSerializeYamlConfig)?;
-                Ok(lint_config_str)
+                serde_yaml::to_writer(writer, self)
+                    .map_err(LintError::FailedToSerializeYamlConfig)
+            }
+            Some("pickle") => {
+                let pickle_options = serde_pickle::SerOptions::default();
+
+                serde_pickle::to_writer(&mut writer, self, pickle_options)
+                    .map_err(LintError::FailedToSerializePickleConfig)
             }
             Some(extension) => {
                 Err(LintError::UnknownConfigFormat { extension: extension.to_owned() })
             }
-        }?;
-
-        std::fs::write(lint_config_path, lint_config_str)?;
-        Ok(())
+        }
     }
 }

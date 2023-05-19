@@ -64,9 +64,9 @@ impl LintMessagesCollection {
             },
             LintOutputFormat::Toml => {
                 // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
-                let toml_output = toml::ser::to_string(self)
+                let tmp_string = toml::ser::to_string(self)
                     .map_err(LintError::FailedToSerializeTomlOutput)?;
-                Ok(writer.write_all(toml_output.as_bytes())?)
+                Ok(writer.write_all(tmp_string.as_bytes())?)
             },
             LintOutputFormat::Json => {
                 serde_json::to_writer(writer, self)
@@ -82,6 +82,7 @@ impl LintMessagesCollection {
             },
             LintOutputFormat::Pickle => {
                 let pickle_options = serde_pickle::SerOptions::default();
+
                 serde_pickle::to_writer(writer, self, pickle_options)
                     .map_err(LintError::FailedToSerializePickleOutput)
             },

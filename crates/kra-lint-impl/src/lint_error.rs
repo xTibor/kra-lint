@@ -25,8 +25,14 @@ pub enum LintError {
         included_from: Utf8PathBuf,
     },
 
-    #[display(fmt = "Failed to read config file \"{path:}\"")]
-    FailedToReadConfig {
+    #[display(fmt = "Failed to open config file \"{path:}\"")]
+    FailedToOpenConfig {
+        path: Utf8PathBuf,
+        source: io::Error,
+    },
+
+    #[display(fmt = "Failed to create config file \"{path:}\"")]
+    FailedToCreateConfig {
         path: Utf8PathBuf,
         source: io::Error,
     },
@@ -61,6 +67,12 @@ pub enum LintError {
         source: serde_yaml::Error,
     },
 
+    #[display(fmt = "Failed to parse Pickle config file \"{path:}\"")]
+    FailedToParsePickleConfig {
+        path: Utf8PathBuf,
+        source: serde_pickle::Error,
+    },
+
     #[display(fmt = "Failed to serialize TOML config")]
     FailedToSerializeTomlConfig(toml::ser::Error),
 
@@ -72,6 +84,9 @@ pub enum LintError {
 
     #[display(fmt = "Failed to serialize YAML config")]
     FailedToSerializeYamlConfig(serde_yaml::Error),
+
+    #[display(fmt = "Failed to serialize Pickle config")]
+    FailedToSerializePickleConfig(serde_pickle::Error),
 
     #[display(fmt = "Failed to serialize TOML output")]
     FailedToSerializeTomlOutput(toml::ser::Error),
