@@ -1,5 +1,6 @@
 use strum::EnumString;
 
+#[non_exhaustive]
 #[derive(EnumString, Copy, Clone, Debug)]
 #[strum(ascii_case_insensitive)]
 pub enum LintOutputFormat {
