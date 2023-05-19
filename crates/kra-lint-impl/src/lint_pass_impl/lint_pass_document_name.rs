@@ -3,7 +3,8 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::{LintMessages, LintPass, LintPassResult};
+use crate::lint_pass::{LintPass, LintPassResult};
+use crate::LintMessages;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

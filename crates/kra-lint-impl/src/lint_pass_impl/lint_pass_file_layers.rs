@@ -5,7 +5,8 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::{LintMessages, LintPass, LintPassResult};
+use crate::lint_pass::{LintPass, LintPassResult};
+use crate::LintMessages;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

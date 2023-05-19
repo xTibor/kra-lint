@@ -2,8 +2,10 @@ use camino::{Utf8Path, Utf8PathBuf};
 
 use kra_parser::kra_archive::KraArchive;
 
+use crate::lint_config::LintConfig;
 use crate::lint_messages_collection::LintMessagesCollection;
-use crate::{LintConfig, LintError, LintMessages, LintPass, LintPassResult};
+use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{LintError, LintMessages};
 
 #[derive(Default)]
 pub struct LintConfigCollection {

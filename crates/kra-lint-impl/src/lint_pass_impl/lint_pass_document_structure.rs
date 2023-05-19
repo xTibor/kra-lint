@@ -9,7 +9,8 @@ use kra_parser::kra_maindoc::{
 };
 
 use crate::lint_fields::{LintGenericMatchExpression, LintNumberMatchExpression, LintStringMatchExpression};
-use crate::{LintMessages, LintPass, LintPassResult};
+use crate::lint_pass::{LintPass, LintPassResult};
+use crate::LintMessages;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
