@@ -6,17 +6,17 @@ use clap::Parser;
 use kra_lint_impl::{LintConfigCollection, LintOutputFormat};
 
 #[derive(Parser, Debug)]
-pub struct Args {
+struct Args {
     /// Config file path
     #[arg(long, short = 'C', value_name = "PATH", env = "KRALINT_CONFIG_PATH")]
-    pub config_paths: Vec<Utf8PathBuf>,
+    config_paths: Vec<Utf8PathBuf>,
 
     /// Output format
     #[arg(long, short = 'F', value_name = "FORMAT", env = "KRALINT_OUTPUT_FORMAT")]
-    pub output_format: Option<LintOutputFormat>,
+    output_format: Option<LintOutputFormat>,
 
     /// Document paths
-    pub paths: Vec<Utf8PathBuf>,
+    paths: Vec<Utf8PathBuf>,
 }
 
 fn main() -> ExitCode {

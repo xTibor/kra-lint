@@ -5,12 +5,12 @@ use clap::Parser;
 use kra_lint_impl::LintConfig;
 
 #[derive(Parser, Debug)]
-pub struct Args {
+struct Args {
     /// Source config file path
-    pub source_config: Utf8PathBuf,
+    source_config: Utf8PathBuf,
 
     /// Destination config file path
-    pub destination_config: Utf8PathBuf,
+    destination_config: Utf8PathBuf,
 }
 
 fn main() -> ExitCode {
