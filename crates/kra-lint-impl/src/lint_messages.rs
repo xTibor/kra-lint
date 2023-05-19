@@ -1,7 +1,9 @@
 use serde::Serialize;
 
 #[derive(Default, Serialize)]
-pub struct LintMessages(Vec<(String, String)>);
+pub struct LintMessages {
+    messages: Vec<(String, String)>,
+}
 
 impl LintMessages {
     pub(crate) fn push<S1, S2>(&mut self, lint_title: S1, lint_message: S2)
@@ -9,20 +11,20 @@ impl LintMessages {
         S1: AsRef<str> + Into<String>,
         S2: AsRef<str> + Into<String>,
     {
-        self.0.push((lint_title.into(), lint_message.into()));
+        self.messages.push((lint_title.into(), lint_message.into()));
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &(String, String)> {
-        self.0.iter()
+        self.messages.iter()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
+        self.messages.is_empty()
     }
 
     pub(crate) fn sort_and_dedup(&mut self) {
-        self.0.sort();
-        self.0.dedup();
+        self.messages.sort();
+        self.messages.dedup();
     }
 }
 
@@ -31,6 +33,6 @@ impl IntoIterator for LintMessages {
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
+        self.messages.into_iter()
     }
 }

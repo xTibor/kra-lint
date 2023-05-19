@@ -6,19 +6,21 @@ use unicode_width::UnicodeWidthStr;
 use crate::{LintError, LintMessages, LintOutputFormat};
 
 #[derive(Default, Serialize)]
-pub struct LintMessagesCollection(Vec<(Utf8PathBuf, LintMessages)>);
+pub struct LintMessagesCollection {
+    message_collection: Vec<(Utf8PathBuf, LintMessages)>,
+}
 
 impl LintMessagesCollection {
     pub(crate) fn push(&mut self, path: &Utf8Path, lint_messages: LintMessages) {
-        self.0.push((path.to_owned(), lint_messages));
+        self.message_collection.push((path.to_owned(), lint_messages));
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &(Utf8PathBuf, LintMessages)> {
-        self.0.iter()
+        self.message_collection.iter()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
+        self.message_collection.is_empty()
     }
 }
 
@@ -27,7 +29,7 @@ impl IntoIterator for LintMessagesCollection {
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
+        self.message_collection.into_iter()
     }
 }
 
@@ -35,7 +37,7 @@ impl LintMessagesCollection {
     fn serialize_plain_text(&self) -> String {
         let mut result = String::new();
 
-        for (path, lint_messages) in &self.0 {
+        for (path, lint_messages) in &self.message_collection {
             for (lint_title, group) in &lint_messages.iter().group_by(|(lint_title, _)| lint_title) {
                 let indent_size = path.to_string().width();
                 let indent_str = format!("{}  | ", " ".repeat(indent_size));
