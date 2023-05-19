@@ -36,7 +36,7 @@ impl IntoIterator for LintMessagesCollection {
 }
 
 impl LintMessagesCollection {
-    fn serialize_plain_text<W>(&self, writer: &mut W) -> Result<(), LintError>
+    fn to_writer_plain_text<W>(&self, writer: &mut W) -> Result<(), LintError>
     where
         W: Write,
     {
@@ -60,7 +60,7 @@ impl LintMessagesCollection {
     pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintError> where W: Write {
         match output_format {
             LintOutputFormat::PlainText => {
-                self.serialize_plain_text(writer)
+                self.to_writer_plain_text(writer)
             },
             LintOutputFormat::Toml => {
                 // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
