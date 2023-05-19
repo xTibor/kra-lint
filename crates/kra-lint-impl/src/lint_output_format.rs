@@ -16,4 +16,7 @@ pub enum LintOutputFormat {
 
     #[strum(serialize = "yaml")]
     Yaml,
+
+    #[strum(serialize = "pickle")]
+    Pickle,
 }

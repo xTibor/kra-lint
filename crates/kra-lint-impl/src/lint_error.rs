@@ -85,6 +85,9 @@ pub enum LintError {
     #[display(fmt = "Failed to serialize YAML output")]
     FailedToSerializeYamlOutput(serde_yaml::Error),
 
+    #[display(fmt = "Failed to serialize Pickle output")]
+    FailedToSerializePickleOutput(serde_pickle::Error),
+
     #[from]
     ZipError(zip::result::ZipError),
 

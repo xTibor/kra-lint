@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use camino::{Utf8Path, Utf8PathBuf};
 use itertools::Itertools;
 use serde::Serialize;
@@ -34,46 +36,54 @@ impl IntoIterator for LintMessagesCollection {
 }
 
 impl LintMessagesCollection {
-    fn serialize_plain_text(&self) -> String {
-        let mut result = String::new();
-
+    fn serialize_plain_text<W>(&self, writer: &mut W) -> Result<(), LintError>
+    where
+        W: Write,
+    {
         for (path, lint_messages) in &self.message_collection {
             for (lint_title, group) in &lint_messages.iter().group_by(|(lint_title, _)| lint_title) {
                 let indent_size = path.to_string().width();
                 let indent_str = format!("{}  | ", " ".repeat(indent_size));
 
-                result.push_str(&format!("{}: {}\n", path, lint_title));
+                writer.write_all(format!("{}: {}\n", path, lint_title).as_bytes())?;
                 for (_, lint_message) in group {
-                    result.push_str(&format!("{}{}\n", indent_str, lint_message));
+                    writer.write_all(format!("{}{}\n", indent_str, lint_message).as_bytes())?;
                 }
-                result.push('\n');
+                writer.write_all(b"\n")?;
             }
         }
 
-        result
+        Ok(())
     }
 
     #[rustfmt::skip]
-    pub fn format_output(&self, output_format: LintOutputFormat) -> Result<String, LintError> {
+    pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintError> where W: Write {
         match output_format {
             LintOutputFormat::PlainText => {
-                Ok(self.serialize_plain_text())
+                self.serialize_plain_text(writer)
             },
             LintOutputFormat::Toml => {
-                toml::ser::to_string(self)
-                    .map_err(LintError::FailedToSerializeTomlOutput)
+                // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
+                let toml_output = toml::ser::to_string(self)
+                    .map_err(LintError::FailedToSerializeTomlOutput)?;
+                Ok(writer.write_all(toml_output.as_bytes())?)
             },
             LintOutputFormat::Json => {
-                serde_json::to_string(self)
+                serde_json::to_writer(writer, self)
                     .map_err(LintError::FailedToSerializeJsonOutput)
             }
             LintOutputFormat::Ron => {
-                ron::to_string(self)
+                ron::ser::to_writer(writer, self)
                     .map_err(LintError::FailedToSerializeRonOutput)
             },
             LintOutputFormat::Yaml => {
-                serde_yaml::to_string(self)
+                serde_yaml::to_writer(writer, self)
                     .map_err(LintError::FailedToSerializeYamlOutput)
+            },
+            LintOutputFormat::Pickle => {
+                let pickle_options = serde_pickle::SerOptions::default();
+                serde_pickle::to_writer(writer, self, pickle_options)
+                    .map_err(LintError::FailedToSerializePickleOutput)
             },
         }
     }

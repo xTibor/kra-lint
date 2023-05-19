@@ -57,7 +57,9 @@ fn main() -> ExitCode {
         ExitCode::SUCCESS
     } else {
         let output_format = args.output_format.unwrap_or(LintOutputFormat::PlainText);
-        print!("{}", lint_message_collection.format_output(output_format).expect("Failed to format output"));
+        let mut output_writer = std::io::stdout();
+
+        lint_message_collection.write_output(&mut output_writer, output_format).expect("Failed to write output");
 
         ExitCode::FAILURE
     }
