@@ -1,6 +1,7 @@
 use strum::EnumString;
 
 #[derive(EnumString, Copy, Clone, Debug)]
+#[strum(ascii_case_insensitive)]
 pub enum LintOutputFormat {
     #[strum(serialize = "plain-text")]
     PlainText,
