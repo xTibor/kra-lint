@@ -62,6 +62,24 @@ impl LintConfigCollection {
         Ok(())
     }
 
+    pub fn lint_path<P>(&self, kra_path: &P) -> LintMessages
+    where
+        P: AsRef<Utf8Path> + Into<Utf8PathBuf>,
+    {
+        let mut lint_messages = LintMessages::default();
+
+        match KraArchive::from_path(kra_path.as_ref()) {
+            Ok(kra_archive) => match self.lint(&kra_archive, &mut lint_messages) {
+                Ok(()) => {}
+                Err(err) => lint_messages.push("Error", err.to_string()),
+            },
+            Err(err) => lint_messages.push("Error", err.to_string()),
+        }
+
+        lint_messages.sort_and_dedup();
+        lint_messages
+    }
+
     pub fn lint_paths<P>(&self, kra_paths: &[P]) -> LintMessagesCollection
     where
         P: AsRef<Utf8Path> + Into<Utf8PathBuf>,
@@ -69,19 +87,10 @@ impl LintConfigCollection {
         let mut lint_message_collection = LintMessagesCollection::default();
 
         for kra_path in kra_paths {
-            let mut lint_messages = LintMessages::default();
-
-            match KraArchive::from_path(kra_path.as_ref()) {
-                Ok(kra_archive) => match self.lint(&kra_archive, &mut lint_messages) {
-                    Ok(()) => {}
-                    Err(err) => lint_messages.push("Error", err.to_string()),
-                },
-                Err(err) => lint_messages.push("Error", err.to_string()),
-            }
+            let lint_messages = self.lint_path(kra_path);
 
             if !lint_messages.is_empty() {
-                lint_messages.sort_and_dedup();
-                lint_message_collection.push(kra_path.as_ref(), lint_messages)
+                lint_message_collection.push(kra_path.as_ref(), lint_messages);
             }
         }
 
