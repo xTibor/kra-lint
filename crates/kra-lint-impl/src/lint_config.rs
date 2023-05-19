@@ -89,8 +89,7 @@ impl LintConfig {
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
             None | Some("toml") => {
                 // TODO: toml::from_reader (https://github.com/toml-rs/toml/pull/349)
-                let tmp_string = std::io::read_to_string(reader)?;
-                toml::from_str(&tmp_string)
+                toml::from_str(&std::io::read_to_string(reader)?)
                     .map_err(|source| LintError::FailedToParseTomlConfig { path: lint_config_path.to_owned(), source })
             }
             Some("json") => {
@@ -99,8 +98,7 @@ impl LintConfig {
             }
             Some("hjson") => {
                 // TODO: deser_hjson::from_reader (https://github.com/Canop/deser-hjson)
-                let tmp_string = std::io::read_to_string(reader)?;
-                deser_hjson::from_str(&tmp_string)
+                deser_hjson::from_str(&std::io::read_to_string(reader)?)
                     .map_err(|source| LintError::FailedToParseHjsonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("ron") => {
