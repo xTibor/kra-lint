@@ -7,6 +7,7 @@ use unicode_width::UnicodeWidthStr;
 
 use crate::{LintError, LintMessages, LintOutputFormat};
 
+#[must_use = "lint results shouldn't be ignored"]
 #[derive(Default, Serialize)]
 pub struct LintMessagesCollection {
     message_collection: Vec<(Utf8PathBuf, LintMessages)>,

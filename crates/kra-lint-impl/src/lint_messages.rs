@@ -1,5 +1,6 @@
 use serde::Serialize;
 
+#[must_use = "lint results shouldn't be ignored"]
 #[derive(Default, Serialize)]
 pub struct LintMessages {
     messages: Vec<(String, String)>,
