@@ -3,13 +3,17 @@ use std::process::ExitCode;
 use camino::Utf8PathBuf;
 use clap::Parser;
 
-use kra_lint_impl::LintConfigCollection;
+use kra_lint_impl::{LintConfigCollection, LintOutputFormat};
 
 #[derive(Parser, Debug)]
 pub struct Args {
     /// Config file path
     #[arg(long, short = 'C', value_name = "PATH", env = "KRALINT_CONFIG_PATH")]
     pub config_paths: Vec<Utf8PathBuf>,
+
+    /// Output format
+    #[arg(long, short = 'F', value_name = "FORMAT", env = "KRALINT_OUTPUT_FORMAT")]
+    pub output_format: Option<LintOutputFormat>,
 
     /// Document paths
     pub paths: Vec<Utf8PathBuf>,
@@ -52,7 +56,9 @@ fn main() -> ExitCode {
     if lint_message_collection.is_empty() {
         ExitCode::SUCCESS
     } else {
-        lint_message_collection.print();
+        let output_format = args.output_format.unwrap_or(LintOutputFormat::PlainText);
+        print!("{}", lint_message_collection.format_output(output_format));
+
         ExitCode::FAILURE
     }
 }

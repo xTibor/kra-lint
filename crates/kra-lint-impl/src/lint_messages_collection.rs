@@ -1,10 +1,11 @@
 use camino::{Utf8Path, Utf8PathBuf};
 use itertools::Itertools;
+use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
-use crate::LintMessages;
+use crate::{LintMessages, LintOutputFormat};
 
-#[derive(Default)]
+#[derive(Default, Serialize)]
 pub struct LintMessagesCollection(Vec<(Utf8PathBuf, LintMessages)>);
 
 impl LintMessagesCollection {
@@ -43,6 +44,16 @@ impl LintMessagesCollection {
                 }
                 eprintln!();
             }
+        }
+    }
+
+    pub fn format_output(&self, output_format: LintOutputFormat) -> String {
+        match output_format {
+            LintOutputFormat::PlainText => todo!(),
+            LintOutputFormat::Toml => toml::ser::to_string_pretty(self).unwrap(),
+            LintOutputFormat::Json => serde_json::to_string_pretty(self).unwrap(),
+            LintOutputFormat::Ron => ron::to_string(self).unwrap(),
+            LintOutputFormat::Yaml => serde_yaml::to_string(self).unwrap(),
         }
     }
 }

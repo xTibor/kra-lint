@@ -1,4 +1,6 @@
-#[derive(Default)]
+use serde::Serialize;
+
+#[derive(Default, Serialize)]
 pub struct LintMessages(Vec<(String, String)>);
 
 impl LintMessages {
