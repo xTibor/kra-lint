@@ -5,6 +5,7 @@ paths = [
     "kra-lint-03.hjson",
     "kra-lint-04.ron",
     "kra-lint-05.yaml",
+    "kra-lint-06.pickle",
     "test-subfolder/kra-lint.toml",
 ]
 
