@@ -11,3 +11,4 @@ pub use lint_config::LintConfig;
 pub use lint_config_collection::LintConfigCollection;
 pub use lint_error::LintError;
 pub use lint_messages::LintMessages;
+pub use lint_messages_collection::LintMessagesCollection;
