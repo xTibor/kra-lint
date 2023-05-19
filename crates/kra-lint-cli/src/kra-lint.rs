@@ -57,7 +57,7 @@ fn main() -> ExitCode {
         ExitCode::SUCCESS
     } else {
         let output_format = args.output_format.unwrap_or(LintOutputFormat::PlainText);
-        print!("{}", lint_message_collection.format_output(output_format));
+        print!("{}", lint_message_collection.format_output(output_format).expect("Failed to format output"));
 
         ExitCode::FAILURE
     }

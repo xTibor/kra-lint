@@ -3,7 +3,7 @@ use itertools::Itertools;
 use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
-use crate::{LintMessages, LintOutputFormat};
+use crate::{LintError, LintMessages, LintOutputFormat};
 
 #[derive(Default, Serialize)]
 pub struct LintMessagesCollection(Vec<(Utf8PathBuf, LintMessages)>);
@@ -32,28 +32,47 @@ impl IntoIterator for LintMessagesCollection {
 }
 
 impl LintMessagesCollection {
-    pub fn print(&self) {
+    fn serialize_plain_text(&self) -> String {
+        let mut result = String::new();
+
         for (path, lint_messages) in &self.0 {
             for (lint_title, group) in &lint_messages.iter().group_by(|(lint_title, _)| lint_title) {
                 let indent_size = path.to_string().width();
                 let indent_str = format!("{}  | ", " ".repeat(indent_size));
 
-                eprintln!("{}: {}", path, lint_title);
+                result.push_str(&format!("{}: {}\n", path, lint_title));
                 for (_, lint_message) in group {
-                    eprintln!("{}{}", indent_str, lint_message);
+                    result.push_str(&format!("{}{}\n", indent_str, lint_message));
                 }
-                eprintln!();
+                result.push('\n');
             }
         }
+
+        result
     }
 
-    pub fn format_output(&self, output_format: LintOutputFormat) -> String {
+    #[rustfmt::skip]
+    pub fn format_output(&self, output_format: LintOutputFormat) -> Result<String, LintError> {
         match output_format {
-            LintOutputFormat::PlainText => todo!(),
-            LintOutputFormat::Toml => toml::ser::to_string_pretty(self).unwrap(),
-            LintOutputFormat::Json => serde_json::to_string_pretty(self).unwrap(),
-            LintOutputFormat::Ron => ron::to_string(self).unwrap(),
-            LintOutputFormat::Yaml => serde_yaml::to_string(self).unwrap(),
+            LintOutputFormat::PlainText => {
+                Ok(self.serialize_plain_text())
+            },
+            LintOutputFormat::Toml => {
+                toml::ser::to_string(self)
+                    .map_err(LintError::FailedToSerializeTomlOutput)
+            },
+            LintOutputFormat::Json => {
+                serde_json::to_string(self)
+                    .map_err(LintError::FailedToSerializeJsonOutput)
+            }
+            LintOutputFormat::Ron => {
+                ron::to_string(self)
+                    .map_err(LintError::FailedToSerializeRonOutput)
+            },
+            LintOutputFormat::Yaml => {
+                serde_yaml::to_string(self)
+                    .map_err(LintError::FailedToSerializeYamlOutput)
+            },
         }
     }
 }
