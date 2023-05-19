@@ -205,10 +205,8 @@ version = "0.1.0"
 dependencies = [
  "camino",
  "clap",
- "itertools",
  "kra-lint-impl",
  "kra-parser",
- "unicode-width",
 ]
 
 [[package]]
@@ -227,6 +225,7 @@ dependencies = [
  "serde_yaml",
  "svg",
  "toml",
+ "unicode-width",
  "zip",
 ]
 

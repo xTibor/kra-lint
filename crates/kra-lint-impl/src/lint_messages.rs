@@ -13,6 +13,15 @@ impl LintMessages {
     pub fn iter(&self) -> impl Iterator<Item = &(String, String)> {
         self.0.iter()
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    pub(crate) fn sort_and_dedup(&mut self) {
+        self.0.sort();
+        self.0.dedup();
+    }
 }
 
 impl IntoIterator for LintMessages {

@@ -3,6 +3,7 @@ mod lint_config_collection;
 mod lint_error;
 mod lint_fields;
 mod lint_messages;
+mod lint_messages_collection;
 mod lint_pass;
 mod lint_pass_impl;
 

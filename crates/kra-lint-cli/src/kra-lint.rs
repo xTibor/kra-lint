@@ -2,11 +2,8 @@ use std::process::ExitCode;
 
 use camino::Utf8PathBuf;
 use clap::Parser;
-use itertools::Itertools;
-use unicode_width::UnicodeWidthStr;
 
-use kra_lint_impl::{LintConfigCollection, LintMessages, LintPass};
-use kra_parser::kra_archive::KraArchive;
+use kra_lint_impl::LintConfigCollection;
 
 #[derive(Parser, Debug)]
 pub struct Args {
@@ -50,48 +47,12 @@ fn main() -> ExitCode {
         lint_config_collection
     };
 
-    let all_lint_messages = {
-        let mut all_lint_messages = vec![];
+    let lint_message_collection = lint_config_collection.lint_paths(&args.paths);
 
-        for kra_path in &args.paths {
-            match KraArchive::from_path(kra_path) {
-                Ok(kra_archive) => {
-                    let mut lint_messages = LintMessages::default();
-
-                    match lint_config_collection.lint(&kra_archive, &mut lint_messages) {
-                        Ok(()) => all_lint_messages.extend(
-                            lint_messages
-                                .into_iter()
-                                .map(|(lint_title, lint_message)| (kra_path, lint_title, lint_message)),
-                        ),
-                        Err(err) => all_lint_messages.push((kra_path, "Error".to_string(), err.to_string())),
-                    }
-                }
-                Err(err) => all_lint_messages.push((kra_path, "Error".to_string(), err.to_string())),
-            }
-        }
-
-        all_lint_messages.sort();
-        all_lint_messages.dedup();
-        all_lint_messages
-    };
-
-    if all_lint_messages.is_empty() {
+    if lint_message_collection.is_empty() {
         ExitCode::SUCCESS
     } else {
-        for ((kra_path, lint_title), group) in
-            &all_lint_messages.iter().group_by(|(kra_path, lint_title, _)| (kra_path, lint_title))
-        {
-            let indent_size = kra_path.to_string().width();
-            let indent_str = format!("{}  | ", " ".repeat(indent_size));
-
-            eprintln!("{}: {}", kra_path, lint_title);
-            for (_, _, lint_message) in group {
-                eprintln!("{}{}", indent_str, lint_message);
-            }
-            eprintln!();
-        }
-
+        lint_message_collection.print();
         ExitCode::FAILURE
     }
 }
