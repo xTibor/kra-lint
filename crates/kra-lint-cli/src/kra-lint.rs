@@ -53,14 +53,12 @@ fn main() -> ExitCode {
 
     let lint_message_collection = lint_config_collection.lint_paths(&args.paths);
 
+    let output_format = args.output_format.unwrap_or(LintOutputFormat::PlainText);
+    lint_message_collection.write_output(&mut std::io::stdout(), output_format).expect("Failed to write output");
+
     if lint_message_collection.is_empty() {
         ExitCode::SUCCESS
     } else {
-        let output_format = args.output_format.unwrap_or(LintOutputFormat::PlainText);
-        let mut output_writer = std::io::stdout();
-
-        lint_message_collection.write_output(&mut output_writer, output_format).expect("Failed to write output");
-
         ExitCode::FAILURE
     }
 }
