@@ -13,20 +13,23 @@ use crate::LintMessages;
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassVectorLayers {
     font_family: Option<LintStringMatchExpression>,
+    stroke_linecap: Option<LintStringMatchExpression>,
+    stroke_linejoin: Option<LintStringMatchExpression>,
     placeholder_text: Option<LintStringMatchExpression>,
 }
 
 impl LintPass for LintPassVectorLayers {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
-        // Sub-pass #1
+        // Sub-pass #1, #2, #3, #4
         {
-            if let Some(font_family) = self.font_family.as_ref() {
-                for layer in kra_archive.all_layers_by_type(KraLayerType::VectorLayer) {
-                    let content_svg_data = layer.content_svg(kra_archive)?;
-                    let content_svg_parser = svg::read(&content_svg_data)?;
+            for layer in kra_archive.all_layers_by_type(KraLayerType::VectorLayer) {
+                let content_svg_data = layer.content_svg(kra_archive)?;
+                let content_svg_parser = svg::read(&content_svg_data)?;
 
-                    for svg_event in content_svg_parser {
-                        if let Event::Tag("text" | "tspan", Type::Start, svg_attributes) = svg_event {
+                for svg_event in content_svg_parser {
+                    // Sub-pass #1
+                    if let Some(font_family) = self.font_family.as_ref() {
+                        if let Event::Tag("text" | "tspan", Type::Start, svg_attributes) = &svg_event {
                             if let Some(svg_font_family) = svg_attributes.get("font-family") {
                                 if !font_family.matches(svg_font_family) {
                                     lint_messages.push(
@@ -42,19 +45,52 @@ impl LintPass for LintPassVectorLayers {
                             }
                         }
                     }
-                }
-            }
-        }
 
-        // Sub-pass #2
-        {
-            if let Some(placeholder_text) = self.placeholder_text.as_ref() {
-                for layer in kra_archive.all_layers_by_type(KraLayerType::VectorLayer) {
-                    let content_svg_data = layer.content_svg(kra_archive)?;
-                    let content_svg_parser = svg::read(&content_svg_data)?;
+                    // Sub-pass #2
+                    if let Some(stroke_linecap) = self.stroke_linecap.as_ref() {
+                        if let Event::Tag("rect" | "ellipse" | "path" | "text", Type::Start, svg_attributes) =
+                            &svg_event
+                        {
+                            if let Some(svg_stroke_linecap) = svg_attributes.get("stroke-linecap") {
+                                if !stroke_linecap.matches(svg_stroke_linecap) {
+                                    lint_messages.push(
+                                        "Prohibited stroke line cap on vector layer",
+                                        format!(
+                                            "Layer: \"{}\", Expected: {}, Found: \"{}\"",
+                                            layer.name.escape_debug(),
+                                            stroke_linecap,
+                                            svg_stroke_linecap.escape_debug()
+                                        ),
+                                    );
+                                }
+                            }
+                        }
+                    }
 
-                    for svg_event in content_svg_parser {
-                        if let Event::Text(svg_text) = svg_event {
+                    // Sub-pass #3
+                    if let Some(stroke_linejoin) = self.stroke_linejoin.as_ref() {
+                        if let Event::Tag("rect" | "ellipse" | "path" | "text", Type::Start, svg_attributes) =
+                            &svg_event
+                        {
+                            if let Some(svg_stroke_linejoin) = svg_attributes.get("stroke-linejoin") {
+                                if !stroke_linejoin.matches(svg_stroke_linejoin) {
+                                    lint_messages.push(
+                                        "Prohibited stroke line join on vector layer",
+                                        format!(
+                                            "Layer: \"{}\", Expected: {}, Found: \"{}\"",
+                                            layer.name.escape_debug(),
+                                            stroke_linejoin,
+                                            svg_stroke_linejoin.escape_debug()
+                                        ),
+                                    );
+                                }
+                            }
+                        }
+                    }
+
+                    // Sub-pass #4
+                    if let Some(placeholder_text) = self.placeholder_text.as_ref() {
+                        if let Event::Text(svg_text) = &svg_event {
                             if placeholder_text.matches(svg_text) {
                                 lint_messages.push(
                                     "Prohibited placeholder text on vector layer",

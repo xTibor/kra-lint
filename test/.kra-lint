@@ -45,6 +45,8 @@ check_missing_files = true
 
 [vector_layers]
 font_family = { not = { regex = '^Noto Sans CJK (SC|TC)$' } }
+stroke_linecap = "round"
+stroke_linejoin = "round"
 placeholder_text = [
     { regex    = '(?i)XXX'                               },
     { regex    = '(?i)TO[\s_-]*DO'                       },
