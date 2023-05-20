@@ -16,11 +16,12 @@ pub(crate) struct LintPassVectorLayers {
     stroke_linecap: Option<LintStringMatchExpression>,
     stroke_linejoin: Option<LintStringMatchExpression>,
     placeholder_text: Option<LintStringMatchExpression>,
+    warn_broken_text_gradients: Option<bool>,
 }
 
 impl LintPass for LintPassVectorLayers {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
-        // Sub-pass #1, #2, #3, #4
+        // Sub-pass #1, #2, #3, #4, #5
         {
             for layer in kra_archive.all_layers_by_type(KraLayerType::VectorLayer) {
                 let content_svg_data = layer.content_svg(kra_archive)?;
@@ -100,6 +101,23 @@ impl LintPass for LintPassVectorLayers {
                                         svg_text.escape_debug()
                                     ),
                                 );
+                            }
+                        }
+                    }
+
+                    // Sub-pass #5
+                    if self.warn_broken_text_gradients == Some(true) {
+                        if let Event::Tag("text", Type::Start, svg_attributes) = &svg_event {
+                            if let Some(svg_fill) = svg_attributes.get("fill") {
+                                let compiled_regex = regex::Regex::new(r"^url\(#gradient\d+\)$")
+                                    .expect("Failed to compile regular expression");
+
+                                if compiled_regex.is_match(svg_fill) {
+                                    lint_messages.push(
+                                        "Broken text gradient fill on vector layer",
+                                        format!("Layer: \"{}\", Bug 430774", layer.name.escape_debug(),),
+                                    );
+                                }
                             }
                         }
                     }

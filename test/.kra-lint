@@ -56,6 +56,7 @@ placeholder_text = [
     { regex    = '(?i)(QWERT[YZ]|ASDF|[ZY]XCV)'          },
     { contains = '123456'                                },
 ]
+warn_broken_text_gradients = true
 
 [surface_type]
     [surface_type.layer_types]
