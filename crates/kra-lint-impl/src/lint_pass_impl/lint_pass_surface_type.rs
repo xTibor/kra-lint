@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::{LintLayerProperty, LintMaskProperty};
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -21,9 +21,12 @@ impl LintPass for LintPassSurfaceType {
                 let (layer_opt, layer_display) = self.layer_types.get(layer);
 
                 if *layer_opt == Some(false) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         format!("Prohibited use of {}", layer_display),
-                        format!("Layer: \"{}\"", layer.name.escape_debug()),
+                        &[
+                            LintMetadata::Layer(layer.name.to_string()),
+                        ],
                     );
                 }
             }
@@ -35,9 +38,13 @@ impl LintPass for LintPassSurfaceType {
                 let (mask_opt, mask_display) = self.mask_types.get(mask);
 
                 if *mask_opt == Some(false) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         format!("Prohibited use of {}", mask_display),
-                        format!("Layer: \"{}\", Mask: \"{}\"", layer.name.escape_debug(), mask.name.escape_debug()),
+                        &[
+                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Mask(mask.name.to_string()),
+                        ],
                     );
                 }
             }

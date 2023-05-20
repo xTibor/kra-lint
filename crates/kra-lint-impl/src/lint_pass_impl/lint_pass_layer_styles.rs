@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintLayerProperty;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -25,9 +25,12 @@ impl LintPass for LintPassLayerStyles {
                         // Bug: When removing all layer styles this KRA field does
                         //  not get cleared, interface still acts like layer styles
                         //  are present.
+                        #[rustfmt::skip]
                         lint_messages.push(
                             format!("Prohibited {} styles", layer_display),
-                            format!("Layer: \"{}\"", layer.name.escape_debug()),
+                            &[
+                                LintMetadata::Layer(layer.name.to_string()),
+                            ],
                         );
                     }
                 }

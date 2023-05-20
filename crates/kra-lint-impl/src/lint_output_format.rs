@@ -7,9 +7,6 @@ pub enum LintOutputFormat {
     #[strum(serialize = "plain-text")]
     PlainText,
 
-    #[strum(serialize = "toml")]
-    Toml,
-
     #[strum(serialize = "json")]
     Json,
 

@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -24,11 +24,21 @@ impl LintPass for LintPassCopyright {
                 let kra_copyright_line = &kra_archive.document_info.about.license;
 
                 if kra_copyright_line.is_empty() {
-                    lint_messages.push("Missing copyright line", format!("Expected: {}", copyright_line));
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing copyright line",
+                        &[
+                            LintMetadata::Expected(copyright_line.to_string()),
+                        ],
+                    );
                 } else if !copyright_line.matches(kra_copyright_line) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect copyright line",
-                        format!("Expected: {}, Found: \"{}\"", copyright_line, kra_copyright_line.escape_debug()),
+                        &[
+                            LintMetadata::Expected(copyright_line.to_string()),
+                            LintMetadata::Found(kra_copyright_line.to_string()),
+                        ],
                     );
                 }
             }
@@ -40,15 +50,21 @@ impl LintPass for LintPassCopyright {
                 let kra_copyright_disclaimer = &kra_archive.document_info.about.r#abstract;
 
                 if kra_copyright_disclaimer.is_empty() {
-                    lint_messages.push("Missing copyright disclaimer", format!("Expected: {}", copyright_disclaimer));
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing copyright disclaimer",
+                        &[
+                            LintMetadata::Expected(copyright_disclaimer.to_string()),
+                        ],
+                    );
                 } else if !copyright_disclaimer.matches(kra_copyright_disclaimer) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect copyright disclaimer",
-                        format!(
-                            "Expected: {}, Found: \"{}\"",
-                            copyright_disclaimer,
-                            kra_copyright_disclaimer.escape_debug()
-                        ),
+                        &[
+                            LintMetadata::Expected(copyright_disclaimer.to_string()),
+                            LintMetadata::Found(kra_copyright_disclaimer.to_string()),
+                        ],
                     );
                 }
             }
@@ -60,7 +76,13 @@ impl LintPass for LintPassCopyright {
                 let kra_initial_creator = &kra_archive.document_info.about.initial_creator;
 
                 if kra_initial_creator.is_empty() || (kra_initial_creator == "Unknown") {
-                    lint_messages.push("Missing author information", "Initial creator");
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing author information",
+                        &[
+                            LintMetadata::MissingField("Initial creator".to_owned()),
+                        ],
+                    );
                 }
             }
         }
@@ -73,27 +95,45 @@ impl LintPass for LintPassCopyright {
                 let kra_author_last_name = &kra_archive.document_info.author.creator_last_name;
 
                 if kra_author_full_name.is_empty() {
-                    lint_messages.push("Missing author information", "Author full name");
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing author information",
+                        &[
+                            LintMetadata::MissingField("Author full name".to_owned()),
+                        ],
+                    );
                 }
 
                 if kra_author_first_name.is_empty() {
-                    lint_messages.push("Missing author information", "Author first name");
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing author information",
+                        &[
+                            LintMetadata::MissingField("Author first name".to_owned()),
+                        ],
+                    );
                 }
 
                 if kra_author_last_name.is_empty() {
-                    lint_messages.push("Missing author information", "Author last name");
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing author information",
+                        &[
+                            LintMetadata::MissingField("Author last name".to_owned()),
+                        ],
+                    );
                 }
 
                 if !kra_author_full_name.is_empty() && !kra_author_first_name.is_empty() {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_first_name) {
+                        #[rustfmt::skip]
                         lint_messages.push(
                             "Inconsistent author information",
-                            format!(
-                                "First name: \"{}\", Full name: \"{}\"",
-                                kra_author_first_name.escape_debug(),
-                                kra_author_full_name.escape_debug()
-                            ),
+                            &[
+                                LintMetadata::Comment(format!("First name: \"{}\"", kra_author_first_name.to_string())),
+                                LintMetadata::Comment(format!("Full name: \"{}\"", kra_author_full_name.to_string())),
+                            ],
                         );
                     }
                 }
@@ -101,13 +141,13 @@ impl LintPass for LintPassCopyright {
                 if !kra_author_full_name.is_empty() && !kra_author_last_name.is_empty() {
                     // .contains() because Eastern/Western name orders
                     if !kra_author_full_name.contains(kra_author_last_name) {
+                        #[rustfmt::skip]
                         lint_messages.push(
                             "Inconsistent author information",
-                            format!(
-                                "Last name: \"{}\", Full name: \"{}\"",
-                                kra_author_last_name.escape_debug(),
-                                kra_author_full_name.escape_debug()
-                            ),
+                            &[
+                                LintMetadata::Comment(format!("Last name: \"{}\"", kra_author_last_name.to_string())),
+                                LintMetadata::Comment(format!("Full name: \"{}\"", kra_author_full_name.to_string())),
+                            ],
                         );
                     }
                 }
@@ -120,11 +160,21 @@ impl LintPass for LintPassCopyright {
                 let kra_studio_name = &kra_archive.document_info.author.company;
 
                 if kra_studio_name.is_empty() {
-                    lint_messages.push("Missing studio name", format!("Expected: {}", studio_name));
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Missing studio name",
+                        &[
+                            LintMetadata::Expected(studio_name.to_string()),
+                        ],
+                    );
                 } else if !studio_name.matches(kra_studio_name) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect studio name",
-                        format!("Expected: {}, Found: \"{}\"", studio_name, kra_studio_name.escape_debug()),
+                        &[
+                            LintMetadata::Expected(studio_name.to_string()),
+                            LintMetadata::Found(kra_studio_name.to_string()),
+                        ],
                     );
                 }
             }

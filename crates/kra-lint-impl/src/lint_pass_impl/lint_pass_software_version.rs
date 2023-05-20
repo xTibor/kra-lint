@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -22,9 +22,13 @@ impl LintPass for LintPassSoftwareVersion {
                 let kra_software_name = &kra_archive.main_doc.editor;
 
                 if !software_name.matches(kra_software_name) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect software name",
-                        format!("Expected: {}, Found: \"{}\"", software_name, kra_software_name.escape_debug()),
+                        &[
+                            LintMetadata::Expected(software_name.to_string()),
+                            LintMetadata::Found(kra_software_name.to_string()),
+                        ],
                     );
                 }
             }
@@ -36,9 +40,13 @@ impl LintPass for LintPassSoftwareVersion {
                 let kra_software_version = &kra_archive.main_doc.software_version;
 
                 if !software_version.matches(kra_software_version) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect software version",
-                        format!("Expected: {}, Found: \"{}\"", software_version, kra_software_version.escape_debug()),
+                        &[
+                            LintMetadata::Expected(software_version.to_string()),
+                            LintMetadata::Found(kra_software_version.to_string()),
+                        ],
                     );
                 }
             }
@@ -50,9 +58,13 @@ impl LintPass for LintPassSoftwareVersion {
                 let kra_syntax_version = &kra_archive.main_doc.syntax_version;
 
                 if !syntax_version.matches(kra_syntax_version) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect document syntax version",
-                        format!("Expected: {}, Found: \"{}\"", syntax_version, kra_syntax_version.escape_debug()),
+                        &[
+                            LintMetadata::Expected(syntax_version.to_string()),
+                            LintMetadata::Found(kra_syntax_version.to_string()),
+                        ],
                     );
                 }
             }

@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -15,9 +15,12 @@ impl LintPass for LintPassProhibitCustomPalettes {
         {
             if let Some(kra_palette_container) = kra_archive.main_doc.image.palette_container.as_ref() {
                 for kra_palette in kra_palette_container.into_iter() {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Prohibited use of custom palettes",
-                        format!("Palette: \"{}\"", kra_palette.name.escape_debug()),
+                        &[
+                            LintMetadata::Comment(format!("Palette: \"{}\"", kra_palette.name)),
+                        ],
                     );
                 }
             }

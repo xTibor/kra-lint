@@ -72,19 +72,19 @@ impl Display for LintStringMatchExpression {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             LintStringMatchExpression::FullMatch(pattern) => {
-                write!(f, "\"{}\"", pattern.escape_debug())
+                write!(f, "\"{}\"", pattern)
             }
             LintStringMatchExpression::Regex { pattern } => {
-                write!(f, "regex(\"{}\")", pattern.escape_debug())
+                write!(f, "regex(\"{}\")", pattern)
             }
             LintStringMatchExpression::StartsWith { pattern } => {
-                write!(f, "starts_with(\"{}\")", pattern.escape_debug())
+                write!(f, "starts_with(\"{}\")", pattern)
             }
             LintStringMatchExpression::EndsWith { pattern } => {
-                write!(f, "ends_with(\"{}\")", pattern.escape_debug())
+                write!(f, "ends_with(\"{}\")", pattern)
             }
             LintStringMatchExpression::Contains { pattern } => {
-                write!(f, "contains(\"{}\")", pattern.escape_debug())
+                write!(f, "contains(\"{}\")", pattern)
             }
             LintStringMatchExpression::BinaryOr(expressions) => {
                 let param_list =

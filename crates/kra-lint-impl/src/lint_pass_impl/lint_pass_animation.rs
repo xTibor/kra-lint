@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression};
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -24,9 +24,12 @@ impl LintPass for LintPassAnimation {
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
                     if layer.keyframes.is_some() {
+                        #[rustfmt::skip]
                         lint_messages.push(
                             format!("Prohibited use of animated {}", layer_display),
-                            format!("Layer: \"{}\"", layer.name.escape_debug()),
+                            &[
+                                LintMetadata::Layer(layer.name.to_string()),
+                            ],
                         );
                     }
                 }
@@ -41,9 +44,13 @@ impl LintPass for LintPassAnimation {
                 #[allow(clippy::collapsible_if)]
                 if *mask_opt == Some(false) {
                     if mask.keyframes.is_some() {
+                        #[rustfmt::skip]
                         lint_messages.push(
                             format!("Prohibited use of animated {}", mask_display),
-                            format!("Layer: \"{}\", Mask: \"{}\"", layer.name.escape_debug(), mask.name.escape_debug()),
+                            &[
+                                LintMetadata::Layer(layer.name.to_string()),
+                                LintMetadata::Mask(mask.name.to_string()),
+                            ],
                         );
                     }
                 }
@@ -56,9 +63,13 @@ impl LintPass for LintPassAnimation {
                 let kra_framerate = kra_archive.main_doc.image.animation.framerate.value;
 
                 if !framerate.matches(&kra_framerate) {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Incorrect animation framerate",
-                        format!("Expected: {}fps, Found: {}fps", framerate, kra_framerate),
+                        &[
+                            LintMetadata::Expected(format!("{}fps", framerate)),
+                            LintMetadata::Found(format!("{}fps", kra_framerate)),
+                        ],
                     );
                 }
             }

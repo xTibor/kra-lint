@@ -47,8 +47,8 @@ impl LintMessagesCollection {
                 let indent_str = format!("{}  | ", " ".repeat(indent_size));
 
                 writer.write_all(format!("{}: {}\n", path, lint_title).as_bytes())?;
-                for (_, lint_message) in group {
-                    writer.write_all(format!("{}{}\n", indent_str, lint_message).as_bytes())?;
+                for (_, lint_metadata) in group {
+                    writer.write_all(format!("{}{}\n", indent_str, lint_metadata.iter().join(", ")).as_bytes())?;
                 }
                 writer.write_all(b"\n")?;
             }
@@ -62,12 +62,6 @@ impl LintMessagesCollection {
         match output_format {
             LintOutputFormat::PlainText => {
                 self.to_writer_plain_text(writer)
-            },
-            LintOutputFormat::Toml => {
-                // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
-                let tmp_string = toml::ser::to_string(self)
-                    .map_err(LintError::FailedToSerializeTomlOutput)?;
-                Ok(writer.write_all(tmp_string.as_bytes())?)
             },
             LintOutputFormat::Json => {
                 serde_json::to_writer(writer, self)

@@ -7,7 +7,7 @@ use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -33,14 +33,14 @@ impl LintPass for LintPassVectorLayers {
                         if let Event::Tag("text" | "tspan", Type::Start, svg_attributes) = &svg_event {
                             if let Some(svg_font_family) = svg_attributes.get("font-family") {
                                 if !font_family.matches(svg_font_family) {
+                                    #[rustfmt::skip]
                                     lint_messages.push(
                                         "Prohibited font family on vector layer",
-                                        format!(
-                                            "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                            layer.name.escape_debug(),
-                                            font_family,
-                                            svg_font_family.escape_debug()
-                                        ),
+                                        &[
+                                            LintMetadata::Layer(layer.name.to_string()),
+                                            LintMetadata::Expected(font_family.to_string()),
+                                            LintMetadata::Found(svg_font_family.to_string()),
+                                        ],
                                     );
                                 }
                             }
@@ -54,14 +54,14 @@ impl LintPass for LintPassVectorLayers {
                         {
                             if let Some(svg_stroke_linecap) = svg_attributes.get("stroke-linecap") {
                                 if !stroke_linecap.matches(svg_stroke_linecap) {
+                                    #[rustfmt::skip]
                                     lint_messages.push(
                                         "Prohibited stroke line cap on vector layer",
-                                        format!(
-                                            "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                            layer.name.escape_debug(),
-                                            stroke_linecap,
-                                            svg_stroke_linecap.escape_debug()
-                                        ),
+                                        &[
+                                            LintMetadata::Layer(layer.name.to_string()),
+                                            LintMetadata::Expected(stroke_linecap.to_string()),
+                                            LintMetadata::Found(svg_stroke_linecap.to_string()),
+                                        ],
                                     );
                                 }
                             }
@@ -75,14 +75,14 @@ impl LintPass for LintPassVectorLayers {
                         {
                             if let Some(svg_stroke_linejoin) = svg_attributes.get("stroke-linejoin") {
                                 if !stroke_linejoin.matches(svg_stroke_linejoin) {
+                                    #[rustfmt::skip]
                                     lint_messages.push(
                                         "Prohibited stroke line join on vector layer",
-                                        format!(
-                                            "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                            layer.name.escape_debug(),
-                                            stroke_linejoin,
-                                            svg_stroke_linejoin.escape_debug()
-                                        ),
+                                        &[
+                                            LintMetadata::Layer(layer.name.to_string()),
+                                            LintMetadata::Expected(stroke_linejoin.to_string()),
+                                            LintMetadata::Found(svg_stroke_linejoin.to_string()),
+                                        ],
                                     );
                                 }
                             }
@@ -93,13 +93,13 @@ impl LintPass for LintPassVectorLayers {
                     if let Some(placeholder_text) = self.placeholder_text.as_ref() {
                         if let Event::Text(svg_text) = &svg_event {
                             if placeholder_text.matches(svg_text) {
+                                #[rustfmt::skip]
                                 lint_messages.push(
                                     "Prohibited placeholder text on vector layer",
-                                    format!(
-                                        "Layer: \"{}\", Placeholder text: \"{}\"",
-                                        layer.name.escape_debug(),
-                                        svg_text.escape_debug()
-                                    ),
+                                    &[
+                                        LintMetadata::Layer(layer.name.to_string()),
+                                        LintMetadata::Found(svg_text.to_string()),
+                                    ],
                                 );
                             }
                         }
@@ -113,9 +113,13 @@ impl LintPass for LintPassVectorLayers {
                                     .expect("Failed to compile regular expression");
 
                                 if compiled_regex.is_match(svg_fill) {
+                                    #[rustfmt::skip]
                                     lint_messages.push(
                                         "Broken text gradient fill on vector layer",
-                                        format!("Layer: \"{}\", Bug 430774", layer.name.escape_debug(),),
+                                        &[
+                                            LintMetadata::Layer(layer.name.to_string()),
+                                            LintMetadata::Bug(430774),
+                                        ],
                                     );
                                 }
                             }

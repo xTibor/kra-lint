@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -19,9 +19,13 @@ impl LintPass for LintPassFileName {
             let kra_file_name = kra_archive.zip_path.file_name().expect("Failed to get file name");
 
             if !self.file_name.matches(kra_file_name) {
+                #[rustfmt::skip]
                 lint_messages.push(
                     "Incorrect file name",
-                    format!("Expected: {}, Found: \"{}\"", self.file_name, kra_file_name.escape_debug()),
+                    &[
+                        LintMetadata::Expected(self.file_name.to_string()),
+                        LintMetadata::Found(kra_file_name.to_string()),
+                    ],
                 );
             }
         }

@@ -2,10 +2,8 @@ use camino::{Utf8Path, Utf8PathBuf};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_config::LintConfig;
-use crate::lint_messages_collection::LintMessagesCollection;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::{LintError, LintMessages};
+use crate::{LintConfig, LintError, LintMessages, LintMessagesCollection, LintMetadata};
 
 #[derive(Default)]
 pub struct LintConfigCollection {
@@ -71,9 +69,9 @@ impl LintConfigCollection {
         match KraArchive::from_path(kra_path.as_ref()) {
             Ok(kra_archive) => match self.lint(&kra_archive, &mut lint_messages) {
                 Ok(()) => {}
-                Err(err) => lint_messages.push("Error", err.to_string()),
+                Err(err) => lint_messages.push("Error", &[LintMetadata::Error(err.to_string())]),
             },
-            Err(err) => lint_messages.push("Error", err.to_string()),
+            Err(err) => lint_messages.push("Error", &[LintMetadata::Error(err.to_string())]),
         }
 
         lint_messages.sort_and_dedup();

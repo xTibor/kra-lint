@@ -11,6 +11,6 @@ mod lint_pass_impl;
 pub use lint_config::LintConfig;
 pub use lint_config_collection::LintConfigCollection;
 pub use lint_error::LintError;
-pub use lint_messages::LintMessages;
+pub use lint_messages::{LintMessages, LintMetadata};
 pub use lint_messages_collection::LintMessagesCollection;
 pub use lint_output_format::LintOutputFormat;

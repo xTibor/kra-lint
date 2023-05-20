@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -16,14 +16,14 @@ impl LintPass for LintPassNonDefaultBlending {
         {
             for layer in kra_archive.all_layers() {
                 if layer.opacity != 255 {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Non-default layer transparency",
-                        format!(
-                            "Layer: \"{}\", Expected: \"{:.0}%\", Found: \"{:.0}%\"",
-                            layer.name.escape_debug(),
-                            100.0,
-                            (layer.opacity as f64 / 255.0 * 100.0),
-                        ),
+                        &[
+                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Expected(format!("{:.0}%", 100.0)),
+                            LintMetadata::Found(format!("{:.0}%", layer.opacity as f64 / 255.0 * 100.0)),
+                        ],
                     );
                 }
             }
@@ -38,14 +38,14 @@ impl LintPass for LintPassNonDefaultBlending {
                 };
 
                 if layer.composite_op != expected_blending_mode {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Non-default layer blending mode",
-                        format!(
-                            "Layer: \"{}\", Expected: \"{}\", Found: \"{}\"",
-                            layer.name.escape_debug(),
-                            expected_blending_mode,
-                            layer.composite_op.escape_debug(),
-                        ),
+                        &[
+                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Expected(expected_blending_mode.to_string()),
+                            LintMetadata::Found(layer.composite_op.to_string()),
+                        ],
                     );
                 }
             }
@@ -60,15 +60,15 @@ impl LintPass for LintPassNonDefaultBlending {
                 };
 
                 if mask.composite_op.as_deref() != expected_blending_mode {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Non-default mask blending mode",
-                        format!(
-                            "Layer: \"{}\", Mask: \"{}\", Expected: \"{}\", Found: \"{}\"",
-                            layer.name.escape_debug(),
-                            mask.name.escape_debug(),
-                            expected_blending_mode.unwrap_or("none"),
-                            mask.composite_op.as_deref().unwrap_or("none").escape_debug(),
-                        ),
+                        &[
+                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Mask(mask.name.to_string()),
+                            LintMetadata::Expected(expected_blending_mode.unwrap_or("none").to_string()),
+                            LintMetadata::Found(mask.composite_op.as_deref().unwrap_or("none").to_string()),
+                        ],
                     );
                 }
             }

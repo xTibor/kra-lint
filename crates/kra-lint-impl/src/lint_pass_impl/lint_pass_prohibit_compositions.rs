@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -15,9 +15,12 @@ impl LintPass for LintPassProhibitCompositions {
         {
             if let Some(composition_container) = kra_archive.main_doc.image.composition_container.as_ref() {
                 for composition in composition_container.into_iter() {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Prohibited use of compositions",
-                        format!("Composition name: \"{}\"", composition.name.escape_debug()),
+                        &[
+                            LintMetadata::Comment(format!("Composition name: \"{}\"", composition.name)),
+                        ],
                     );
                 }
             }

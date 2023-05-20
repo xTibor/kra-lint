@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintNumberMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -46,12 +46,13 @@ impl LintPass for LintPassDocumentSize {
                     .collect::<Vec<_>>()
                     .join(", ");
 
+                #[rustfmt::skip]
                 lint_messages.push(
                     "Incorrect document size",
-                    format!(
-                        "Expected: [{}], Found: {}×{}px/{}dpi",
-                        document_size_list, kra_document_width, kra_document_height, kra_document_resolution
-                    ),
+                    &[
+                        LintMetadata::Expected(document_size_list),
+                        LintMetadata::Found(format!("{}×{}px/{}dpi", kra_document_width, kra_document_height, kra_document_resolution)),
+                    ],
                 );
             }
         }
@@ -62,9 +63,12 @@ impl LintPass for LintPassDocumentSize {
             let kra_resolution_y = kra_archive.main_doc.image.y_res;
 
             if kra_resolution_x != kra_resolution_y {
+                #[rustfmt::skip]
                 lint_messages.push(
                     "Inconsistent horizontal and vertical document resolution",
-                    format!("Horizontal: {}dpi, Vertical: {}dpi", kra_resolution_x, kra_resolution_y),
+                    &[
+                        LintMetadata::Comment(format!("Horizontal: {}dpi, Vertical: {}dpi", kra_resolution_x, kra_resolution_y)),
+                    ],
                 );
             }
         }

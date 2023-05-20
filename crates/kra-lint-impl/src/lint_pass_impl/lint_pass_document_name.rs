@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -19,11 +19,21 @@ impl LintPass for LintPassDocumentName {
             let kra_document_name = &kra_archive.main_doc.image.name;
 
             if kra_document_name.is_empty() {
-                lint_messages.push("Missing document name", format!("Expected: {}", self.document_name));
+                #[rustfmt::skip]
+                lint_messages.push(
+                    "Missing document name",
+                    &[
+                        LintMetadata::Expected(self.document_name.to_string()),
+                    ],
+                );
             } else if !self.document_name.matches(kra_document_name) {
+                #[rustfmt::skip]
                 lint_messages.push(
                     "Incorrect document name",
-                    format!("Expected: {}, Found: \"{}\"", self.document_name, kra_document_name.escape_debug()),
+                    &[
+                        LintMetadata::Expected(self.document_name.to_string()),
+                        LintMetadata::Found(kra_document_name.to_string()),
+                    ],
                 );
             }
         }

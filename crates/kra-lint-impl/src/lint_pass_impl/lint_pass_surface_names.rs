@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintStringMatchExpression};
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -23,9 +23,14 @@ impl LintPass for LintPassSurfaceNames {
 
                     if let Some(string_match_expr) = layer_opt.as_ref() {
                         if !string_match_expr.matches(&layer.name) {
+                            #[rustfmt::skip]
                             lint_messages.push(
                                 format!("Incorrect {} name", layer_display),
-                                format!("Layer: \"{}\", Expected: {}", layer.name.escape_debug(), string_match_expr),
+                                &[
+                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Expected(string_match_expr.to_string()),
+                                    LintMetadata::Found(layer.name.to_string()),
+                                ],
                             );
                         }
                     }
@@ -41,14 +46,15 @@ impl LintPass for LintPassSurfaceNames {
 
                     if let Some(string_match_expr) = mask_opt.as_ref() {
                         if !string_match_expr.matches(&mask.name) {
+                            #[rustfmt::skip]
                             lint_messages.push(
                                 format!("Incorrect {} name", mask_display),
-                                format!(
-                                    "Layer: \"{}\", Mask: \"{}\", Expected: {}",
-                                    layer.name.escape_debug(),
-                                    mask.name.escape_debug(),
-                                    string_match_expr
-                                ),
+                                &[
+                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Mask(mask.name.to_string()),
+                                    LintMetadata::Expected(string_match_expr.to_string()),
+                                    LintMetadata::Found(mask.name.to_string()),
+                                ],
                             );
                         }
                     }

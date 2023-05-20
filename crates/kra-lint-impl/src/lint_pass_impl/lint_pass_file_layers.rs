@@ -6,7 +6,7 @@ use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -24,20 +24,24 @@ impl LintPass for LintPassFileLayers {
                     if let Some(source) = layer.source.as_ref() {
                         if let Some(source_ext) = Utf8Path::new(source).extension() {
                             if !file_formats.matches(source_ext) {
+                                #[rustfmt::skip]
                                 lint_messages.push(
                                     "Incorrect file layer source image format",
-                                    format!(
-                                        "Layer: \"{}\", Expected: {}, Found: \"{}\"",
-                                        layer.name.escape_debug(),
-                                        file_formats,
-                                        source_ext.escape_debug()
-                                    ),
+                                    &[
+                                        LintMetadata::Layer(layer.name.to_string()),
+                                        LintMetadata::Expected(file_formats.to_string()),
+                                        LintMetadata::Found(source_ext.to_string()),
+                                    ],
                                 );
                             }
                         } else {
+                            #[rustfmt::skip]
                             lint_messages.push(
                                 "File layer source image has no file extension",
-                                format!("Layer: \"{}\", Expected: {}", layer.name.escape_debug(), file_formats),
+                                &[
+                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Expected(file_formats.to_string()),
+                                ],
                             );
                         }
                     }
@@ -55,13 +59,13 @@ impl LintPass for LintPassFileLayers {
                             kra_archive.zip_path.parent().expect("Failed to get parent directory").join(source);
 
                         if !source_path.is_file() {
+                            #[rustfmt::skip]
                             lint_messages.push(
                                 "Missing file layer source image",
-                                format!(
-                                    "Layer: \"{}\", Source: \"{}\"",
-                                    layer.name.escape_debug(),
-                                    source.escape_debug()
-                                ),
+                                &[
+                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Comment(format!("Source: \"{}\"", source)),
+                                ],
                             );
                         }
                     }

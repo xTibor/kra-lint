@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::LintMessages;
+use crate::{LintMessages, LintMetadata};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -20,7 +20,14 @@ impl LintPass for LintPassMalformedDocument {
             let documentinfo_xml = std::io::read_to_string(zip_file)?;
 
             if documentinfo_xml.matches("]]>").count() > 1 {
-                lint_messages.push("Malformed document", "Unescaped documentinfo.xml <abstract> tag, Bug 446376");
+                #[rustfmt::skip]
+                lint_messages.push(
+                    "Malformed document",
+                    &[
+                        LintMetadata::Comment("Unescaped documentinfo.xml <abstract> tag".to_owned()),
+                        LintMetadata::Bug(446376),
+                    ],
+                );
             }
         }
 
@@ -29,7 +36,14 @@ impl LintPass for LintPassMalformedDocument {
             let zip_archive = kra_archive.zip_archive.borrow();
 
             if zip_archive.file_names().any(|file_name| file_name.contains("../")) {
-                lint_messages.push("Malformed document", "Path traversal vulnerability, Bug 429925");
+                #[rustfmt::skip]
+                lint_messages.push(
+                    "Malformed document",
+                    &[
+                        LintMetadata::Comment("Path traversal vulnerability".to_owned()),
+                        LintMetadata::Bug(429925),
+                    ],
+                );
             }
         }
 
@@ -38,18 +52,24 @@ impl LintPass for LintPassMalformedDocument {
             for layer in kra_archive.all_layers_by_type(KraLayerType::CloneLayer) {
                 if let Some(clone_from_uuid) = layer.clone_from_uuid.as_ref() {
                     if !kra_archive.all_layers().any(|target_layer| &target_layer.uuid == clone_from_uuid) {
+                        #[rustfmt::skip]
                         lint_messages.push(
                             "Malformed document",
-                            format!(
-                                "Missing clone layer target layer, Layer: \"{}\", Bug 414699",
-                                layer.name.escape_debug()
-                            ),
+                            &[
+                                LintMetadata::Comment("Missing clone layer target layer".to_owned()),
+                                LintMetadata::Layer(layer.name.to_string()),
+                                LintMetadata::Bug(414699),
+                            ],
                         );
                     }
                 } else {
+                    #[rustfmt::skip]
                     lint_messages.push(
                         "Malformed document",
-                        format!("Missing clone layer target field, Layer: \"{}\"", layer.name.escape_debug()),
+                        &[
+                            LintMetadata::Comment("Missing clone layer target field".to_owned()),
+                            LintMetadata::Layer(layer.name.to_string()),
+                        ],
                     );
                 }
             }
@@ -59,7 +79,13 @@ impl LintPass for LintPassMalformedDocument {
         {
             if let Some(composition_container) = kra_archive.main_doc.image.composition_container.as_ref() {
                 if composition_container.into_iter().any(|composition| composition.name.contains('/')) {
-                    lint_messages.push("Malformed document", "Compositions path traversal vulnerability");
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Malformed document",
+                        &[
+                            LintMetadata::Comment("Compositions path traversal vulnerability".to_owned()),
+                        ],
+                    );
                 }
             }
         }
@@ -83,9 +109,13 @@ impl LintPass for LintPassMalformedDocument {
                         .collect::<Vec<_>>();
 
                     if referencing_uuid.contains(&uuid_root) {
+                        #[rustfmt::skip]
                         lint_messages.push(
                             "Malformed document",
-                            format!("Clone layer loop, Layer: \"{}\"", layer.name.escape_debug()),
+                            &[
+                                LintMetadata::Comment("Clone layer loop".to_owned()),
+                                LintMetadata::Layer(layer.name.to_string()),
+                            ],
                         );
                         break;
                     }
