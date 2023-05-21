@@ -29,7 +29,7 @@ impl LintPass for LintPassLayerStyles {
                         lint_messages.push(
                             format!("Prohibited {} styles", layer_display),
                             &[
-                                LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
                             ],
                         );
                     }

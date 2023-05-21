@@ -40,7 +40,7 @@ impl LintPass for LintPassColorspace {
                         lint_messages.push(
                             "Incorrect layer color space",
                             &[
-                                LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
                                 LintMetadata::Expected(self.colorspace.to_string()),
                                 LintMetadata::Found(layer_colorspace.to_string()),
                             ],
@@ -59,8 +59,8 @@ impl LintPass for LintPassColorspace {
                         lint_messages.push(
                             "Incorrect mask color space",
                             &[
-                                LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
-                                LintMetadata::Mask(mask.name.to_string(), mask.uuid.to_string()),
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
                                 LintMetadata::Expected(self.colorspace.to_string()),
                                 LintMetadata::Found(mask_colorspace.to_string()),
                             ],

@@ -47,8 +47,8 @@ impl IntoIterator for LintMessages {
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "meta_type", content = "meta_data")]
 pub enum LintMetadata {
-    Layer(String, String), // TODO: { layer_name, layer_uuid }
-    Mask(String, String),  // TODO: { mask_name,  mask_uuid  }
+    Layer { layer_name: String, layer_uuid: String },
+    Mask { mask_name: String, mask_uuid: String },
     Expected(String),
     Found(String),
     MissingField(String),
@@ -61,10 +61,10 @@ impl Display for LintMetadata {
     #[rustfmt::skip]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match *self {
-            LintMetadata::Layer(ref layer_name, _) => {
+            LintMetadata::Layer { ref layer_name, .. } => {
                 write!(f, "Layer: \"{}\"", layer_name.escape_debug())
             },
-            LintMetadata::Mask(ref mask_name, _) => {
+            LintMetadata::Mask { ref mask_name, .. } => {
                 write!(f, "Mask: \"{}\"", mask_name.escape_debug())
             },
             LintMetadata::Expected(ref expected) => {
