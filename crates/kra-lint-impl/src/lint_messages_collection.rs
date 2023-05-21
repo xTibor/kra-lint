@@ -5,20 +5,32 @@ use itertools::Itertools;
 use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
+use crate::lint_messages::LintMessagesEntry;
 use crate::{LintError, LintMessages, LintOutputFormat};
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#[derive(Default, Serialize)]
+pub struct LintMessagesCollectionEntry {
+    path: Utf8PathBuf,
+    messages: LintMessages,
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[must_use = "lint results shouldn't be ignored"]
 #[derive(Default, Serialize)]
+#[serde(transparent)]
 pub struct LintMessagesCollection {
-    message_collection: Vec<(Utf8PathBuf, LintMessages)>,
+    message_collection: Vec<LintMessagesCollectionEntry>,
 }
 
 impl LintMessagesCollection {
-    pub(crate) fn push(&mut self, path: &Utf8Path, lint_messages: LintMessages) {
-        self.message_collection.push((path.to_owned(), lint_messages));
+    pub(crate) fn push(&mut self, path: &Utf8Path, messages: LintMessages) {
+        self.message_collection.push(LintMessagesCollectionEntry { path: path.to_owned(), messages });
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &(Utf8PathBuf, LintMessages)> {
+    pub fn iter(&self) -> impl Iterator<Item = &LintMessagesCollectionEntry> {
         self.message_collection.iter()
     }
 
@@ -28,7 +40,7 @@ impl LintMessagesCollection {
 }
 
 impl IntoIterator for LintMessagesCollection {
-    type Item = (Utf8PathBuf, LintMessages);
+    type Item = LintMessagesCollectionEntry;
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -41,14 +53,16 @@ impl LintMessagesCollection {
     where
         W: Write,
     {
-        for (path, lint_messages) in &self.message_collection {
-            for (lint_title, group) in &lint_messages.iter().group_by(|(lint_title, _)| lint_title) {
+        for LintMessagesCollectionEntry { path, messages } in &self.message_collection {
+            for (message_title, group) in
+                &messages.iter().group_by(|LintMessagesEntry { message_title, .. }| message_title)
+            {
                 let indent_size = path.to_string().width();
                 let indent_str = format!("{}  | ", " ".repeat(indent_size));
 
-                writer.write_all(format!("{}: {}\n", path, lint_title).as_bytes())?;
-                for (_, lint_metadata) in group {
-                    writer.write_all(format!("{}{}\n", indent_str, lint_metadata.iter().join(", ")).as_bytes())?;
+                writer.write_all(format!("{}: {}\n", path, message_title).as_bytes())?;
+                for LintMessagesEntry { message_metadata, .. } in group {
+                    writer.write_all(format!("{}{}\n", indent_str, message_metadata.iter().join(", ")).as_bytes())?;
                 }
                 writer.write_all(b"\n")?;
             }

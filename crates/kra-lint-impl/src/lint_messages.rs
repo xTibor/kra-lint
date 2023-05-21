@@ -4,21 +4,33 @@ use serde::Serialize;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+#[derive(Default, Serialize, PartialEq, Eq, PartialOrd, Ord)]
+pub struct LintMessagesEntry {
+    pub message_title: String,
+    pub message_metadata: Vec<LintMetadata>,
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 #[must_use = "lint results shouldn't be ignored"]
 #[derive(Default, Serialize)]
+#[serde(transparent)]
 pub struct LintMessages {
-    messages: Vec<(String, Vec<LintMetadata>)>,
+    messages: Vec<LintMessagesEntry>,
 }
 
 impl LintMessages {
-    pub(crate) fn push<S>(&mut self, lint_title: S, lint_message_metadata: &[LintMetadata])
+    pub(crate) fn push<S>(&mut self, message_title: S, message_metadata: &[LintMetadata])
     where
         S: AsRef<str> + Into<String>,
     {
-        self.messages.push((lint_title.into(), lint_message_metadata.to_vec()));
+        self.messages.push(LintMessagesEntry {
+            message_title: message_title.into(),
+            message_metadata: message_metadata.to_vec(),
+        });
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &(String, Vec<LintMetadata>)> {
+    pub fn iter(&self) -> impl Iterator<Item = &LintMessagesEntry> {
         self.messages.iter()
     }
 
@@ -33,7 +45,7 @@ impl LintMessages {
 }
 
 impl IntoIterator for LintMessages {
-    type Item = (String, Vec<LintMetadata>);
+    type Item = LintMessagesEntry;
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -45,7 +57,7 @@ impl IntoIterator for LintMessages {
 
 #[non_exhaustive]
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[serde(tag = "meta_type", content = "meta_data")]
+#[serde(tag = "metadata_type", content = "metadata_content")]
 #[serde(rename_all = "snake_case")]
 pub enum LintMetadata {
     Layer { layer_name: String, layer_uuid: String },
