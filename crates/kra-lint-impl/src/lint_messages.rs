@@ -46,6 +46,7 @@ impl IntoIterator for LintMessages {
 #[non_exhaustive]
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "meta_type", content = "meta_data")]
+#[serde(rename_all = "snake_case")]
 pub enum LintMetadata {
     Layer { layer_name: String, layer_uuid: String },
     Mask { mask_name: String, mask_uuid: String },
