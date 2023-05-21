@@ -25,7 +25,7 @@ impl LintPass for LintPassSurfaceType {
                     lint_messages.push(
                         format!("Prohibited use of {}", layer_display),
                         &[
-                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                         ],
                     );
                 }
@@ -42,8 +42,8 @@ impl LintPass for LintPassSurfaceType {
                     lint_messages.push(
                         format!("Prohibited use of {}", mask_display),
                         &[
-                            LintMetadata::Layer(layer.name.to_string()),
-                            LintMetadata::Mask(mask.name.to_string()),
+                            LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
+                            LintMetadata::Mask(mask.name.to_string(), mask.uuid.to_string()),
                         ],
                     );
                 }

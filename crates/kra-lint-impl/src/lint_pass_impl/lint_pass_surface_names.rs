@@ -27,7 +27,7 @@ impl LintPass for LintPassSurfaceNames {
                             lint_messages.push(
                                 format!("Incorrect {} name", layer_display),
                                 &[
-                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                                     LintMetadata::Expected(string_match_expr.to_string()),
                                     LintMetadata::Found(layer.name.to_string()),
                                 ],
@@ -50,8 +50,8 @@ impl LintPass for LintPassSurfaceNames {
                             lint_messages.push(
                                 format!("Incorrect {} name", mask_display),
                                 &[
-                                    LintMetadata::Layer(layer.name.to_string()),
-                                    LintMetadata::Mask(mask.name.to_string()),
+                                    LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
+                                    LintMetadata::Mask(mask.name.to_string(), mask.uuid.to_string()),
                                     LintMetadata::Expected(string_match_expr.to_string()),
                                     LintMetadata::Found(mask.name.to_string()),
                                 ],

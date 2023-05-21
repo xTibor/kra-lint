@@ -28,7 +28,7 @@ impl LintPass for LintPassFileLayers {
                                 lint_messages.push(
                                     "Incorrect file layer source image format",
                                     &[
-                                        LintMetadata::Layer(layer.name.to_string()),
+                                        LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                                         LintMetadata::Expected(file_formats.to_string()),
                                         LintMetadata::Found(source_ext.to_string()),
                                     ],
@@ -39,7 +39,7 @@ impl LintPass for LintPassFileLayers {
                             lint_messages.push(
                                 "File layer source image has no file extension",
                                 &[
-                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                                     LintMetadata::Expected(file_formats.to_string()),
                                 ],
                             );
@@ -63,7 +63,7 @@ impl LintPass for LintPassFileLayers {
                             lint_messages.push(
                                 "Missing file layer source image",
                                 &[
-                                    LintMetadata::Layer(layer.name.to_string()),
+                                    LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                                     LintMetadata::Comment(format!("Source: \"{}\"", source)),
                                 ],
                             );

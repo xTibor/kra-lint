@@ -57,7 +57,7 @@ impl LintPass for LintPassMalformedDocument {
                             "Malformed document",
                             &[
                                 LintMetadata::Comment("Missing clone layer target layer".to_owned()),
-                                LintMetadata::Layer(layer.name.to_string()),
+                                LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                                 LintMetadata::Bug(414699),
                             ],
                         );
@@ -68,7 +68,7 @@ impl LintPass for LintPassMalformedDocument {
                         "Malformed document",
                         &[
                             LintMetadata::Comment("Missing clone layer target field".to_owned()),
-                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                         ],
                     );
                 }
@@ -114,7 +114,7 @@ impl LintPass for LintPassMalformedDocument {
                             "Malformed document",
                             &[
                                 LintMetadata::Comment("Clone layer loop".to_owned()),
-                                LintMetadata::Layer(layer.name.to_string()),
+                                LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                             ],
                         );
                         break;

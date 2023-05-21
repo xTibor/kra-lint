@@ -139,7 +139,7 @@ impl LintPass for LintPassDocumentStructure {
                         "Incorrect document structure",
                         &[
                             LintMetadata::Comment("Extra mask".to_owned()),
-                            LintMetadata::Mask(kra_extra_mask.name.to_string()),
+                            LintMetadata::Mask(kra_extra_mask.name.to_string(), kra_extra_mask.uuid.to_string()),
                         ],
                     );
                 }
@@ -211,7 +211,7 @@ impl LintPass for LintPassDocumentStructure {
                         "Incorrect document structure",
                         &[
                             LintMetadata::Comment("Extra layer".to_owned()),
-                            LintMetadata::Layer(kra_extra_layer.name.to_string()),
+                            LintMetadata::Layer(kra_extra_layer.name.to_string(), kra_extra_layer.uuid.to_string()),
                         ],
                     );
                 }

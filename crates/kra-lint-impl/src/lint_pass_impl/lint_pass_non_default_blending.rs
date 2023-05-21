@@ -20,7 +20,7 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default layer transparency",
                         &[
-                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                             LintMetadata::Expected(format!("{:.0}%", 100.0)),
                             LintMetadata::Found(format!("{:.0}%", layer.opacity as f64 / 255.0 * 100.0)),
                         ],
@@ -42,7 +42,7 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default layer blending mode",
                         &[
-                            LintMetadata::Layer(layer.name.to_string()),
+                            LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
                             LintMetadata::Expected(expected_blending_mode.to_string()),
                             LintMetadata::Found(layer.composite_op.to_string()),
                         ],
@@ -64,8 +64,8 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default mask blending mode",
                         &[
-                            LintMetadata::Layer(layer.name.to_string()),
-                            LintMetadata::Mask(mask.name.to_string()),
+                            LintMetadata::Layer(layer.name.to_string(), layer.uuid.to_string()),
+                            LintMetadata::Mask(mask.name.to_string(), mask.uuid.to_string()),
                             LintMetadata::Expected(expected_blending_mode.unwrap_or("none").to_string()),
                             LintMetadata::Found(mask.composite_op.as_deref().unwrap_or("none").to_string()),
                         ],
