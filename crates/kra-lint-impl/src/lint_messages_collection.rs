@@ -21,21 +21,19 @@ pub struct LintMessagesCollectionEntry {
 #[must_use = "lint results shouldn't be ignored"]
 #[derive(Default, Serialize)]
 #[serde(transparent)]
-pub struct LintMessagesCollection {
-    message_collection: Vec<LintMessagesCollectionEntry>,
-}
+pub struct LintMessagesCollection(Vec<LintMessagesCollectionEntry>);
 
 impl LintMessagesCollection {
     pub(crate) fn push(&mut self, path: &Utf8Path, messages: LintMessages) {
-        self.message_collection.push(LintMessagesCollectionEntry { path: path.to_owned(), messages });
+        self.0.push(LintMessagesCollectionEntry { path: path.to_owned(), messages });
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &LintMessagesCollectionEntry> {
-        self.message_collection.iter()
+        self.0.iter()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.message_collection.is_empty()
+        self.0.is_empty()
     }
 }
 
@@ -44,7 +42,7 @@ impl IntoIterator for LintMessagesCollection {
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.message_collection.into_iter()
+        self.0.into_iter()
     }
 }
 
@@ -53,7 +51,7 @@ impl LintMessagesCollection {
     where
         W: Write,
     {
-        for LintMessagesCollectionEntry { path, messages } in &self.message_collection {
+        for LintMessagesCollectionEntry { path, messages } in self.iter() {
             for (message_title, group) in
                 &messages.iter().group_by(|LintMessagesEntry { message_title, .. }| message_title)
             {

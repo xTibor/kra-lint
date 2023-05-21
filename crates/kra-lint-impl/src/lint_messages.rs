@@ -15,32 +15,30 @@ pub struct LintMessagesEntry {
 #[must_use = "lint results shouldn't be ignored"]
 #[derive(Default, Serialize)]
 #[serde(transparent)]
-pub struct LintMessages {
-    messages: Vec<LintMessagesEntry>,
-}
+pub struct LintMessages(Vec<LintMessagesEntry>);
 
 impl LintMessages {
     pub(crate) fn push<S>(&mut self, message_title: S, message_metadata: &[LintMetadata])
     where
         S: AsRef<str> + Into<String>,
     {
-        self.messages.push(LintMessagesEntry {
+        self.0.push(LintMessagesEntry {
             message_title: message_title.into(),
             message_metadata: message_metadata.to_vec(),
         });
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &LintMessagesEntry> {
-        self.messages.iter()
+        self.0.iter()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.messages.is_empty()
+        self.0.is_empty()
     }
 
     pub(crate) fn sort_and_dedup(&mut self) {
-        self.messages.sort();
-        self.messages.dedup();
+        self.0.sort();
+        self.0.dedup();
     }
 }
 
@@ -49,7 +47,7 @@ impl IntoIterator for LintMessages {
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.messages.into_iter()
+        self.0.into_iter()
     }
 }
 
