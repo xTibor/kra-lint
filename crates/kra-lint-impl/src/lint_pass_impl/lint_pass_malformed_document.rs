@@ -135,7 +135,13 @@ impl LintPass for LintPassMalformedDocument {
         {
             let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
-            let contains_mergedimage_png = zip_archive.by_name("mergedimage.png").is_ok();
+            // TODO: zip_archive.by_name("mergedimage.png")?.is_some() (https://github.com/zip-rs/zip/discussions/341)
+            let contains_mergedimage_png = match zip_archive.by_name("mergedimage.png") {
+                Ok(_) => Ok(true),
+                Err(zip::result::ZipError::FileNotFound) => Ok(false),
+                Err(err) => Err(err),
+            }?;
+
             let file_extension = kra_archive.zip_path.extension().map(str::to_lowercase);
 
             match (file_extension.as_deref(), contains_mergedimage_png) {
