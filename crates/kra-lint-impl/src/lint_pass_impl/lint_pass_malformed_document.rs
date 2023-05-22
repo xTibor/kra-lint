@@ -131,6 +131,36 @@ impl LintPass for LintPassMalformedDocument {
             }
         }
 
+        // Sub-pass #6
+        {
+            let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+            let contains_mergedimage_png = zip_archive.by_name("mergedimage.png").is_ok();
+            let file_extension = kra_archive.zip_path.extension().map(str::to_lowercase);
+
+            match (file_extension.as_deref(), contains_mergedimage_png) {
+                (Some("kra"), false) => {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Malformed document",
+                        &[
+                            LintMetadata::Comment("KRA archive without required preview image".to_owned()),
+                        ],
+                    );
+                }
+                (Some("krz"), true) => {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Malformed document",
+                        &[
+                            LintMetadata::Comment("KRZ archive with extraneous preview image".to_owned()),
+                        ],
+                    );
+                }
+                _ => {}
+            }
+        }
+
         Ok(())
     }
 }
