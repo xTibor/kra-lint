@@ -5,15 +5,16 @@ use itertools::Itertools;
 use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
-use crate::lint_messages::LintMessagesEntry;
-use crate::{LintError, LintMessages, LintOutputFormat};
+use crate::lint_error::LintError;
+use crate::lint_messages::{LintMessages, LintMessagesEntry};
+use crate::lint_output_format::LintOutputFormat;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[derive(Default, Serialize)]
 pub struct LintMessagesCollectionEntry {
-    path: Utf8PathBuf,
-    messages: LintMessages,
+    pub path: Utf8PathBuf,
+    pub messages: LintMessages,
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
