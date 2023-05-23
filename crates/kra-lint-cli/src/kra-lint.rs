@@ -7,7 +7,7 @@ use kra_lint_impl::{LintConfigCollection, LintOutputFormat};
 
 #[derive(Parser, Debug)]
 struct Args {
-    /// Config file path
+    /// Config file paths
     #[arg(long, short = 'C', value_name = "PATH", env = "KRALINT_CONFIG_PATH")]
     config_paths: Vec<Utf8PathBuf>,
 
