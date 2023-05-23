@@ -27,10 +27,18 @@ fn main() -> ExitCode {
         let mut config_paths = args.config_paths.clone();
 
         if config_paths.is_empty() {
-            let default_config_path = Utf8PathBuf::from(".kra-lint");
+            let search_root: Utf8PathBuf = std::env::current_dir()
+                .expect("Failed to get current directory")
+                .try_into()
+                .expect("Failed to convert path to UTF-8");
 
-            if default_config_path.is_file() {
-                config_paths.push(default_config_path);
+            for search_directory in search_root.ancestors() {
+                let default_config_path = search_directory.to_owned().join(".kra-lint");
+
+                if default_config_path.is_file() {
+                    config_paths.push(default_config_path);
+                    break;
+                }
             }
         }
 
