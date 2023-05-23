@@ -140,7 +140,7 @@ impl LintConfig {
                 Ok(writer.write_all(tmp_string.as_bytes())?)
             },
             Some("json") => {
-                serde_json::to_writer(writer, self)
+                serde_json::to_writer_pretty(writer, self)
                     .map_err(LintError::FailedToSerializeJsonConfig)
             }
             Some("ron") => {
