@@ -152,6 +152,9 @@ pub struct KraMainDocLayer {
     #[xml(attr = "layerstyle")]
     pub layer_style: Option<String>,
 
+    #[xml(attr = "scalingmethod")]
+    pub scaling_method: Option<KraScalingMethod>,
+
     #[xml(child = "layers")]
     pub layer_container: Option<KraMainDocLayerContainer>,
 
@@ -388,4 +391,17 @@ pub enum KraColorLabel {
 
     #[strum(serialize = "8", to_string = "black")]
     Black,
+}
+
+#[derive(Debug, PartialEq, Deserialize, Serialize, Display, EnumString)]
+#[serde(rename_all = "snake_case")]
+pub enum KraScalingMethod {
+    #[strum(serialize = "0", to_string = "none")]
+    None,
+
+    #[strum(serialize = "1", to_string = "scale_to_image")]
+    ScaleToImage,
+
+    #[strum(serialize = "2", to_string = "adapt_resolution")]
+    AdaptResolution,
 }

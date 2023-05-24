@@ -42,6 +42,7 @@ styleable_layers = false
 [file_layers]
 file_formats = ["kra", "tga"]
 check_missing_files = true
+scaling_method = "none"
 
 [vector_layers]
 font_family = { not = { regex = '^Noto Sans CJK (SC|TC)$' } }

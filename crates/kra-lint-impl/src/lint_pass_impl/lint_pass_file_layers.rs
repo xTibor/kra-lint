@@ -2,9 +2,9 @@ use camino::Utf8Path;
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::KraLayerType;
+use kra_parser::kra_maindoc::{KraLayerType, KraScalingMethod};
 
-use crate::lint_fields::LintStringMatchExpression;
+use crate::lint_fields::{LintGenericMatchExpression, LintStringMatchExpression};
 use crate::lint_messages::{LintMessages, LintMetadata};
 use crate::lint_pass::{LintPass, LintPassResult};
 
@@ -13,6 +13,7 @@ use crate::lint_pass::{LintPass, LintPassResult};
 pub(crate) struct LintPassFileLayers {
     file_formats: Option<LintStringMatchExpression>,
     check_missing_files: Option<bool>,
+    scaling_method: Option<LintGenericMatchExpression<KraScalingMethod>>,
 }
 
 impl LintPass for LintPassFileLayers {
@@ -68,6 +69,36 @@ impl LintPass for LintPassFileLayers {
                                 ],
                             );
                         }
+                    }
+                }
+            }
+        }
+
+        // Sub-pass #3
+        {
+            if let Some(scaling_method) = self.scaling_method.as_ref() {
+                for layer in kra_archive.all_layers_by_type(KraLayerType::FileLayer) {
+                    if let Some(kra_scaling_method) = layer.scaling_method.as_ref() {
+                        if !scaling_method.matches(kra_scaling_method) {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                "Incorrect file layer scaling method",
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    LintMetadata::Expected(scaling_method.to_string()),
+                                    LintMetadata::Found(kra_scaling_method.to_string()),
+                                ],
+                            );
+                        }
+                    } else {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Missing file layer scaling method",
+                            &[
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Expected(scaling_method.to_string()),
+                            ],
+                        );
                     }
                 }
             }
