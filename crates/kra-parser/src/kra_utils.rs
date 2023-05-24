@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
-use crate::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask};
+use crate::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -61,6 +61,13 @@ impl KraArchive {
                     .map(|mask_container| mask_container.into_iter().map(move |mask| (layer, mask)))
             })
             .flatten()
+    }
+
+    pub fn all_masks_by_type(
+        &self,
+        mask_type: KraMaskType,
+    ) -> impl Iterator<Item = (&KraMainDocLayer, &KraMainDocMask)> {
+        self.all_masks().filter(move |(_, kra_mask)| kra_mask.mask_type == mask_type)
     }
 }
 

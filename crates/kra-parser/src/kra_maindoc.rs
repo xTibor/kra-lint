@@ -155,6 +155,12 @@ pub struct KraMainDocLayer {
     #[xml(attr = "scalingmethod")]
     pub scaling_method: Option<KraScalingMethod>,
 
+    #[xml(attr = "filtername")]
+    pub filter_name: Option<String>,
+
+    #[xml(attr = "filterversion")]
+    pub filter_version: Option<usize>,
+
     #[xml(child = "layers")]
     pub layer_container: Option<KraMainDocLayerContainer>,
 
