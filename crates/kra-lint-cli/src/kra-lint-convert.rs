@@ -5,6 +5,7 @@ use clap::Parser;
 use kra_lint_impl::LintConfig;
 
 #[derive(Parser, Debug)]
+#[command(version)]
 struct Args {
     /// Source config file path
     source_config: Utf8PathBuf,

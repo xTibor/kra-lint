@@ -6,6 +6,7 @@ use clap::Parser;
 use kra_lint_impl::{LintConfigCollection, LintOutputFormat};
 
 #[derive(Parser, Debug)]
+#[command(version)]
 struct Args {
     /// Config file paths
     #[arg(long, short = 'C', value_name = "PATH", env = "KRALINT_CONFIG_PATH")]
