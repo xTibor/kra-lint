@@ -74,6 +74,42 @@ impl LintPass for LintPassNonDefaultBlending {
             }
         }
 
+        // Sub-pass #4
+        {
+            for layer in kra_archive.all_layers() {
+                if (layer.channel_flags != "1111") && !layer.channel_flags.is_empty() {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Non-default set of active channels",
+                        &[
+                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                            LintMetadata::Expected("1111".to_string()),
+                            LintMetadata::Found(layer.channel_flags.to_string()),
+                        ],
+                    );
+                }
+            }
+        }
+
+        // Sub-pass #5
+        {
+            for layer in kra_archive.all_layers() {
+                if let Some(channel_lock_flags) = layer.channel_lock_flags.as_ref() {
+                    if (channel_lock_flags != "1111") && !channel_lock_flags.is_empty() {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Non-default channel lock flags",
+                            &[
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Expected("1111".to_string()),
+                                LintMetadata::Found(channel_lock_flags.to_string()),
+                            ],
+                        );
+                    }
+                }
+            }
+        }
+
         Ok(())
     }
 }
