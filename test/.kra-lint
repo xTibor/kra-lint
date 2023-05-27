@@ -111,6 +111,8 @@ software_version = ["5.1.3", "5.1.4"]
 framerate = 24
 animated_layers = false
 animated_masks = false
+force_layer_pin = true
+force_mask_pin = true
 
 [copyright]
 copyright_line = "Copyright (c) 2023 <example-studio>, All rights reserved"

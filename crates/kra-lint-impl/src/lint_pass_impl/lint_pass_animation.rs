@@ -12,6 +12,8 @@ pub(crate) struct LintPassAnimation {
     animated_layers: LintLayerProperty<bool>,
     animated_masks: LintMaskProperty<bool>,
     framerate: Option<LintNumberMatchExpression<usize>>,
+    force_layer_pin: LintLayerProperty<bool>,
+    force_mask_pin: LintMaskProperty<bool>,
 }
 
 impl LintPass for LintPassAnimation {
@@ -71,6 +73,47 @@ impl LintPass for LintPassAnimation {
                             LintMetadata::Found(format!("{}fps", kra_framerate)),
                         ],
                     );
+                }
+            }
+        }
+
+        // Sub-pass #4
+        {
+            for layer in kra_archive.all_layers() {
+                let (layer_opt, layer_display) = self.force_layer_pin.get(layer);
+
+                #[allow(clippy::collapsible_if)]
+                if *layer_opt == Some(true) {
+                    if layer.keyframes.is_some() && (layer.in_timeline != 1) {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            format!("Unpinned animated {}", layer_display),
+                            &[
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                            ],
+                        );
+                    }
+                }
+            }
+        }
+
+        // Sub-pass #5
+        {
+            for (layer, mask) in kra_archive.all_masks() {
+                let (mask_opt, mask_display) = self.force_mask_pin.get(mask);
+
+                #[allow(clippy::collapsible_if)]
+                if *mask_opt == Some(true) {
+                    if mask.keyframes.is_some() && (mask.in_timeline != Some(1)) {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            format!("Unpinned animated {}", mask_display),
+                            &[
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                            ],
+                        );
+                    }
                 }
             }
         }
