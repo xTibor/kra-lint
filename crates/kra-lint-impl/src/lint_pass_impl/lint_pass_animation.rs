@@ -9,30 +9,32 @@ use crate::lint_pass::{LintPass, LintPassResult};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassAnimation {
-    animated_layers: LintLayerProperty<bool>,
-    animated_masks: LintMaskProperty<bool>,
+    animated_layers: Option<LintLayerProperty<bool>>,
+    animated_masks: Option<LintMaskProperty<bool>>,
     framerate: Option<LintNumberMatchExpression<usize>>,
-    force_layer_pin: LintLayerProperty<bool>,
-    force_mask_pin: LintMaskProperty<bool>,
+    force_layer_pin: Option<LintLayerProperty<bool>>,
+    force_mask_pin: Option<LintMaskProperty<bool>>,
 }
 
 impl LintPass for LintPassAnimation {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
-            for layer in kra_archive.all_layers() {
-                let (layer_opt, layer_display) = self.animated_layers.get(layer);
+            if let Some(animated_layers) = self.animated_layers.as_ref() {
+                for layer in kra_archive.all_layers() {
+                    let (layer_opt, layer_display) = animated_layers.get(layer);
 
-                #[allow(clippy::collapsible_if)]
-                if *layer_opt == Some(false) {
-                    if layer.keyframes.is_some() {
-                        #[rustfmt::skip]
-                        lint_messages.push(
-                            format!("Prohibited use of animated {}", layer_display),
-                            &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                            ],
-                        );
+                    #[allow(clippy::collapsible_if)]
+                    if *layer_opt == Some(false) {
+                        if layer.keyframes.is_some() {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                format!("Prohibited use of animated {}", layer_display),
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                ],
+                            );
+                        }
                     }
                 }
             }
@@ -40,20 +42,22 @@ impl LintPass for LintPassAnimation {
 
         // Sub-pass #2
         {
-            for (layer, mask) in kra_archive.all_masks() {
-                let (mask_opt, mask_display) = self.animated_masks.get(mask);
+            if let Some(animated_masks) = self.animated_masks.as_ref() {
+                for (layer, mask) in kra_archive.all_masks() {
+                    let (mask_opt, mask_display) = animated_masks.get(mask);
 
-                #[allow(clippy::collapsible_if)]
-                if *mask_opt == Some(false) {
-                    if mask.keyframes.is_some() {
-                        #[rustfmt::skip]
-                        lint_messages.push(
-                            format!("Prohibited use of animated {}", mask_display),
-                            &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                            ],
-                        );
+                    #[allow(clippy::collapsible_if)]
+                    if *mask_opt == Some(false) {
+                        if mask.keyframes.is_some() {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                format!("Prohibited use of animated {}", mask_display),
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                ],
+                            );
+                        }
                     }
                 }
             }
@@ -79,19 +83,21 @@ impl LintPass for LintPassAnimation {
 
         // Sub-pass #4
         {
-            for layer in kra_archive.all_layers() {
-                let (layer_opt, layer_display) = self.force_layer_pin.get(layer);
+            if let Some(force_layer_pin) = self.force_layer_pin.as_ref() {
+                for layer in kra_archive.all_layers() {
+                    let (layer_opt, layer_display) = force_layer_pin.get(layer);
 
-                #[allow(clippy::collapsible_if)]
-                if *layer_opt == Some(true) {
-                    if layer.keyframes.is_some() && (layer.in_timeline != 1) {
-                        #[rustfmt::skip]
-                        lint_messages.push(
-                            format!("Unpinned animated {}", layer_display),
-                            &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                            ],
-                        );
+                    #[allow(clippy::collapsible_if)]
+                    if *layer_opt == Some(true) {
+                        if layer.keyframes.is_some() && (layer.in_timeline != 1) {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                format!("Unpinned animated {}", layer_display),
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                ],
+                            );
+                        }
                     }
                 }
             }
@@ -99,20 +105,22 @@ impl LintPass for LintPassAnimation {
 
         // Sub-pass #5
         {
-            for (layer, mask) in kra_archive.all_masks() {
-                let (mask_opt, mask_display) = self.force_mask_pin.get(mask);
+            if let Some(force_mask_pin) = self.force_mask_pin.as_ref() {
+                for (layer, mask) in kra_archive.all_masks() {
+                    let (mask_opt, mask_display) = force_mask_pin.get(mask);
 
-                #[allow(clippy::collapsible_if)]
-                if *mask_opt == Some(true) {
-                    if mask.keyframes.is_some() && (mask.in_timeline != Some(1)) {
-                        #[rustfmt::skip]
-                        lint_messages.push(
-                            format!("Unpinned animated {}", mask_display),
-                            &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                            ],
-                        );
+                    #[allow(clippy::collapsible_if)]
+                    if *mask_opt == Some(true) {
+                        if mask.keyframes.is_some() && (mask.in_timeline != Some(1)) {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                format!("Unpinned animated {}", mask_display),
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                ],
+                            );
+                        }
                     }
                 }
             }
