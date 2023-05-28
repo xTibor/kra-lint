@@ -10,6 +10,8 @@ pub trait ZipArchiveExt {
     // https://github.com/zip-rs/zip/discussions/341
     fn by_name_opt<'a>(&'a mut self, path: &str) -> ZipResult<Option<ZipFile<'a>>>;
 
+    fn read(&mut self, path: &str) -> ZipResult<Option<Vec<u8>>>;
+
     fn read_to_string(&mut self, path: &str) -> ZipResult<Option<String>>;
 }
 
@@ -30,6 +32,16 @@ where
             Ok(zip_file) => Ok(Some(zip_file)),
             Err(ZipError::FileNotFound) => Ok(None),
             Err(err) => Err(err),
+        }
+    }
+
+    fn read(&mut self, path: &str) -> ZipResult<Option<Vec<u8>>> {
+        if let Some(mut zip_file) = self.by_name_opt(path)? {
+            let mut buffer = Vec::with_capacity(zip_file.size() as usize);
+            zip_file.read_to_end(&mut buffer)?;
+            Ok(Some(buffer))
+        } else {
+            Ok(None)
         }
     }
 

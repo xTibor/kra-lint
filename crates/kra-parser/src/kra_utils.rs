@@ -85,4 +85,14 @@ impl KraMainDocLayer {
 
         zip_archive.read_to_string(&svg_path)?.ok_or(KraError::ContentSvgNotFound { svg_path })
     }
+
+    pub fn color_profile(&self, kra_archive: &KraArchive) -> Result<Vec<u8>, KraError> {
+        assert_eq!(self.layer_type, KraLayerType::PaintLayer);
+
+        let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+        let color_profile_path = format!("{}/layers/{}.icc", kra_archive.main_doc.image.name, self.file_name);
+
+        zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
+    }
 }
