@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_error::KraError;
 use kra_parser::kra_maindoc::KraLayerType;
 
 use ziparchive_ext::ZipArchiveExt;
@@ -167,6 +168,22 @@ impl LintPass for LintPassMalformedDocument {
                     );
                 }
                 _ => {}
+            }
+        }
+
+        // Sub-pass #7
+        {
+            for layer in kra_archive.all_layers_by_type(KraLayerType::PaintLayer) {
+                if let Err(KraError::ColorProfileNotFound { .. }) = layer.color_profile(kra_archive) {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Malformed document",
+                        &[
+                            LintMetadata::Comment("Missing layer color profile".to_owned()),
+                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                        ],
+                    );
+                }
             }
         }
 
