@@ -104,7 +104,7 @@ impl LintPass for LintPassColorspace {
                             "Incorrect layer color profile",
                             &[
                                 LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Comment("Profile checksum mismatch".to_owned())
+                                LintMetadata::Comment("Profile checksum mismatch".to_owned()),
                             ],
                         );
                     }

@@ -35,7 +35,7 @@ impl LintPass for LintPassMalformedDocument {
                     "Malformed document",
                     &[
                         LintMetadata::Comment("Missing documentinfo.xml".to_owned()),
-                    ]
+                    ],
                 );
             }
         }
