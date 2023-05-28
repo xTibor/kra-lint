@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraLayerType;
 
+use ziparchive_ext::ZipArchiveExt;
+
 use crate::lint_messages::{LintMessages, LintMetadata};
 use crate::lint_pass::{LintPass, LintPassResult};
 
@@ -135,13 +137,7 @@ impl LintPass for LintPassMalformedDocument {
         {
             let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
-            // TODO: zip_archive.by_name("mergedimage.png")?.is_some() (https://github.com/zip-rs/zip/discussions/341)
-            let contains_mergedimage_png = match zip_archive.by_name("mergedimage.png") {
-                Ok(_) => Ok(true),
-                Err(zip::result::ZipError::FileNotFound) => Ok(false),
-                Err(err) => Err(err),
-            }?;
-
+            let contains_mergedimage_png = zip_archive.exists("mergedimage.png")?;
             let file_extension = kra_archive.zip_path.extension().map(str::to_lowercase);
 
             match (file_extension.as_deref(), contains_mergedimage_png) {

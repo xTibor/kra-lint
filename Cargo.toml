@@ -3,4 +3,5 @@ members = [
     "crates/kra-lint-cli",
     "crates/kra-lint-impl",
     "crates/kra-parser",
+    "crates/ziparchive-ext",
 ]

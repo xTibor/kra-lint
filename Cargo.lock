@@ -235,6 +235,7 @@ dependencies = [
  "toml",
  "unicode-width",
  "zip",
+ "ziparchive-ext",
 ]
 
 [[package]]
@@ -581,4 +582,11 @@ dependencies = [
  "crc32fast",
  "crossbeam-utils",
  "flate2",
+]
+
+[[package]]
+name = "ziparchive-ext"
+version = "0.1.0"
+dependencies = [
+ "zip",
 ]

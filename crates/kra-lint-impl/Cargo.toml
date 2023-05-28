@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 kra-parser = { path = "../kra-parser/" }
+ziparchive-ext = { path = "../ziparchive-ext/" }
 
 camino = { version = "1.1.4", features = ["serde1"] }
 derive_more = { version = "0.99.17", default-features = false, features = ["into_iterator", "display", "error", "from"] }
