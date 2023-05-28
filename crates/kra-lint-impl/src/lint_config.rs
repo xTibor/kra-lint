@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_error::LintError;
-use crate::lint_messages::LintMessages;
+use crate::lint_messages::{LintMessages, LintMetadata};
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::lint_pass_impl;
 
@@ -50,7 +50,9 @@ impl LintPass for LintConfig {
         macro_rules! lint_pass {
             ($lint_name:ident) => {{
                 if let Some($lint_name) = self.$lint_name.as_ref() {
-                    $lint_name.lint(kra_archive, lint_messages)?;
+                    if let Err(err) = $lint_name.lint(kra_archive, lint_messages) {
+                        lint_messages.push("Error", &[LintMetadata::Error(err.to_string())]);
+                    }
                 }
             }};
         }
