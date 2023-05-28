@@ -248,6 +248,7 @@ dependencies = [
  "strong-xml",
  "strum",
  "zip",
+ "ziparchive-ext",
 ]
 
 [[package]]

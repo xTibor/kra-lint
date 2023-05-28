@@ -9,6 +9,8 @@ pub trait ZipArchiveExt {
 
     // https://github.com/zip-rs/zip/discussions/341
     fn by_name_opt<'a>(&'a mut self, path: &str) -> ZipResult<Option<ZipFile<'a>>>;
+
+    fn read_to_string(&mut self, path: &str) -> ZipResult<Option<String>>;
 }
 
 impl<R> ZipArchiveExt for ZipArchive<R>
@@ -28,6 +30,14 @@ where
             Ok(zip_file) => Ok(Some(zip_file)),
             Err(ZipError::FileNotFound) => Ok(None),
             Err(err) => Err(err),
+        }
+    }
+
+    fn read_to_string(&mut self, path: &str) -> ZipResult<Option<String>> {
+        if let Some(zip_file) = self.by_name_opt(path)? {
+            Ok(Some(std::io::read_to_string(zip_file)?))
+        } else {
+            Ok(None)
         }
     }
 }

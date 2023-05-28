@@ -17,18 +17,25 @@ impl LintPass for LintPassMalformedDocument {
         // Sub-pass #1
         {
             let mut zip_archive = kra_archive.zip_archive.borrow_mut();
-            let zip_file = zip_archive.by_name("documentinfo.xml")?;
 
-            let documentinfo_xml = std::io::read_to_string(zip_file)?;
-
-            if documentinfo_xml.matches("]]>").count() > 1 {
+            if let Some(documentinfo_xml) = zip_archive.read_to_string("documentinfo.xml")? {
+                if documentinfo_xml.matches("]]>").count() > 1 {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Malformed document",
+                        &[
+                            LintMetadata::Comment("Unescaped documentinfo.xml <abstract> tag".to_owned()),
+                            LintMetadata::Bug(446376),
+                        ],
+                    );
+                }
+            } else {
                 #[rustfmt::skip]
                 lint_messages.push(
                     "Malformed document",
                     &[
-                        LintMetadata::Comment("Unescaped documentinfo.xml <abstract> tag".to_owned()),
-                        LintMetadata::Bug(446376),
-                    ],
+                        LintMetadata::Comment("Missing documentinfo.xml".to_owned()),
+                    ]
                 );
             }
         }

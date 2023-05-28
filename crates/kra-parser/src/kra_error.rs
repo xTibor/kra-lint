@@ -42,6 +42,11 @@ pub enum KraError {
         source: XmlError,
     },
 
+    #[display(fmt = "Vector layer contents not found at '{svg_path:}'")]
+    ContentSvgNotFound {
+        svg_path: String,
+    },
+
     #[from]
     ZipError(zip::result::ZipError),
 
