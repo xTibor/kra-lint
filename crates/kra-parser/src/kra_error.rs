@@ -24,21 +24,21 @@ pub enum KraError {
     #[display(fmt = "Cannot find '{xml_path:}' in '{path:}'")]
     XmlNotFound {
         path: Utf8PathBuf,
-        xml_path: &'static str,
+        xml_path: String,
         source: ZipError,
     },
 
     #[display(fmt = "Cannot read '{xml_path:}' in '{path:}'")]
     XmlCannotRead {
         path: Utf8PathBuf,
-        xml_path: &'static str,
+        xml_path: String,
         source: io::Error,
     },
 
     #[display(fmt = "Cannot parse '{xml_path:}' in '{path:}'")]
     XmlCannotParse {
         path: Utf8PathBuf,
-        xml_path: &'static str,
+        xml_path: String,
         source: XmlError,
     },
 

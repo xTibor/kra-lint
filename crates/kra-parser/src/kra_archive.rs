@@ -30,19 +30,19 @@ impl KraArchive {
             ($xml_type:ident, $xml_path:expr) => {{
                 let file = zip_archive.by_name($xml_path).map_err(|source| KraError::XmlNotFound {
                     path: path.to_owned(),
-                    xml_path: $xml_path,
+                    xml_path: $xml_path.to_owned(),
                     source,
                 })?;
 
                 let data = io::read_to_string(file).map_err(|source| KraError::XmlCannotRead {
                     path: path.to_owned(),
-                    xml_path: $xml_path,
+                    xml_path: $xml_path.to_owned(),
                     source,
                 })?;
 
                 $xml_type::from_str(&data).map_err(|source| KraError::XmlCannotParse {
                     path: path.to_owned(),
-                    xml_path: $xml_path,
+                    xml_path: $xml_path.to_owned(),
                     source,
                 })?
             }};
