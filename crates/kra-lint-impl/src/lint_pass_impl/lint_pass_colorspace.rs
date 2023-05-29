@@ -99,6 +99,8 @@ impl LintPass for LintPassColorspace {
                         base16ct::lower::encode_string(&Sha256::digest(layer_color_profile));
 
                     if !profile_checksum.matches(&layer_color_profile_checksum) {
+                        // Bug: Vector layers do not persist color profiles, defaulting to
+                        //   the document color profile on reload. I cannot lint this data loss.
                         #[rustfmt::skip]
                         lint_messages.push(
                             "Incorrect layer color profile",
