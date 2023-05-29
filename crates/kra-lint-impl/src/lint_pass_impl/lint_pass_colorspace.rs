@@ -137,6 +137,25 @@ impl LintPass for LintPassColorspace {
             }
         }
 
+        // Sub-pass #6
+        {
+            if let Some(profile_checksum) = self.profile_checksum.as_ref() {
+                let document_color_profile = kra_archive.main_doc.image.color_profile(kra_archive)?;
+                let document_color_profile_checksum =
+                    base16ct::lower::encode_string(&Sha256::digest(document_color_profile));
+
+                if !profile_checksum.matches(&document_color_profile_checksum) {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Incorrect document color profile",
+                        &[
+                            LintMetadata::Comment("Profile checksum mismatch".to_owned()),
+                        ],
+                    );
+                }
+            }
+        }
+
         Ok(())
     }
 }

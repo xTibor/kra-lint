@@ -187,6 +187,19 @@ impl LintPass for LintPassMalformedDocument {
             }
         }
 
+        // Sub-pass #8
+        {
+            if let Err(KraError::ColorProfileNotFound { .. }) = kra_archive.main_doc.image.color_profile(kra_archive) {
+                #[rustfmt::skip]
+                lint_messages.push(
+                    "Malformed document",
+                    &[
+                        LintMetadata::Comment("Missing document color profile".to_owned()),
+                    ],
+                );
+            }
+        }
+
         Ok(())
     }
 }

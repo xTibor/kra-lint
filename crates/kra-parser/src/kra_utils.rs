@@ -4,7 +4,9 @@ use ziparchive_ext::ZipArchiveExt;
 
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
-use crate::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType};
+use crate::kra_maindoc::{
+    KraLayerType, KraMainDocImage, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType,
+};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -114,6 +116,19 @@ impl KraMainDocMask {
             document_name = kra_archive.main_doc.image.name,
             mask_name = self.file_name.as_ref().ok_or(KraError::MaskFileNameFieldNotFound)?,
         );
+
+        zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
+    }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+impl KraMainDocImage {
+    pub fn color_profile(&self, kra_archive: &KraArchive) -> Result<Vec<u8>, KraError> {
+        let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+        let color_profile_path =
+            format!("{document_name:}/annotations/icc", document_name = kra_archive.main_doc.image.name);
 
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
