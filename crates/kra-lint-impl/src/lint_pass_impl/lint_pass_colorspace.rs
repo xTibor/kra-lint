@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::KraLayerType;
+use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
 use sha2::{Digest, Sha256};
 
@@ -106,6 +106,29 @@ impl LintPass for LintPassColorspace {
                             "Incorrect layer color profile",
                             &[
                                 LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Comment("Profile checksum mismatch".to_owned()),
+                            ],
+                        );
+                    }
+                }
+            }
+        }
+
+        // Sub-pass #6
+        {
+            if let Some(profile_checksum) = self.profile_checksum.as_ref() {
+                for (layer, mask) in kra_archive.all_masks_by_type(KraMaskType::ColorizeMask) {
+                    let mask_color_profile = mask.colorize_color_profile(kra_archive)?;
+                    let mask_color_profile_checksum =
+                        base16ct::lower::encode_string(&Sha256::digest(mask_color_profile));
+
+                    if !profile_checksum.matches(&mask_color_profile_checksum) {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Incorrect colorize mask color profile",
+                            &[
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
                                 LintMetadata::Comment("Profile checksum mismatch".to_owned()),
                             ],
                         );

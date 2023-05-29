@@ -91,7 +91,29 @@ impl KraMainDocLayer {
 
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
-        let color_profile_path = format!("{}/layers/{}.icc", kra_archive.main_doc.image.name, self.file_name);
+        let color_profile_path = format!(
+            "{document_name:}/layers/{layer_name:}.icc",
+            document_name = kra_archive.main_doc.image.name,
+            layer_name = self.file_name
+        );
+
+        zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
+    }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+impl KraMainDocMask {
+    pub fn colorize_color_profile(&self, kra_archive: &KraArchive) -> Result<Vec<u8>, KraError> {
+        assert_eq!(self.mask_type, KraMaskType::ColorizeMask);
+
+        let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+        let color_profile_path = format!(
+            "{document_name:}/layers/{mask_name:}.colorizemask/{document_name:}/layers/{mask_name:}.icc",
+            document_name = kra_archive.main_doc.image.name,
+            mask_name = self.file_name.as_ref().ok_or(KraError::MaskFileNameFieldNotFound)?,
+        );
 
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }

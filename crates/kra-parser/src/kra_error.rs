@@ -47,10 +47,13 @@ pub enum KraError {
         svg_path: String,
     },
 
-    #[display(fmt = "Layer color profile not found at '{color_profile_path:}'")]
+    #[display(fmt = "Color profile not found at '{color_profile_path:}'")]
     ColorProfileNotFound {
         color_profile_path: String,
     },
+
+    #[display(fmt = "Mask file name field not found")]
+    MaskFileNameFieldNotFound,
 
     #[from]
     ZipError(zip::result::ZipError),
