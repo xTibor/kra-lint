@@ -1,4 +1,5 @@
 pub(crate) mod lint_pass_animation;
+pub(crate) mod lint_pass_colorize_mask;
 pub(crate) mod lint_pass_colorspace;
 pub(crate) mod lint_pass_copyright;
 pub(crate) mod lint_pass_document_name;

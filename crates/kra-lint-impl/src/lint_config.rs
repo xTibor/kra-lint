@@ -24,6 +24,7 @@ pub struct LintConfig {
     pub(crate) includes:      Option<LintIncludes>,
 
     animation:                Option<lint_pass_impl::lint_pass_animation               ::LintPassAnimation             >,
+    colorize_mask:            Option<lint_pass_impl::lint_pass_colorize_mask           ::LintPassColorizeMask          >,
     colorspace:               Option<lint_pass_impl::lint_pass_colorspace              ::LintPassColorspace            >,
     copyright:                Option<lint_pass_impl::lint_pass_copyright               ::LintPassCopyright             >,
     document_name:            Option<lint_pass_impl::lint_pass_document_name           ::LintPassDocumentName          >,
@@ -58,6 +59,7 @@ impl LintPass for LintConfig {
         }
 
         lint_pass!(animation);
+        lint_pass!(colorize_mask);
         lint_pass!(colorspace);
         lint_pass!(copyright);
         lint_pass!(document_name);

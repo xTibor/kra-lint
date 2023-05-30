@@ -105,6 +105,9 @@ colorspace = "RGBA"
 profile = "sRGB-elle-V2-srgbtrc.icc"
 profile_checksum = "5991c8d8fcb628dad5d052d9341df8a32bd3c7a794c913a8ede8eae4b34b4545"
 
+[colorize_mask]
+warn_keystrokes_edit_mode = true
+
 [software_version]
 software_version = ["5.1.3", "5.1.4"]
 
