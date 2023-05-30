@@ -22,7 +22,7 @@ impl LintPass for LintPassHiddenSurface {
 
                 #[allow(clippy::collapsible_if)]
                 if *layer_opt == Some(false) {
-                    if (layer.visible == 0) || (layer.opacity == 0) {
+                    if !layer.visible || (layer.opacity == 0) {
                         #[rustfmt::skip]
                         lint_messages.push(
                             format!("Prohibited hidden {}", layer_display),
@@ -44,7 +44,7 @@ impl LintPass for LintPassHiddenSurface {
                 if *mask_opt == Some(false) {
                     // Bug: Interface allows setting opacity for some types of masks,
                     //   however they are not stored in the KRA documents.
-                    if mask.visible == 0 {
+                    if !mask.visible {
                         #[rustfmt::skip]
                         lint_messages.push(
                             format!("Prohibited hidden {}", mask_display),

@@ -102,10 +102,10 @@ pub struct KraMainDocLayer {
     pub generator_version: Option<usize>,
 
     #[xml(attr = "intimeline")]
-    pub in_timeline: usize,
+    pub in_timeline: bool,
 
     #[xml(attr = "locked")]
-    pub locked: usize,
+    pub locked: bool,
 
     #[xml(attr = "name")]
     pub name: String,
@@ -114,7 +114,7 @@ pub struct KraMainDocLayer {
     pub layer_type: KraLayerType,
 
     #[xml(attr = "onionskin")]
-    pub onion_skin: Option<String>,
+    pub onion_skin: Option<bool>,
 
     #[xml(attr = "opacity")]
     pub opacity: usize,
@@ -126,7 +126,7 @@ pub struct KraMainDocLayer {
     pub uuid: String,
 
     #[xml(attr = "visible")]
-    pub visible: usize,
+    pub visible: bool,
 
     #[xml(attr = "x")]
     pub x: isize,
@@ -195,7 +195,7 @@ pub struct KraMainDocMaskContainer (
 #[xml(tag = "mask")]
 pub struct KraMainDocMask {
     #[xml(attr = "active")]
-    pub active: Option<usize>,
+    pub active: Option<bool>,
 
     #[xml(attr = "cleanup")]
     pub cleanup: Option<usize>,
@@ -213,7 +213,7 @@ pub struct KraMainDocMask {
     pub edge_detection_size: Option<usize>,
 
     #[xml(attr = "edit-keystrokes")]
-    pub edit_keystrokes: Option<usize>,
+    pub edit_keystrokes: Option<bool>,
 
     #[xml(attr = "filename")]
     pub file_name: Option<String>,
@@ -228,13 +228,13 @@ pub struct KraMainDocMask {
     pub fuzzy_radius: Option<usize>,
 
     #[xml(attr = "intimeline")]
-    pub in_timeline: Option<usize>,
+    pub in_timeline: Option<bool>,
 
     #[xml(attr = "limit-to-device")]
-    pub limit_to_device: Option<usize>,
+    pub limit_to_device: Option<bool>,
 
     #[xml(attr = "locked")]
-    pub locked: usize,
+    pub locked: bool,
 
     #[xml(attr = "name")]
     pub name: String,
@@ -243,16 +243,16 @@ pub struct KraMainDocMask {
     pub mask_type: KraMaskType,
 
     #[xml(attr = "show-coloring")]
-    pub show_coloring: Option<usize>,
+    pub show_coloring: Option<bool>,
 
     #[xml(attr = "use-edge-detection")]
-    pub use_edge_detection: Option<usize>,
+    pub use_edge_detection: Option<bool>,
 
     #[xml(attr = "uuid")]
     pub uuid: String,
 
     #[xml(attr = "visible")]
-    pub visible: usize,
+    pub visible: bool,
 
     #[xml(attr = "x")]
     pub x: usize,
@@ -302,7 +302,7 @@ pub struct KraMainDocCompositionContainer (
 #[xml(tag = "composition")]
 pub struct KraMainDocComposition {
     #[xml(attr = "exportEnabled")]
-    pub export_enabled: usize,
+    pub export_enabled: bool,
 
     #[xml(attr = "name")]
     pub name: String,
@@ -315,10 +315,10 @@ pub struct KraMainDocComposition {
 #[xml(tag = "value")]
 pub struct KraMainDocCompositionValue {
     #[xml(attr = "collapsed")]
-    pub collapsed: usize,
+    pub collapsed: bool,
 
     #[xml(attr = "visible")]
-    pub visible: usize,
+    pub visible: bool,
 
     #[xml(attr = "uuid")]
     pub uuid: String,

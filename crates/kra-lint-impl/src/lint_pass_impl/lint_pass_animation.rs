@@ -89,7 +89,7 @@ impl LintPass for LintPassAnimation {
 
                     #[allow(clippy::collapsible_if)]
                     if *layer_opt == Some(true) {
-                        if layer.keyframes.is_some() && (layer.in_timeline != 1) {
+                        if layer.keyframes.is_some() && !layer.in_timeline {
                             #[rustfmt::skip]
                             lint_messages.push(
                                 format!("Unpinned animated {}", layer_display),
@@ -111,7 +111,7 @@ impl LintPass for LintPassAnimation {
 
                     #[allow(clippy::collapsible_if)]
                     if *mask_opt == Some(true) {
-                        if mask.keyframes.is_some() && (mask.in_timeline != Some(1)) {
+                        if mask.keyframes.is_some() && (mask.in_timeline != Some(true)) {
                             #[rustfmt::skip]
                             lint_messages.push(
                                 format!("Unpinned animated {}", mask_display),

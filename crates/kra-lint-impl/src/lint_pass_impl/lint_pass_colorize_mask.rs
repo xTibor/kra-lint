@@ -19,7 +19,7 @@ impl LintPass for LintPassColorizeMask {
         {
             if self.warn_keystrokes_edit_mode == Some(true) {
                 for (layer, mask) in kra_archive.all_masks_by_type(KraMaskType::ColorizeMask) {
-                    if mask.edit_keystrokes == Some(1) {
+                    if mask.edit_keystrokes == Some(true) {
                         #[rustfmt::skip]
                         lint_messages.push(
                             "Active key strokes edit mode on colorize mask",
@@ -38,7 +38,7 @@ impl LintPass for LintPassColorizeMask {
         {
             if self.enforce_coloring == Some(true) {
                 for (layer, mask) in kra_archive.all_masks_by_type(KraMaskType::ColorizeMask) {
-                    if mask.show_coloring == Some(0) {
+                    if mask.show_coloring == Some(false) {
                         #[rustfmt::skip]
                         lint_messages.push(
                             "Disabled coloring on colorize mask",
