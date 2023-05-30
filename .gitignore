@@ -1,3 +1,5 @@
 /target
 **/*.kra~
 **/*.kra-autosave.kra
+**/*.krz~
+**/*.krz-autosave.kra
