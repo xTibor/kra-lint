@@ -10,6 +10,7 @@ use crate::lint_pass::{LintPass, LintPassResult};
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassColorizeMask {
     warn_keystrokes_edit_mode: Option<bool>,
+    enforce_coloring: Option<bool>,
 }
 
 impl LintPass for LintPassColorizeMask {
@@ -26,6 +27,24 @@ impl LintPass for LintPassColorizeMask {
                                 LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
                                 LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
                                 LintMetadata::Comment("Leads to false document previews".to_owned()),
+                            ],
+                        );
+                    }
+                }
+            }
+        }
+
+        // Sub-pass #2
+        {
+            if self.enforce_coloring == Some(true) {
+                for (layer, mask) in kra_archive.all_masks_by_type(KraMaskType::ColorizeMask) {
+                    if mask.show_coloring == Some(0) {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Disabled coloring on colorize mask",
+                            &[
+                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
                             ],
                         );
                     }
