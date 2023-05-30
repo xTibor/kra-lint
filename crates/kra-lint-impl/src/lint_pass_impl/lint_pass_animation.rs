@@ -14,6 +14,7 @@ pub(crate) struct LintPassAnimation {
     framerate: Option<LintNumberMatchExpression<usize>>,
     force_layer_pin: Option<LintLayerProperty<bool>>,
     force_mask_pin: Option<LintMaskProperty<bool>>,
+    warn_onion_skin: Option<bool>,
 }
 
 impl LintPass for LintPassAnimation {
@@ -122,6 +123,21 @@ impl LintPass for LintPassAnimation {
                             );
                         }
                     }
+                }
+            }
+        }
+
+        // Sub-pass #6
+        {
+            for layer in kra_archive.all_layers() {
+                if layer.onion_skin == Some(true) {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Active onion skins leading to false document previews",
+                        &[
+                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                        ],
+                    );
                 }
             }
         }
