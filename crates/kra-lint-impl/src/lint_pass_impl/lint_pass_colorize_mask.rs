@@ -22,11 +22,10 @@ impl LintPass for LintPassColorizeMask {
                     if mask.edit_keystrokes == Some(true) {
                         #[rustfmt::skip]
                         lint_messages.push(
-                            "Active key strokes edit mode on colorize mask",
+                            "Active key stroke edit modes on colorize masks leading to false document previews",
                             &[
                                 LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
                                 LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                LintMetadata::Comment("Leads to false document previews".to_owned()),
                             ],
                         );
                     }
