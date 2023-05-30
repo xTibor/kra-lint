@@ -12,8 +12,8 @@ use crate::lint_pass::{LintPass, LintPassResult};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassColorspace {
-    colorspace: LintStringMatchExpression,
-    profile: LintStringMatchExpression,
+    colorspace: Option<LintStringMatchExpression>,
+    profile: Option<LintStringMatchExpression>,
     profile_checksum: Option<LintStringMatchExpression>,
 }
 
@@ -21,34 +21,38 @@ impl LintPass for LintPassColorspace {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
-            let kra_colorspace = &kra_archive.main_doc.image.colorspace_name;
+            if let Some(colorspace) = self.colorspace.as_ref() {
+                let kra_colorspace = &kra_archive.main_doc.image.colorspace_name;
 
-            if !self.colorspace.matches(kra_colorspace) {
-                #[rustfmt::skip]
-                lint_messages.push(
-                    "Incorrect document color space",
-                    &[
-                        LintMetadata::Expected(self.colorspace.to_string()),
-                        LintMetadata::Found(kra_colorspace.to_string()),
-                    ],
-                );
+                if !colorspace.matches(kra_colorspace) {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Incorrect document color space",
+                        &[
+                            LintMetadata::Expected(colorspace.to_string()),
+                            LintMetadata::Found(kra_colorspace.to_string()),
+                        ],
+                    );
+                }
             }
         }
 
         // Sub-pass #2
         {
-            for layer in kra_archive.all_layers() {
-                if let Some(layer_colorspace) = layer.colorspace_name.as_ref() {
-                    if !self.colorspace.matches(layer_colorspace) {
-                        #[rustfmt::skip]
-                        lint_messages.push(
-                            "Incorrect layer color space",
-                            &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Expected(self.colorspace.to_string()),
-                                LintMetadata::Found(layer_colorspace.to_string()),
-                            ],
-                        );
+            if let Some(colorspace) = self.colorspace.as_ref() {
+                for layer in kra_archive.all_layers() {
+                    if let Some(layer_colorspace) = layer.colorspace_name.as_ref() {
+                        if !colorspace.matches(layer_colorspace) {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                "Incorrect layer color space",
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    LintMetadata::Expected(colorspace.to_string()),
+                                    LintMetadata::Found(layer_colorspace.to_string()),
+                                ],
+                            );
+                        }
                     }
                 }
             }
@@ -56,19 +60,21 @@ impl LintPass for LintPassColorspace {
 
         // Sub-pass #3
         {
-            for (layer, mask) in kra_archive.all_masks() {
-                if let Some(mask_colorspace) = mask.colorspace_name.as_ref() {
-                    if !self.colorspace.matches(mask_colorspace) {
-                        #[rustfmt::skip]
-                        lint_messages.push(
-                            "Incorrect mask color space",
-                            &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                LintMetadata::Expected(self.colorspace.to_string()),
-                                LintMetadata::Found(mask_colorspace.to_string()),
-                            ],
-                        );
+            if let Some(colorspace) = self.colorspace.as_ref() {
+                for (layer, mask) in kra_archive.all_masks() {
+                    if let Some(mask_colorspace) = mask.colorspace_name.as_ref() {
+                        if !colorspace.matches(mask_colorspace) {
+                            #[rustfmt::skip]
+                            lint_messages.push(
+                                "Incorrect mask color space",
+                                &[
+                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                    LintMetadata::Expected(colorspace.to_string()),
+                                    LintMetadata::Found(mask_colorspace.to_string()),
+                                ],
+                            );
+                        }
                     }
                 }
             }
@@ -76,17 +82,19 @@ impl LintPass for LintPassColorspace {
 
         // Sub-pass #4
         {
-            let kra_profile = &kra_archive.main_doc.image.profile;
+            if let Some(profile) = self.profile.as_ref() {
+                let kra_profile = &kra_archive.main_doc.image.profile;
 
-            if !self.profile.matches(kra_profile) {
-                #[rustfmt::skip]
-                lint_messages.push(
-                    "Incorrect document color profile",
-                    &[
-                        LintMetadata::Expected(self.profile.to_string()),
-                        LintMetadata::Found(kra_profile.to_string()),
-                    ],
-                );
+                if !profile.matches(kra_profile) {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Incorrect document color profile",
+                        &[
+                            LintMetadata::Expected(profile.to_string()),
+                            LintMetadata::Found(kra_profile.to_string()),
+                        ],
+                    );
+                }
             }
         }
 
