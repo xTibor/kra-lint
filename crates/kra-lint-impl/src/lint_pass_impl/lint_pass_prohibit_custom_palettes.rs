@@ -15,6 +15,7 @@ impl LintPass for LintPassProhibitCustomPalettes {
         {
             if let Some(kra_palette_container) = kra_archive.main_doc.image.palette_container.as_ref() {
                 for kra_palette in kra_palette_container.into_iter() {
+                    // Bug: KRA files known to have mangled internal palettes (clusterfuck around bit depths/color spaces)
                     #[rustfmt::skip]
                     lint_messages.push(
                         "Prohibited use of custom palettes",
