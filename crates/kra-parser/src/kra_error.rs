@@ -55,10 +55,8 @@ pub enum KraError {
     #[display(fmt = "Mask file name field not found")]
     MaskFileNameFieldNotFound,
 
-    #[display(fmt = "Filter config not found at '{filter_config_path:}'")]
-    FilterConfigNotFound {
-        filter_config_path: String,
-    },
+    #[display(fmt = "Filter config not found")]
+    FilterConfigNotFound,
 
     #[display(fmt = "Cannot find filter config parameter '{param_name:}'")]
     CannotFindFilterConfigParam {

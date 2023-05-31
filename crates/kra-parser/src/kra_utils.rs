@@ -105,10 +105,7 @@ impl KraMainDocLayer {
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
 
-    pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
-    where
-        T: TryFrom<KraParamsContainer, Error = KraError>,
-    {
+    pub fn filter_config_params(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
         assert_eq!(self.layer_type, KraLayerType::FilterLayer);
 
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
@@ -119,13 +116,14 @@ impl KraMainDocLayer {
             layer_name = self.file_name
         );
 
-        let filter_config_params = zip_archive
-            .read_to_string(&filter_config_path)?
-            .as_deref()
-            .map(KraParamsContainer::from_str)
-            .transpose()?
-            .ok_or(KraError::FilterConfigNotFound { filter_config_path })?;
+        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+    }
 
+    pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
+    where
+        T: TryFrom<KraParamsContainer, Error = KraError>,
+    {
+        let filter_config_params = self.filter_config_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
         T::try_from(filter_config_params)
     }
 }
@@ -147,10 +145,7 @@ impl KraMainDocMask {
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
 
-    pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
-    where
-        T: TryFrom<KraParamsContainer, Error = KraError>,
-    {
+    pub fn filter_config_params(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
         assert_eq!(self.mask_type, KraMaskType::FilterMask);
 
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
@@ -161,13 +156,14 @@ impl KraMainDocMask {
             mask_name = self.file_name.as_ref().ok_or(KraError::MaskFileNameFieldNotFound)?,
         );
 
-        let filter_config_params = zip_archive
-            .read_to_string(&filter_config_path)?
-            .as_deref()
-            .map(KraParamsContainer::from_str)
-            .transpose()?
-            .ok_or(KraError::FilterConfigNotFound { filter_config_path })?;
+        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+    }
 
+    pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
+    where
+        T: TryFrom<KraParamsContainer, Error = KraError>,
+    {
+        let filter_config_params = self.filter_config_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
         T::try_from(filter_config_params)
     }
 }
