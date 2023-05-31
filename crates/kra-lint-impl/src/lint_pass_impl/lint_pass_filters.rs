@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_filterconfig::KraPixelizeFilterConfig;
 use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer, KraMainDocMask, KraMaskType};
-use kra_parser::kra_params::KraParamsContainer;
 
 use crate::lint_fields::LintStringMatchExpression;
 use crate::lint_messages::{LintMessages, LintMetadata};
@@ -83,60 +83,49 @@ impl LintPass for LintPassFilters {
                     }
                 };
 
-                let lint_filter_config = |filter_config: KraParamsContainer,
+                let lint_filter_config = |filter_config: KraPixelizeFilterConfig,
                                           layer: &KraMainDocLayer,
                                           mask: Option<&KraMainDocMask>,
-                                          lint_messages: &mut LintMessages|
-                 -> LintPassResult {
-                    let pixel_width = filter_config.get::<usize>("pixelWidth")?;
-                    let pixel_height = filter_config.get::<usize>("pixelHeight")?;
-
-                    if let (Some(pixel_width), Some(pixel_height)) = (pixel_width, pixel_height) {
-                        if pixel_width != pixel_height {
-                            #[rustfmt::skip]
-                            lint_messages.push(
-                                "Incorrect Pixiv mosaics",
-                                &[
-                                    vec![
-                                        LintMetadata::Comment("Non-square mosaics".to_owned()),
-                                    ],
-                                    layer_mask_lint_metadata(layer, mask),
-                                    vec![
-                                        LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
-                                        LintMetadata::Found(format!("{}x{}px", pixel_width, pixel_height)),
-                                    ],
-                                ]
-                                .concat(),
-                            );
-                        } else if pixel_width < minimum_mosaic_size {
-                            #[rustfmt::skip]
-                            lint_messages.push(
-                                "Incorrect Pixiv mosaics",
-                                &[
-                                    vec![
-                                        LintMetadata::Comment("Insufficient mosaic size".to_owned()),
-                                    ],
-                                    layer_mask_lint_metadata(layer, mask),
-                                    vec![
-                                        LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
-                                        LintMetadata::Found(format!("{}x{}px", pixel_width, pixel_height)),
-                                    ],
-                                ]
-                                .concat(),
-                            );
-                        }
-                    } else {
-                        // TODO: Malformed pixelize filter config
+                                          lint_messages: &mut LintMessages| {
+                    if filter_config.pixel_width != filter_config.pixel_height {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Incorrect Pixiv mosaics",
+                            &[
+                                vec![
+                                    LintMetadata::Comment("Non-square mosaics".to_owned()),
+                                ],
+                                layer_mask_lint_metadata(layer, mask),
+                                vec![
+                                    LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
+                                    LintMetadata::Found(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
+                                ],
+                            ]
+                            .concat(),
+                        );
+                    } else if filter_config.pixel_width < minimum_mosaic_size {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Incorrect Pixiv mosaics",
+                            &[
+                                vec![
+                                    LintMetadata::Comment("Insufficient mosaic size".to_owned()),
+                                ],
+                                layer_mask_lint_metadata(layer, mask),
+                                vec![
+                                    LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
+                                    LintMetadata::Found(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
+                                ],
+                            ]
+                            .concat(),
+                        );
                     }
-
-                    Ok(())
                 };
 
                 for layer in kra_archive.all_layers_by_type(KraLayerType::FilterLayer) {
                     if layer.filter_name.as_deref() == Some("pixelize") {
-                        if let Some(filter_config) = layer.filter_config(kra_archive)? {
-                            lint_filter_config(filter_config, layer, None, lint_messages)?;
-                        }
+                        let filter_config = layer.filter_config::<KraPixelizeFilterConfig>(kra_archive)?;
+                        lint_filter_config(filter_config, layer, None, lint_messages);
 
                         if layer.opacity < 255 {
                             #[rustfmt::skip]
@@ -153,9 +142,8 @@ impl LintPass for LintPassFilters {
 
                 for (layer, mask) in kra_archive.all_masks_by_type(KraMaskType::FilterMask) {
                     if mask.filter_name.as_deref() == Some("pixelize") {
-                        if let Some(filter_config) = mask.filter_config(kra_archive)? {
-                            lint_filter_config(filter_config, layer, Some(mask), lint_messages)?;
-                        }
+                        let filter_config = mask.filter_config::<KraPixelizeFilterConfig>(kra_archive)?;
+                        lint_filter_config(filter_config, layer, Some(mask), lint_messages);
                     }
                 }
             }

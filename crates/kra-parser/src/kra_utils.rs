@@ -105,7 +105,10 @@ impl KraMainDocLayer {
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
 
-    pub fn filter_config(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
+    pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
+    where
+        T: TryFrom<KraParamsContainer, Error = KraError>,
+    {
         assert_eq!(self.layer_type, KraLayerType::FilterLayer);
 
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
@@ -116,7 +119,14 @@ impl KraMainDocLayer {
             layer_name = self.file_name
         );
 
-        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+        let filter_config_params = zip_archive
+            .read_to_string(&filter_config_path)?
+            .as_deref()
+            .map(KraParamsContainer::from_str)
+            .transpose()?
+            .ok_or(KraError::FilterConfigNotFound { filter_config_path })?;
+
+        T::try_from(filter_config_params)
     }
 }
 
@@ -137,7 +147,10 @@ impl KraMainDocMask {
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
 
-    pub fn filter_config(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
+    pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
+    where
+        T: TryFrom<KraParamsContainer, Error = KraError>,
+    {
         assert_eq!(self.mask_type, KraMaskType::FilterMask);
 
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
@@ -148,7 +161,14 @@ impl KraMainDocMask {
             mask_name = self.file_name.as_ref().ok_or(KraError::MaskFileNameFieldNotFound)?,
         );
 
-        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+        let filter_config_params = zip_archive
+            .read_to_string(&filter_config_path)?
+            .as_deref()
+            .map(KraParamsContainer::from_str)
+            .transpose()?
+            .ok_or(KraError::FilterConfigNotFound { filter_config_path })?;
+
+        T::try_from(filter_config_params)
     }
 }
 
@@ -168,7 +188,7 @@ impl KraMainDocImage {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 impl KraParamsContainer {
-    pub fn get<T: FromStr>(&self, param_name: &str) -> Result<Option<T>, KraError> {
+    pub fn get_opt<T: FromStr>(&self, param_name: &str) -> Result<Option<T>, KraError> {
         if let Some(param) = self.into_iter().find(|param| param.name == param_name) {
             let parse_result = param
                 .value
@@ -178,5 +198,10 @@ impl KraParamsContainer {
         } else {
             Ok(None)
         }
+    }
+
+    pub fn get<T: FromStr>(&self, param_name: &str) -> Result<T, KraError> {
+        self.get_opt::<T>(param_name)?
+            .ok_or(KraError::CannotFindFilterConfigParam { param_name: param_name.to_owned() })
     }
 }
