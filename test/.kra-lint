@@ -41,6 +41,7 @@ styleable_layers = false
 
 [filters]
 filter_types = ["colortoalpha", "gaussian blur"]
+pixiv_mosaics = true
 
 [file_layers]
 file_formats = ["kra", "tga"]
