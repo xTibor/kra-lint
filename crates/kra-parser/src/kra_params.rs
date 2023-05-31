@@ -1,7 +1,7 @@
 use derive_more::IntoIterator;
 use serde::Deserialize;
 use strong_xml::XmlRead;
-use strum::{EnumString};
+use strum::EnumString;
 
 #[derive(Debug, XmlRead, IntoIterator)]
 #[xml(tag = "params")]

@@ -55,6 +55,11 @@ pub enum KraError {
     #[display(fmt = "Mask file name field not found")]
     MaskFileNameFieldNotFound,
 
+    #[display(fmt = "Failed to parse filter config parameter '{param_name:}'")]
+    FailedToParseFilterConfigParam {
+        param_name: String,
+    },
+
     #[from]
     ZipError(zip::result::ZipError),
 

@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::str::FromStr;
 
 use strong_xml::XmlRead;
 use ziparchive_ext::ZipArchiveExt;
@@ -161,5 +162,21 @@ impl KraMainDocImage {
             format!("{document_name:}/annotations/icc", document_name = kra_archive.main_doc.image.name);
 
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
+    }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+impl KraParamsContainer {
+    pub fn get<T: FromStr>(&self, param_name: &str) -> Result<Option<T>, KraError> {
+        if let Some(param) = self.into_iter().find(|param| param.name == param_name) {
+            let parse_result = param
+                .value
+                .parse::<T>()
+                .map_err(|_| KraError::FailedToParseFilterConfigParam { param_name: param_name.to_owned() });
+            Some(parse_result).transpose()
+        } else {
+            Ok(None)
+        }
     }
 }
