@@ -1,5 +1,6 @@
 use std::collections::VecDeque;
 
+use strong_xml::XmlRead;
 use ziparchive_ext::ZipArchiveExt;
 
 use crate::kra_archive::KraArchive;
@@ -7,6 +8,7 @@ use crate::kra_error::KraError;
 use crate::kra_maindoc::{
     KraLayerType, KraMainDocImage, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType,
 };
+use crate::kra_params::KraParamsContainer;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -101,6 +103,20 @@ impl KraMainDocLayer {
 
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
+
+    pub fn filter_config(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
+        assert_eq!(self.layer_type, KraLayerType::FilterLayer);
+
+        let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+        let filter_config_path = format!(
+            "{document_name:}/layers/{layer_name:}.filterconfig",
+            document_name = kra_archive.main_doc.image.name,
+            layer_name = self.file_name
+        );
+
+        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+    }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,6 +134,20 @@ impl KraMainDocMask {
         );
 
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
+    }
+
+    pub fn filter_config(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
+        assert_eq!(self.mask_type, KraMaskType::FilterMask);
+
+        let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+        let filter_config_path = format!(
+            "{document_name:}/layers/{mask_name:}.filterconfig",
+            document_name = kra_archive.main_doc.image.name,
+            mask_name = self.file_name.as_ref().ok_or(KraError::MaskFileNameFieldNotFound)?,
+        );
+
+        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
     }
 }
 

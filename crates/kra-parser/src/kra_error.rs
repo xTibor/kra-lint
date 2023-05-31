@@ -60,4 +60,7 @@ pub enum KraError {
 
     #[from]
     IoError(io::Error),
+
+    #[from]
+    XmlError(strong_xml::XmlError),
 }
