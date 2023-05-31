@@ -6,10 +6,10 @@ use ziparchive_ext::ZipArchiveExt;
 
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
+use crate::kra_filterparams::KraFilterParamsContainer;
 use crate::kra_maindoc::{
     KraLayerType, KraMainDocImage, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType,
 };
-use crate::kra_params::KraParamsContainer;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -83,7 +83,6 @@ impl KraArchive {
 impl KraMainDocLayer {
     pub fn content_svg(&self, kra_archive: &KraArchive) -> Result<String, KraError> {
         assert_eq!(self.layer_type, KraLayerType::VectorLayer);
-
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
         let svg_path = format!("{}/layers/{}.shapelayer/content.svg", kra_archive.main_doc.image.name, self.file_name);
@@ -93,7 +92,6 @@ impl KraMainDocLayer {
 
     pub fn color_profile(&self, kra_archive: &KraArchive) -> Result<Vec<u8>, KraError> {
         assert_eq!(self.layer_type, KraLayerType::PaintLayer);
-
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
         let color_profile_path = format!(
@@ -105,26 +103,29 @@ impl KraMainDocLayer {
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
 
-    pub fn filter_config_params(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
+    pub fn filter_params(&self, kra_archive: &KraArchive) -> Result<Option<KraFilterParamsContainer>, KraError> {
         assert_eq!(self.layer_type, KraLayerType::FilterLayer);
-
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
-        let filter_config_path = format!(
+        let filter_params_path = format!(
             "{document_name:}/layers/{layer_name:}.filterconfig",
             document_name = kra_archive.main_doc.image.name,
             layer_name = self.file_name
         );
 
-        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+        Ok(zip_archive
+            .read_to_string(&filter_params_path)?
+            .as_deref()
+            .map(KraFilterParamsContainer::from_str)
+            .transpose()?)
     }
 
     pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
     where
-        T: TryFrom<KraParamsContainer, Error = KraError>,
+        T: TryFrom<KraFilterParamsContainer, Error = KraError>,
     {
-        let filter_config_params = self.filter_config_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
-        T::try_from(filter_config_params)
+        let filter_params = self.filter_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
+        T::try_from(filter_params)
     }
 }
 
@@ -133,7 +134,6 @@ impl KraMainDocLayer {
 impl KraMainDocMask {
     pub fn colorize_color_profile(&self, kra_archive: &KraArchive) -> Result<Vec<u8>, KraError> {
         assert_eq!(self.mask_type, KraMaskType::ColorizeMask);
-
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
         let color_profile_path = format!(
@@ -145,26 +145,29 @@ impl KraMainDocMask {
         zip_archive.read(&color_profile_path)?.ok_or(KraError::ColorProfileNotFound { color_profile_path })
     }
 
-    pub fn filter_config_params(&self, kra_archive: &KraArchive) -> Result<Option<KraParamsContainer>, KraError> {
+    pub fn filter_params(&self, kra_archive: &KraArchive) -> Result<Option<KraFilterParamsContainer>, KraError> {
         assert_eq!(self.mask_type, KraMaskType::FilterMask);
-
         let mut zip_archive = kra_archive.zip_archive.borrow_mut();
 
-        let filter_config_path = format!(
+        let filter_params_path = format!(
             "{document_name:}/layers/{mask_name:}.filterconfig",
             document_name = kra_archive.main_doc.image.name,
             mask_name = self.file_name.as_ref().ok_or(KraError::MaskFileNameFieldNotFound)?,
         );
 
-        Ok(zip_archive.read_to_string(&filter_config_path)?.as_deref().map(KraParamsContainer::from_str).transpose()?)
+        Ok(zip_archive
+            .read_to_string(&filter_params_path)?
+            .as_deref()
+            .map(KraFilterParamsContainer::from_str)
+            .transpose()?)
     }
 
     pub fn filter_config<T>(&self, kra_archive: &KraArchive) -> Result<T, KraError>
     where
-        T: TryFrom<KraParamsContainer, Error = KraError>,
+        T: TryFrom<KraFilterParamsContainer, Error = KraError>,
     {
-        let filter_config_params = self.filter_config_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
-        T::try_from(filter_config_params)
+        let filter_params = self.filter_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
+        T::try_from(filter_params)
     }
 }
 
@@ -183,7 +186,7 @@ impl KraMainDocImage {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-impl KraParamsContainer {
+impl KraFilterParamsContainer {
     pub fn get_opt<T: FromStr>(&self, param_name: &str) -> Result<Option<T>, KraError> {
         if let Some(param) = self.into_iter().find(|param| param.name == param_name) {
             let parse_result = param

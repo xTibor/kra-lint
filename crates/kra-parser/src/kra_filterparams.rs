@@ -5,30 +5,30 @@ use strum::EnumString;
 
 #[derive(Debug, XmlRead, IntoIterator)]
 #[xml(tag = "params")]
-pub struct KraParamsContainer {
+pub struct KraFilterParamsContainer {
     #[xml(attr = "version")]
     pub version: usize,
 
     #[into_iterator(ref)]
     #[xml(child = "param")]
-    pub params: Vec<KraParam>,
+    pub params: Vec<KraFilterParam>,
 }
 
 #[derive(Debug, XmlRead)]
 #[xml(tag = "param")]
-pub struct KraParam {
+pub struct KraFilterParam {
     #[xml(attr = "name")]
     pub name: String,
 
     #[xml(attr = "type")]
-    pub r#type: Option<KraParamType>,
+    pub r#type: Option<KraFilterParamType>,
 
     #[xml(text)]
     pub value: String,
 }
 
 #[derive(Debug, PartialEq, Deserialize, EnumString)]
-pub enum KraParamType {
+pub enum KraFilterParamType {
     #[strum(serialize = "internal")]
     Internal,
 

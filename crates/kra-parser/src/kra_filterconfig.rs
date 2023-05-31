@@ -1,5 +1,5 @@
 use crate::kra_error::KraError;
-use crate::kra_params::KraParamsContainer;
+use crate::kra_filterparams::KraFilterParamsContainer;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -8,13 +8,13 @@ pub struct KraPixelizeFilterConfig {
     pub pixel_height: usize,
 }
 
-impl TryFrom<KraParamsContainer> for KraPixelizeFilterConfig {
+impl TryFrom<KraFilterParamsContainer> for KraPixelizeFilterConfig {
     type Error = KraError;
 
-    fn try_from(filter_config: KraParamsContainer) -> Result<KraPixelizeFilterConfig, KraError> {
+    fn try_from(filter_params: KraFilterParamsContainer) -> Result<KraPixelizeFilterConfig, KraError> {
         Ok(KraPixelizeFilterConfig {
-            pixel_width: filter_config.get::<usize>("pixelWidth")?,
-            pixel_height: filter_config.get::<usize>("pixelHeight")?,
+            pixel_width: filter_params.get::<usize>("pixelWidth")?,
+            pixel_height: filter_params.get::<usize>("pixelHeight")?,
         })
     }
 }
