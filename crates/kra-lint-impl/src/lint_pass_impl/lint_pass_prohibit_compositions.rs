@@ -2,8 +2,9 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::meta_comment;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -19,7 +20,7 @@ impl LintPass for LintPassProhibitCompositions {
                     lint_messages.push(
                         "Prohibited use of compositions",
                         &[
-                            LintMetadata::Comment(format!("Composition name: \"{}\"", composition.name)),
+                            meta_comment!(format!("Composition name: \"{}\"", composition.name)),
                         ],
                     );
                 }

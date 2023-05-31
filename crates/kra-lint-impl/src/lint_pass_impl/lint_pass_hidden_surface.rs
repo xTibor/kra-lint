@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::{LintLayerProperty, LintMaskProperty};
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -27,7 +28,7 @@ impl LintPass for LintPassHiddenSurface {
                         lint_messages.push(
                             format!("Prohibited hidden {}", layer_display),
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                meta_layer!(layer),
                             ],
                         );
                     }
@@ -49,8 +50,8 @@ impl LintPass for LintPassHiddenSurface {
                         lint_messages.push(
                             format!("Prohibited hidden {}", mask_display),
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                meta_layer!(layer),
+                                meta_mask!(mask),
                             ],
                         );
                     }

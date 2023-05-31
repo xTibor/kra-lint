@@ -5,8 +5,9 @@ use kra_parser::kra_filterconfig::KraPixelizeFilterConfig;
 use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -27,9 +28,9 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect filter layer type",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(filter_types.to_string()),
-                                    LintMetadata::Found(kra_filter_type.to_string()),
+                                    meta_layer!(layer),
+                                    meta_expected!(filter_types),
+                                    meta_found!(kra_filter_type),
                                 ],
                             );
                         }
@@ -48,10 +49,10 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect filter mask type",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                    LintMetadata::Expected(filter_types.to_string()),
-                                    LintMetadata::Found(kra_filter_type.to_string()),
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
+                                    meta_expected!(filter_types),
+                                    meta_found!(kra_filter_type),
                                 ],
                             );
                         }
@@ -78,10 +79,10 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect Pixiv mosaics",
                                 &[
-                                    LintMetadata::Comment("Non-square filter layer mosaics".to_owned()),
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
-                                    LintMetadata::Found(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
+                                    meta_comment!("Non-square filter layer mosaics"),
+                                    meta_layer!(layer),
+                                    meta_expected!(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
+                                    meta_found!(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
                                 ],
                             );
                         } else if filter_config.pixel_width < minimum_mosaic_size {
@@ -89,10 +90,10 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect Pixiv mosaics",
                                 &[
-                                    LintMetadata::Comment("Insufficient filter layer mosaic size".to_owned()),
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
-                                    LintMetadata::Found(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
+                                    meta_comment!("Insufficient filter layer mosaic size"),
+                                    meta_layer!(layer),
+                                    meta_expected!(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
+                                    meta_found!(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
                                 ],
                             );
                         }
@@ -102,8 +103,8 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect Pixiv mosaics",
                                 &[
-                                    LintMetadata::Comment("Transparent mosaic filter layer".to_owned()),
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    meta_comment!("Transparent mosaic filter layer"),
+                                    meta_layer!(layer),
                                 ],
                             );
                         }
@@ -119,11 +120,11 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect Pixiv mosaics",
                                 &[
-                                    LintMetadata::Comment("Non-square filter mask mosaics".to_owned()),
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                    LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
-                                    LintMetadata::Found(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
+                                    meta_comment!("Non-square filter mask mosaics"),
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
+                                    meta_expected!(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
+                                    meta_found!(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
                                 ],
                             );
                         } else if filter_config.pixel_width < minimum_mosaic_size {
@@ -131,11 +132,11 @@ impl LintPass for LintPassFilters {
                             lint_messages.push(
                                 "Incorrect Pixiv mosaics",
                                 &[
-                                    LintMetadata::Comment("Insufficient filter mask mosaic size".to_owned()),
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                    LintMetadata::Expected(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
-                                    LintMetadata::Found(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
+                                    meta_comment!("Insufficient filter mask mosaic size"),
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
+                                    meta_expected!(format!("{}x{}px", minimum_mosaic_size, minimum_mosaic_size)),
+                                    meta_found!(format!("{}x{}px", filter_config.pixel_width, filter_config.pixel_height)),
                                 ],
                             );
                         }

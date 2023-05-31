@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_comment, meta_expected, meta_found, meta_missing_field};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -28,7 +29,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing copyright line",
                         &[
-                            LintMetadata::Expected(copyright_line.to_string()),
+                            meta_expected!(copyright_line),
                         ],
                     );
                 } else if !copyright_line.matches(kra_copyright_line) {
@@ -36,8 +37,8 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Incorrect copyright line",
                         &[
-                            LintMetadata::Expected(copyright_line.to_string()),
-                            LintMetadata::Found(kra_copyright_line.to_string()),
+                            meta_expected!(copyright_line),
+                            meta_found!(kra_copyright_line),
                         ],
                     );
                 }
@@ -54,7 +55,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing copyright disclaimer",
                         &[
-                            LintMetadata::Expected(copyright_disclaimer.to_string()),
+                            meta_expected!(copyright_disclaimer),
                         ],
                     );
                 } else if !copyright_disclaimer.matches(kra_copyright_disclaimer) {
@@ -62,8 +63,8 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Incorrect copyright disclaimer",
                         &[
-                            LintMetadata::Expected(copyright_disclaimer.to_string()),
-                            LintMetadata::Found(kra_copyright_disclaimer.to_string()),
+                            meta_expected!(copyright_disclaimer),
+                            meta_found!(kra_copyright_disclaimer),
                         ],
                     );
                 }
@@ -80,7 +81,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing author information",
                         &[
-                            LintMetadata::MissingField("Initial creator".to_owned()),
+                            meta_missing_field!("Initial creator"),
                         ],
                     );
                 }
@@ -99,7 +100,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing author information",
                         &[
-                            LintMetadata::MissingField("Author full name".to_owned()),
+                            meta_missing_field!("Author full name"),
                         ],
                     );
                 }
@@ -109,7 +110,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing author information",
                         &[
-                            LintMetadata::MissingField("Author first name".to_owned()),
+                            meta_missing_field!("Author first name"),
                         ],
                     );
                 }
@@ -119,7 +120,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing author information",
                         &[
-                            LintMetadata::MissingField("Author last name".to_owned()),
+                            meta_missing_field!("Author last name"),
                         ],
                     );
                 }
@@ -131,8 +132,8 @@ impl LintPass for LintPassCopyright {
                         lint_messages.push(
                             "Inconsistent author information",
                             &[
-                                LintMetadata::Comment(format!("First name: \"{}\"", kra_author_first_name.to_string())),
-                                LintMetadata::Comment(format!("Full name: \"{}\"", kra_author_full_name.to_string())),
+                                meta_comment!(format!("First name: \"{}\"", kra_author_first_name.to_string())),
+                                meta_comment!(format!("Full name: \"{}\"", kra_author_full_name.to_string())),
                             ],
                         );
                     }
@@ -145,8 +146,8 @@ impl LintPass for LintPassCopyright {
                         lint_messages.push(
                             "Inconsistent author information",
                             &[
-                                LintMetadata::Comment(format!("Last name: \"{}\"", kra_author_last_name.to_string())),
-                                LintMetadata::Comment(format!("Full name: \"{}\"", kra_author_full_name.to_string())),
+                                meta_comment!(format!("Last name: \"{}\"", kra_author_last_name.to_string())),
+                                meta_comment!(format!("Full name: \"{}\"", kra_author_full_name.to_string())),
                             ],
                         );
                     }
@@ -164,7 +165,7 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Missing studio name",
                         &[
-                            LintMetadata::Expected(studio_name.to_string()),
+                            meta_expected!(studio_name),
                         ],
                     );
                 } else if !studio_name.matches(kra_studio_name) {
@@ -172,8 +173,8 @@ impl LintPass for LintPassCopyright {
                     lint_messages.push(
                         "Incorrect studio name",
                         &[
-                            LintMetadata::Expected(studio_name.to_string()),
-                            LintMetadata::Found(kra_studio_name.to_string()),
+                            meta_expected!(studio_name),
+                            meta_found!(kra_studio_name),
                         ],
                     );
                 }

@@ -6,8 +6,9 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_bug, meta_expected, meta_found, meta_layer};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -37,9 +38,9 @@ impl LintPass for LintPassVectorLayers {
                                     lint_messages.push(
                                         "Prohibited font family on vector layer",
                                         &[
-                                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                            LintMetadata::Expected(font_family.to_string()),
-                                            LintMetadata::Found(svg_font_family.to_string()),
+                                            meta_layer!(layer),
+                                            meta_expected!(font_family),
+                                            meta_found!(svg_font_family),
                                         ],
                                     );
                                 }
@@ -58,9 +59,9 @@ impl LintPass for LintPassVectorLayers {
                                     lint_messages.push(
                                         "Prohibited stroke line cap on vector layer",
                                         &[
-                                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                            LintMetadata::Expected(stroke_linecap.to_string()),
-                                            LintMetadata::Found(svg_stroke_linecap.to_string()),
+                                            meta_layer!(layer),
+                                            meta_expected!(stroke_linecap),
+                                            meta_found!(svg_stroke_linecap),
                                         ],
                                     );
                                 }
@@ -79,9 +80,9 @@ impl LintPass for LintPassVectorLayers {
                                     lint_messages.push(
                                         "Prohibited stroke line join on vector layer",
                                         &[
-                                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                            LintMetadata::Expected(stroke_linejoin.to_string()),
-                                            LintMetadata::Found(svg_stroke_linejoin.to_string()),
+                                            meta_layer!(layer),
+                                            meta_expected!(stroke_linejoin),
+                                            meta_found!(svg_stroke_linejoin),
                                         ],
                                     );
                                 }
@@ -97,8 +98,8 @@ impl LintPass for LintPassVectorLayers {
                                 lint_messages.push(
                                     "Prohibited placeholder text on vector layer",
                                     &[
-                                        LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                        LintMetadata::Found(svg_text.to_string()),
+                                        meta_layer!(layer),
+                                        meta_found!(svg_text),
                                     ],
                                 );
                             }
@@ -117,8 +118,8 @@ impl LintPass for LintPassVectorLayers {
                                     lint_messages.push(
                                         "Broken text gradient fill on vector layer",
                                         &[
-                                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                            LintMetadata::Bug(430774),
+                                            meta_layer!(layer),
+                                            meta_bug!(430774),
                                         ],
                                     );
                                 }

@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression};
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_expected, meta_found, meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -32,7 +33,7 @@ impl LintPass for LintPassAnimation {
                             lint_messages.push(
                                 format!("Prohibited use of animated {}", layer_display),
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    meta_layer!(layer),
                                 ],
                             );
                         }
@@ -54,8 +55,8 @@ impl LintPass for LintPassAnimation {
                             lint_messages.push(
                                 format!("Prohibited use of animated {}", mask_display),
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
                                 ],
                             );
                         }
@@ -74,8 +75,8 @@ impl LintPass for LintPassAnimation {
                     lint_messages.push(
                         "Incorrect animation framerate",
                         &[
-                            LintMetadata::Expected(format!("{}fps", framerate)),
-                            LintMetadata::Found(format!("{}fps", kra_framerate)),
+                            meta_expected!(format!("{}fps", framerate)),
+                            meta_found!(format!("{}fps", kra_framerate)),
                         ],
                     );
                 }
@@ -95,7 +96,7 @@ impl LintPass for LintPassAnimation {
                             lint_messages.push(
                                 format!("Unpinned animated {}", layer_display),
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                    meta_layer!(layer),
                                 ],
                             );
                         }
@@ -117,8 +118,8 @@ impl LintPass for LintPassAnimation {
                             lint_messages.push(
                                 format!("Unpinned animated {}", mask_display),
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
                                 ],
                             );
                         }
@@ -135,7 +136,7 @@ impl LintPass for LintPassAnimation {
                     lint_messages.push(
                         "Active onion skins leading to false document previews",
                         &[
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                            meta_layer!(layer),
                         ],
                     );
                 }

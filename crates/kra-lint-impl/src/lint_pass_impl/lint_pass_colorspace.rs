@@ -6,8 +6,9 @@ use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 use sha2::{Digest, Sha256};
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -29,8 +30,8 @@ impl LintPass for LintPassColorspace {
                     lint_messages.push(
                         "Incorrect document color space",
                         &[
-                            LintMetadata::Expected(colorspace.to_string()),
-                            LintMetadata::Found(kra_colorspace.to_string()),
+                            meta_expected!(colorspace),
+                            meta_found!(kra_colorspace),
                         ],
                     );
                 }
@@ -47,9 +48,9 @@ impl LintPass for LintPassColorspace {
                             lint_messages.push(
                                 "Incorrect layer color space",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(colorspace.to_string()),
-                                    LintMetadata::Found(layer_colorspace.to_string()),
+                                    meta_layer!(layer),
+                                    meta_expected!(colorspace),
+                                    meta_found!(layer_colorspace),
                                 ],
                             );
                         }
@@ -68,10 +69,10 @@ impl LintPass for LintPassColorspace {
                             lint_messages.push(
                                 "Incorrect mask color space",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                    LintMetadata::Expected(colorspace.to_string()),
-                                    LintMetadata::Found(mask_colorspace.to_string()),
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
+                                    meta_expected!(colorspace),
+                                    meta_found!(mask_colorspace),
                                 ],
                             );
                         }
@@ -90,8 +91,8 @@ impl LintPass for LintPassColorspace {
                     lint_messages.push(
                         "Incorrect document color profile",
                         &[
-                            LintMetadata::Expected(profile.to_string()),
-                            LintMetadata::Found(kra_profile.to_string()),
+                            meta_expected!(profile),
+                            meta_found!(kra_profile),
                         ],
                     );
                 }
@@ -113,8 +114,8 @@ impl LintPass for LintPassColorspace {
                         lint_messages.push(
                             "Incorrect layer color profile",
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Comment("Profile checksum mismatch".to_owned()),
+                                meta_layer!(layer),
+                                meta_comment!("Profile checksum mismatch"),
                             ],
                         );
                     }
@@ -135,9 +136,9 @@ impl LintPass for LintPassColorspace {
                         lint_messages.push(
                             "Incorrect colorize mask color profile",
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                LintMetadata::Comment("Profile checksum mismatch".to_owned()),
+                                meta_layer!(layer),
+                                meta_mask!(mask),
+                                meta_comment!("Profile checksum mismatch"),
                             ],
                         );
                     }
@@ -157,7 +158,7 @@ impl LintPass for LintPassColorspace {
                     lint_messages.push(
                         "Incorrect document color profile",
                         &[
-                            LintMetadata::Comment("Profile checksum mismatch".to_owned()),
+                            meta_comment!("Profile checksum mismatch"),
                         ],
                     );
                 }

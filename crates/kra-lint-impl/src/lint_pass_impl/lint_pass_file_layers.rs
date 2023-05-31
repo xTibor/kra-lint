@@ -5,8 +5,9 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{KraLayerType, KraScalingMethod};
 
 use crate::lint_fields::{LintGenericMatchExpression, LintStringMatchExpression};
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_comment, meta_expected, meta_found, meta_layer};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -29,9 +30,9 @@ impl LintPass for LintPassFileLayers {
                                 lint_messages.push(
                                     "Incorrect file layer source image format",
                                     &[
-                                        LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                        LintMetadata::Expected(file_formats.to_string()),
-                                        LintMetadata::Found(source_ext.to_string()),
+                                        meta_layer!(layer),
+                                        meta_expected!(file_formats),
+                                        meta_found!(source_ext),
                                     ],
                                 );
                             }
@@ -40,8 +41,8 @@ impl LintPass for LintPassFileLayers {
                             lint_messages.push(
                                 "File layer source image has no file extension",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(file_formats.to_string()),
+                                    meta_layer!(layer),
+                                    meta_expected!(file_formats),
                                 ],
                             );
                         }
@@ -64,8 +65,8 @@ impl LintPass for LintPassFileLayers {
                             lint_messages.push(
                                 "Missing file layer source image",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Comment(format!("Source: \"{}\"", source)),
+                                    meta_layer!(layer),
+                                    meta_comment!(format!("Source: \"{}\"", source)),
                                 ],
                             );
                         }
@@ -84,9 +85,9 @@ impl LintPass for LintPassFileLayers {
                             lint_messages.push(
                                 "Incorrect file layer scaling method",
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(scaling_method.to_string()),
-                                    LintMetadata::Found(kra_scaling_method.to_string()),
+                                    meta_layer!(layer),
+                                    meta_expected!(scaling_method),
+                                    meta_found!(kra_scaling_method),
                                 ],
                             );
                         }
@@ -95,8 +96,8 @@ impl LintPass for LintPassFileLayers {
                         lint_messages.push(
                             "Missing file layer scaling method",
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Expected(scaling_method.to_string()),
+                                meta_layer!(layer),
+                                meta_expected!(scaling_method),
                             ],
                         );
                     }

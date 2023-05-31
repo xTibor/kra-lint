@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_expected, meta_found};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -23,8 +24,8 @@ impl LintPass for LintPassFileName {
                 lint_messages.push(
                     "Incorrect file name",
                     &[
-                        LintMetadata::Expected(self.file_name.to_string()),
-                        LintMetadata::Found(kra_file_name.to_string()),
+                        meta_expected!(self.file_name),
+                        meta_found!(kra_file_name),
                     ],
                 );
             }

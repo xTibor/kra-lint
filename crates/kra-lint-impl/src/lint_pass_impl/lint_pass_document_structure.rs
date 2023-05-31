@@ -9,8 +9,9 @@ use kra_parser::kra_maindoc::{
 };
 
 use crate::lint_fields::{LintGenericMatchExpression, LintNumberMatchExpression, LintStringMatchExpression};
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -123,10 +124,10 @@ impl LintPass for LintPassDocumentStructure {
                         lint_messages.push(
                             "Incorrect document structure",
                             &[
-                                LintMetadata::Comment("Mask repetition mismatch".to_owned()),
-                                LintMetadata::Comment(format!("Mask template: ({})", lint_mask.message_fmt())),
-                                LintMetadata::Expected(mask_count.to_string()),
-                                LintMetadata::Found(kra_matching_masks.len().to_string()),
+                                meta_comment!("Mask repetition mismatch"),
+                                meta_comment!(format!("Mask template: ({})", lint_mask.message_fmt())),
+                                meta_expected!(mask_count),
+                                meta_found!(kra_matching_masks.len()),
                             ],
                         );
                         return Ok(());
@@ -138,8 +139,8 @@ impl LintPass for LintPassDocumentStructure {
                     lint_messages.push(
                         "Incorrect document structure",
                         &[
-                            LintMetadata::Comment("Extra mask".to_owned()),
-                            LintMetadata::Mask { mask_name: kra_extra_mask.name.to_string(), mask_uuid: kra_extra_mask.uuid.to_string() },
+                            meta_comment!("Extra mask"),
+                            meta_mask!(kra_extra_mask),
                         ],
                     );
                 }
@@ -195,10 +196,10 @@ impl LintPass for LintPassDocumentStructure {
                         lint_messages.push(
                             "Incorrect document structure",
                             &[
-                                LintMetadata::Comment("Layer repetition mismatch".to_owned()),
-                                LintMetadata::Comment(format!("Layer template: ({})", lint_layer.message_fmt())),
-                                LintMetadata::Expected(layer_count.to_string()),
-                                LintMetadata::Found(kra_matching_layers.len().to_string()),
+                                meta_comment!("Layer repetition mismatch"),
+                                meta_comment!(format!("Layer template: ({})", lint_layer.message_fmt())),
+                                meta_expected!(layer_count),
+                                meta_found!(kra_matching_layers.len()),
                             ],
                         );
                         return Ok(());
@@ -210,8 +211,8 @@ impl LintPass for LintPassDocumentStructure {
                     lint_messages.push(
                         "Incorrect document structure",
                         &[
-                            LintMetadata::Comment("Extra layer".to_owned()),
-                            LintMetadata::Layer { layer_name: kra_extra_layer.name.to_string(), layer_uuid: kra_extra_layer.uuid.to_string() },
+                            meta_comment!("Extra layer"),
+                            meta_layer!(kra_extra_layer),
                         ],
                     );
                 }

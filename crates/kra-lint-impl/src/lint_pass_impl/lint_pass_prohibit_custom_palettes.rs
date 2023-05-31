@@ -2,8 +2,9 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::meta_comment;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -20,7 +21,7 @@ impl LintPass for LintPassProhibitCustomPalettes {
                     lint_messages.push(
                         "Prohibited use of custom palettes",
                         &[
-                            LintMetadata::Comment(format!("Palette: \"{}\"", kra_palette.name)),
+                            meta_comment!(format!("Palette: \"{}\"", kra_palette.name)),
                         ],
                     );
                 }

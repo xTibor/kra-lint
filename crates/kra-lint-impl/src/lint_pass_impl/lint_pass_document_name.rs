@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_expected, meta_found};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -23,7 +24,7 @@ impl LintPass for LintPassDocumentName {
                 lint_messages.push(
                     "Missing document name",
                     &[
-                        LintMetadata::Expected(self.document_name.to_string()),
+                        meta_expected!(self.document_name),
                     ],
                 );
             } else if !self.document_name.matches(kra_document_name) {
@@ -31,8 +32,8 @@ impl LintPass for LintPassDocumentName {
                 lint_messages.push(
                     "Incorrect document name",
                     &[
-                        LintMetadata::Expected(self.document_name.to_string()),
-                        LintMetadata::Found(kra_document_name.to_string()),
+                        meta_expected!(self.document_name),
+                        meta_found!(kra_document_name),
                     ],
                 );
             }

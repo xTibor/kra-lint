@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraMaskType;
 
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -24,8 +25,8 @@ impl LintPass for LintPassColorizeMask {
                         lint_messages.push(
                             "Active key stroke edit modes on colorize masks leading to false document previews",
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                meta_layer!(layer),
+                                meta_mask!(mask),
                             ],
                         );
                     }
@@ -42,8 +43,8 @@ impl LintPass for LintPassColorizeMask {
                         lint_messages.push(
                             "Disabled coloring on colorize mask",
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
+                                meta_layer!(layer),
+                                meta_mask!(mask),
                             ],
                         );
                     }

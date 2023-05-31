@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_expected, meta_found};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -26,8 +27,8 @@ impl LintPass for LintPassSoftwareVersion {
                     lint_messages.push(
                         "Incorrect software name",
                         &[
-                            LintMetadata::Expected(software_name.to_string()),
-                            LintMetadata::Found(kra_software_name.to_string()),
+                            meta_expected!(software_name),
+                            meta_found!(kra_software_name),
                         ],
                     );
                 }
@@ -44,8 +45,8 @@ impl LintPass for LintPassSoftwareVersion {
                     lint_messages.push(
                         "Incorrect software version",
                         &[
-                            LintMetadata::Expected(software_version.to_string()),
-                            LintMetadata::Found(kra_software_version.to_string()),
+                            meta_expected!(software_version),
+                            meta_found!(kra_software_version),
                         ],
                     );
                 }
@@ -62,8 +63,8 @@ impl LintPass for LintPassSoftwareVersion {
                     lint_messages.push(
                         "Incorrect document syntax version",
                         &[
-                            LintMetadata::Expected(syntax_version.to_string()),
-                            LintMetadata::Found(kra_syntax_version.to_string()),
+                            meta_expected!(syntax_version),
+                            meta_found!(kra_syntax_version),
                         ],
                     );
                 }

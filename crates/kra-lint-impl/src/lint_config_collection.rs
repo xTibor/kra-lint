@@ -4,9 +4,10 @@ use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_config::LintConfig;
 use crate::lint_error::LintError;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_messages_collection::LintMessagesCollection;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::meta_error;
 
 #[derive(Default)]
 pub struct LintConfigCollection {
@@ -72,9 +73,9 @@ impl LintConfigCollection {
         match KraArchive::from_path(kra_path.as_ref()) {
             Ok(kra_archive) => match self.lint(&kra_archive, &mut lint_messages) {
                 Ok(()) => {}
-                Err(err) => lint_messages.push("Error", &[LintMetadata::Error(err.to_string())]),
+                Err(err) => lint_messages.push("Error", &[meta_error!(err)]),
             },
-            Err(err) => lint_messages.push("Error", &[LintMetadata::Error(err.to_string())]),
+            Err(err) => lint_messages.push("Error", &[meta_error!(err)]),
         }
 
         lint_messages.sort_and_dedup();

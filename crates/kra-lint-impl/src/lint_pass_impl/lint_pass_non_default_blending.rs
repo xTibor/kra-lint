@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_expected, meta_found, meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -20,9 +21,9 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default layer transparency",
                         &[
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                            LintMetadata::Expected(format!("{:.0}%", 100.0)),
-                            LintMetadata::Found(format!("{:.0}%", layer.opacity as f64 / 255.0 * 100.0)),
+                            meta_layer!(layer),
+                            meta_expected!(format!("{:.0}%", 100.0)),
+                            meta_found!(format!("{:.0}%", layer.opacity as f64 / 255.0 * 100.0)),
                         ],
                     );
                 }
@@ -42,9 +43,9 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default layer blending mode",
                         &[
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                            LintMetadata::Expected(expected_blending_mode.to_string()),
-                            LintMetadata::Found(layer.composite_op.to_string()),
+                            meta_layer!(layer),
+                            meta_expected!(expected_blending_mode),
+                            meta_found!(layer.composite_op),
                         ],
                     );
                 }
@@ -64,10 +65,10 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default mask blending mode",
                         &[
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                            LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                            LintMetadata::Expected(expected_blending_mode.unwrap_or("none").to_string()),
-                            LintMetadata::Found(mask.composite_op.as_deref().unwrap_or("none").to_string()),
+                            meta_layer!(layer),
+                            meta_mask!(mask),
+                            meta_expected!(expected_blending_mode.unwrap_or("none")),
+                            meta_found!(mask.composite_op.as_deref().unwrap_or("none")),
                         ],
                     );
                 }
@@ -82,9 +83,9 @@ impl LintPass for LintPassNonDefaultBlending {
                     lint_messages.push(
                         "Non-default set of active channels",
                         &[
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                            LintMetadata::Expected("1111".to_string()),
-                            LintMetadata::Found(layer.channel_flags.to_string()),
+                            meta_layer!(layer),
+                            meta_expected!("1111"),
+                            meta_found!(layer.channel_flags),
                         ],
                     );
                 }
@@ -100,9 +101,9 @@ impl LintPass for LintPassNonDefaultBlending {
                         lint_messages.push(
                             "Non-default channel lock flags",
                             &[
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Expected("1111".to_string()),
-                                LintMetadata::Found(channel_lock_flags.to_string()),
+                                meta_layer!(layer),
+                                meta_expected!("1111"),
+                                meta_found!(channel_lock_flags),
                             ],
                         );
                     }

@@ -99,3 +99,67 @@ impl Display for LintMetadata {
         }
     }
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#[macro_export]
+macro_rules! meta_layer {
+    ($layer:expr) => {
+        $crate::lint_messages::LintMetadata::Layer {
+            layer_name: $layer.name.to_string(),
+            layer_uuid: $layer.uuid.to_string(),
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! meta_mask {
+    ($mask:expr) => {
+        $crate::lint_messages::LintMetadata::Mask {
+            mask_name: $mask.name.to_string(),
+            mask_uuid: $mask.uuid.to_string(),
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! meta_expected {
+    ($expected:expr) => {
+        $crate::lint_messages::LintMetadata::Expected($expected.to_string())
+    };
+}
+
+#[macro_export]
+macro_rules! meta_found {
+    ($found:expr) => {
+        $crate::lint_messages::LintMetadata::Found($found.to_string())
+    };
+}
+
+#[macro_export]
+macro_rules! meta_missing_field {
+    ($missing_field:expr) => {
+        $crate::lint_messages::LintMetadata::MissingField($missing_field.to_string())
+    };
+}
+
+#[macro_export]
+macro_rules! meta_bug {
+    ($bug:expr) => {
+        $crate::lint_messages::LintMetadata::Bug($bug)
+    };
+}
+
+#[macro_export]
+macro_rules! meta_comment {
+    ($comment:expr) => {
+        $crate::lint_messages::LintMetadata::Comment($comment.to_string())
+    };
+}
+
+#[macro_export]
+macro_rules! meta_error {
+    ($error:expr) => {
+        $crate::lint_messages::LintMetadata::Error($error.to_string())
+    };
+}

@@ -6,8 +6,9 @@ use kra_parser::kra_maindoc::KraLayerType;
 
 use ziparchive_ext::ZipArchiveExt;
 
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_bug, meta_comment, meta_layer};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -25,8 +26,8 @@ impl LintPass for LintPassMalformedDocument {
                     lint_messages.push(
                         "Malformed document",
                         &[
-                            LintMetadata::Comment("Unescaped documentinfo.xml <abstract> tag".to_owned()),
-                            LintMetadata::Bug(446376),
+                            meta_comment!("Unescaped documentinfo.xml <abstract> tag"),
+                            meta_bug!(446376),
                         ],
                     );
                 }
@@ -35,7 +36,7 @@ impl LintPass for LintPassMalformedDocument {
                 lint_messages.push(
                     "Malformed document",
                     &[
-                        LintMetadata::Comment("Missing documentinfo.xml".to_owned()),
+                        meta_comment!("Missing documentinfo.xml"),
                     ],
                 );
             }
@@ -50,8 +51,8 @@ impl LintPass for LintPassMalformedDocument {
                 lint_messages.push(
                     "Malformed document",
                     &[
-                        LintMetadata::Comment("Path traversal vulnerability".to_owned()),
-                        LintMetadata::Bug(429925),
+                        meta_comment!("Path traversal vulnerability"),
+                        meta_bug!(429925),
                     ],
                 );
             }
@@ -66,9 +67,9 @@ impl LintPass for LintPassMalformedDocument {
                         lint_messages.push(
                             "Malformed document",
                             &[
-                                LintMetadata::Comment("Missing clone layer target layer".to_owned()),
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                LintMetadata::Bug(414699),
+                                meta_comment!("Missing clone layer target layer"),
+                                meta_layer!(layer),
+                                meta_bug!(414699),
                             ],
                         );
                     }
@@ -77,8 +78,8 @@ impl LintPass for LintPassMalformedDocument {
                     lint_messages.push(
                         "Malformed document",
                         &[
-                            LintMetadata::Comment("Missing clone layer target field".to_owned()),
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                            meta_comment!("Missing clone layer target field"),
+                            meta_layer!(layer),
                         ],
                     );
                 }
@@ -93,7 +94,7 @@ impl LintPass for LintPassMalformedDocument {
                     lint_messages.push(
                         "Malformed document",
                         &[
-                            LintMetadata::Comment("Compositions path traversal vulnerability".to_owned()),
+                            meta_comment!("Compositions path traversal vulnerability"),
                         ],
                     );
                 }
@@ -123,8 +124,8 @@ impl LintPass for LintPassMalformedDocument {
                         lint_messages.push(
                             "Malformed document",
                             &[
-                                LintMetadata::Comment("Clone layer loop".to_owned()),
-                                LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                                meta_comment!("Clone layer loop"),
+                                meta_layer!(layer),
                             ],
                         );
                         break;
@@ -154,7 +155,7 @@ impl LintPass for LintPassMalformedDocument {
                     lint_messages.push(
                         "Malformed document",
                         &[
-                            LintMetadata::Comment("KRA archive without required preview image".to_owned()),
+                            meta_comment!("KRA archive without required preview image"),
                         ],
                     );
                 }
@@ -163,7 +164,7 @@ impl LintPass for LintPassMalformedDocument {
                     lint_messages.push(
                         "Malformed document",
                         &[
-                            LintMetadata::Comment("KRZ archive with extraneous preview image".to_owned()),
+                            meta_comment!("KRZ archive with extraneous preview image"),
                         ],
                     );
                 }
@@ -179,8 +180,8 @@ impl LintPass for LintPassMalformedDocument {
                     lint_messages.push(
                         "Malformed document",
                         &[
-                            LintMetadata::Comment("Missing layer color profile".to_owned()),
-                            LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
+                            meta_comment!("Missing layer color profile"),
+                            meta_layer!(layer),
                         ],
                     );
                 }
@@ -194,7 +195,7 @@ impl LintPass for LintPassMalformedDocument {
                 lint_messages.push(
                     "Malformed document",
                     &[
-                        LintMetadata::Comment("Missing document color profile".to_owned()),
+                        meta_comment!("Missing document color profile"),
                     ],
                 );
             }

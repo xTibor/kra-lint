@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintStringMatchExpression};
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_expected, meta_found, meta_layer, meta_mask};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -27,9 +28,9 @@ impl LintPass for LintPassSurfaceNames {
                             lint_messages.push(
                                 format!("Incorrect {} name", layer_display),
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Expected(string_match_expr.to_string()),
-                                    LintMetadata::Found(layer.name.to_string()),
+                                    meta_layer!(layer),
+                                    meta_expected!(string_match_expr),
+                                    meta_found!(layer.name),
                                 ],
                             );
                         }
@@ -50,10 +51,10 @@ impl LintPass for LintPassSurfaceNames {
                             lint_messages.push(
                                 format!("Incorrect {} name", mask_display),
                                 &[
-                                    LintMetadata::Layer { layer_name: layer.name.to_string(), layer_uuid: layer.uuid.to_string() },
-                                    LintMetadata::Mask { mask_name: mask.name.to_string(), mask_uuid: mask.uuid.to_string() },
-                                    LintMetadata::Expected(string_match_expr.to_string()),
-                                    LintMetadata::Found(mask.name.to_string()),
+                                    meta_layer!(layer),
+                                    meta_mask!(mask),
+                                    meta_expected!(string_match_expr),
+                                    meta_found!(mask.name),
                                 ],
                             );
                         }

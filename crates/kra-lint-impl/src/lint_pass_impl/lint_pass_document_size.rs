@@ -3,8 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintNumberMatchExpression;
-use crate::lint_messages::{LintMessages, LintMetadata};
+use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
+use crate::{meta_comment, meta_expected, meta_found};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -50,8 +51,8 @@ impl LintPass for LintPassDocumentSize {
                 lint_messages.push(
                     "Incorrect document size",
                     &[
-                        LintMetadata::Expected(document_size_list),
-                        LintMetadata::Found(format!("{}×{}px/{}dpi", kra_document_width, kra_document_height, kra_document_resolution)),
+                        meta_expected!(document_size_list),
+                        meta_found!(format!("{}×{}px/{}dpi", kra_document_width, kra_document_height, kra_document_resolution)),
                     ],
                 );
             }
@@ -67,7 +68,7 @@ impl LintPass for LintPassDocumentSize {
                 lint_messages.push(
                     "Inconsistent horizontal and vertical document resolution",
                     &[
-                        LintMetadata::Comment(format!("Horizontal: {}dpi, Vertical: {}dpi", kra_resolution_x, kra_resolution_y)),
+                        meta_comment!(format!("Horizontal: {}dpi, Vertical: {}dpi", kra_resolution_x, kra_resolution_y)),
                     ],
                 );
             }
