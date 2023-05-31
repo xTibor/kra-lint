@@ -1,3 +1,5 @@
+#![allow(clippy::needless_late_init)]
+
 use derive_more::IntoIterator;
 use serde::Deserialize;
 use strong_xml::XmlRead;
