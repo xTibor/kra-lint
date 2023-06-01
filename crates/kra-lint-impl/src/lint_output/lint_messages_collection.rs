@@ -1,13 +1,12 @@
 use std::io::Write;
 
 use camino::{Utf8Path, Utf8PathBuf};
+use derive_more::IntoIterator;
 use itertools::Itertools;
 use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
 use crate::lint_output::{LintMessages, LintMessagesEntry, LintOutputError, LintOutputFormat};
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[derive(Default, Serialize)]
 pub struct LintMessagesCollectionEntry {
@@ -15,33 +14,22 @@ pub struct LintMessagesCollectionEntry {
     pub messages: LintMessages,
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+#[rustfmt::skip]
 #[must_use = "lint results shouldn't be ignored"]
-#[derive(Default, Serialize)]
+#[derive(Default, Serialize, IntoIterator)]
 #[serde(transparent)]
-pub struct LintMessagesCollection(Vec<LintMessagesCollectionEntry>);
+pub struct LintMessagesCollection (
+    #[into_iterator(ref)]
+    Vec<LintMessagesCollectionEntry>
+);
 
 impl LintMessagesCollection {
     pub(crate) fn push(&mut self, path: &Utf8Path, messages: LintMessages) {
         self.0.push(LintMessagesCollectionEntry { path: path.to_owned(), messages });
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &LintMessagesCollectionEntry> {
-        self.0.iter()
-    }
-
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
-    }
-}
-
-impl IntoIterator for LintMessagesCollection {
-    type Item = LintMessagesCollectionEntry;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
     }
 }
 
@@ -50,9 +38,9 @@ impl LintMessagesCollection {
     where
         W: Write,
     {
-        for LintMessagesCollectionEntry { path, messages } in self.iter() {
+        for LintMessagesCollectionEntry { path, messages } in self {
             for (message_title, group) in
-                &messages.iter().group_by(|LintMessagesEntry { message_title, .. }| message_title)
+                &messages.into_iter().group_by(|LintMessagesEntry { message_title, .. }| message_title)
             {
                 let indent_size = path.to_string().width();
                 let indent_str = format!("{}  | ", " ".repeat(indent_size));

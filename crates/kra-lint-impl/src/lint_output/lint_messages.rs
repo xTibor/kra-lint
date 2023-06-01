@@ -1,8 +1,7 @@
+use derive_more::IntoIterator;
 use serde::Serialize;
 
 use crate::lint_output::LintMetadata;
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[derive(Default, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 pub struct LintMessagesEntry {
@@ -10,12 +9,14 @@ pub struct LintMessagesEntry {
     pub message_metadata: Vec<LintMetadata>,
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+#[rustfmt::skip]
 #[must_use = "lint results shouldn't be ignored"]
-#[derive(Default, Serialize)]
+#[derive(Default, Serialize, IntoIterator)]
 #[serde(transparent)]
-pub struct LintMessages(Vec<LintMessagesEntry>);
+pub struct LintMessages (
+    #[into_iterator(ref)]
+    Vec<LintMessagesEntry>
+);
 
 impl LintMessages {
     pub(crate) fn push<S>(&mut self, message_title: S, message_metadata: &[LintMetadata])
@@ -28,10 +29,6 @@ impl LintMessages {
         });
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &LintMessagesEntry> {
-        self.0.iter()
-    }
-
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
@@ -39,14 +36,5 @@ impl LintMessages {
     pub(crate) fn sort_and_dedup(&mut self) {
         self.0.sort();
         self.0.dedup();
-    }
-}
-
-impl IntoIterator for LintMessages {
-    type Item = LintMessagesEntry;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
     }
 }
