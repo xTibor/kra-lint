@@ -1,3 +1,7 @@
-pub(crate) mod lint_config;
-pub(crate) mod lint_config_collection;
-pub(crate) mod lint_config_error;
+mod lint_config;
+mod lint_config_collection;
+mod lint_config_error;
+
+pub use lint_config::LintConfig;
+pub use lint_config_collection::LintConfigCollection;
+pub use lint_config_error::LintConfigError;
