@@ -22,11 +22,5 @@ pub enum LintOutputError {
     FailedToSerializePickleOutput(serde_pickle::Error),
 
     #[from]
-    ZipError(zip::result::ZipError),
-
-    #[from]
     IoError(io::Error),
-
-    #[from]
-    KraError(kra_parser::kra_error::KraError),
 }

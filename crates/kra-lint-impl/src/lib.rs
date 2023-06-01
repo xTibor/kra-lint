@@ -9,5 +9,5 @@ pub use lint_config::{LintConfig, LintConfigCollection, LintConfigError};
 pub use lint_error::LintError;
 pub use lint_output::{
     LintMessages, LintMessagesCollection, LintMessagesCollectionEntry, LintMessagesEntry, LintMetadata,
-    LintOutputFormat,
+    LintOutputError, LintOutputFormat,
 };
