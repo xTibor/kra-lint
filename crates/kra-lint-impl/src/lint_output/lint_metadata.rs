@@ -54,7 +54,7 @@ impl Display for LintMetadata {
 #[macro_export]
 macro_rules! meta_layer {
     ($layer:expr) => {
-        $crate::lint_metadata::LintMetadata::Layer {
+        $crate::lint_output::lint_metadata::LintMetadata::Layer {
             layer_name: $layer.name.to_string(),
             layer_uuid: $layer.uuid.to_string(),
         }
@@ -64,7 +64,7 @@ macro_rules! meta_layer {
 #[macro_export]
 macro_rules! meta_mask {
     ($mask:expr) => {
-        $crate::lint_metadata::LintMetadata::Mask {
+        $crate::lint_output::lint_metadata::LintMetadata::Mask {
             mask_name: $mask.name.to_string(),
             mask_uuid: $mask.uuid.to_string(),
         }
@@ -74,41 +74,41 @@ macro_rules! meta_mask {
 #[macro_export]
 macro_rules! meta_expected {
     ($expected:expr) => {
-        $crate::lint_metadata::LintMetadata::Expected($expected.to_string())
+        $crate::lint_output::lint_metadata::LintMetadata::Expected($expected.to_string())
     };
 }
 
 #[macro_export]
 macro_rules! meta_found {
     ($found:expr) => {
-        $crate::lint_metadata::LintMetadata::Found($found.to_string())
+        $crate::lint_output::lint_metadata::LintMetadata::Found($found.to_string())
     };
 }
 
 #[macro_export]
 macro_rules! meta_missing_field {
     ($missing_field:expr) => {
-        $crate::lint_metadata::LintMetadata::MissingField($missing_field.to_string())
+        $crate::lint_output::lint_metadata::LintMetadata::MissingField($missing_field.to_string())
     };
 }
 
 #[macro_export]
 macro_rules! meta_bug {
     ($bug:expr) => {
-        $crate::lint_metadata::LintMetadata::Bug($bug)
+        $crate::lint_output::lint_metadata::LintMetadata::Bug($bug)
     };
 }
 
 #[macro_export]
 macro_rules! meta_comment {
     ($comment:expr) => {
-        $crate::lint_metadata::LintMetadata::Comment($comment.to_string())
+        $crate::lint_output::lint_metadata::LintMetadata::Comment($comment.to_string())
     };
 }
 
 #[macro_export]
 macro_rules! meta_error {
     ($error:expr) => {
-        $crate::lint_metadata::LintMetadata::Error($error.to_string())
+        $crate::lint_output::lint_metadata::LintMetadata::Error($error.to_string())
     };
 }

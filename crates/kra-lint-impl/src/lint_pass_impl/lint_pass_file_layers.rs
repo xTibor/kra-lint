@@ -5,7 +5,7 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{KraLayerType, KraScalingMethod};
 
 use crate::lint_fields::{LintGenericMatchExpression, LintStringMatchExpression};
-use crate::lint_messages::LintMessages;
+use crate::lint_output::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_comment, meta_expected, meta_found, meta_layer};
 

@@ -5,7 +5,7 @@ use kra_parser::kra_filterconfig::KraPixelizeFilterConfig;
 use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
 use crate::lint_fields::LintStringMatchExpression;
-use crate::lint_messages::LintMessages;
+use crate::lint_output::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
 

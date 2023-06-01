@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_fields::LintLayerProperty;
-use crate::lint_messages::LintMessages;
+use crate::lint_output::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::meta_layer;
 

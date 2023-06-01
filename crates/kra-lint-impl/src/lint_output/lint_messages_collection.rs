@@ -5,9 +5,9 @@ use itertools::Itertools;
 use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
-use crate::lint_error::LintError;
-use crate::lint_messages::{LintMessages, LintMessagesEntry};
-use crate::lint_output_format::LintOutputFormat;
+use crate::lint_output::lint_messages::{LintMessages, LintMessagesEntry};
+use crate::lint_output::lint_output_format::LintOutputFormat;
+use crate::lint_output::lint_output_error::LintOutputError;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -48,7 +48,7 @@ impl IntoIterator for LintMessagesCollection {
 }
 
 impl LintMessagesCollection {
-    fn to_writer_plain_text<W>(&self, writer: &mut W) -> Result<(), LintError>
+    fn to_writer_plain_text<W>(&self, writer: &mut W) -> Result<(), LintOutputError>
     where
         W: Write,
     {
@@ -71,28 +71,28 @@ impl LintMessagesCollection {
     }
 
     #[rustfmt::skip]
-    pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintError> where W: Write {
+    pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintOutputError> where W: Write {
         match output_format {
             LintOutputFormat::PlainText => {
                 self.to_writer_plain_text(writer)
             },
             LintOutputFormat::Json => {
                 serde_json::to_writer(writer, self)
-                    .map_err(LintError::FailedToSerializeJsonOutput)
+                    .map_err(LintOutputError::FailedToSerializeJsonOutput)
             }
             LintOutputFormat::Ron => {
                 ron::ser::to_writer(writer, self)
-                    .map_err(LintError::FailedToSerializeRonOutput)
+                    .map_err(LintOutputError::FailedToSerializeRonOutput)
             },
             LintOutputFormat::Yaml => {
                 serde_yaml::to_writer(writer, self)
-                    .map_err(LintError::FailedToSerializeYamlOutput)
+                    .map_err(LintOutputError::FailedToSerializeYamlOutput)
             },
             LintOutputFormat::Pickle => {
                 let pickle_options = serde_pickle::SerOptions::default();
 
                 serde_pickle::to_writer(writer, self, pickle_options)
-                    .map_err(LintError::FailedToSerializePickleOutput)
+                    .map_err(LintOutputError::FailedToSerializePickleOutput)
             },
         }
     }
