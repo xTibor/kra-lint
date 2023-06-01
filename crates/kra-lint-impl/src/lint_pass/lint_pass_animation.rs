@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_config_fields::{NumberMatchExpression, ValueByLayerType, ValueByMaskType};
-use crate::lint_output::macros::{meta_expected, meta_found, meta_layer, meta_mask};
+use crate::lint_output::lint_metadata_macros::{meta_expected, meta_found, meta_layer, meta_mask};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 

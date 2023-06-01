@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_output::macros::meta_comment;
+use crate::lint_output::lint_metadata_macros::meta_comment;
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 

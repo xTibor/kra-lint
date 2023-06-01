@@ -10,4 +10,4 @@ pub use lint_metadata::LintMetadata;
 pub use lint_output_error::LintOutputError;
 pub use lint_output_format::LintOutputFormat;
 
-pub(crate) use lint_metadata::macros;
+pub(crate) mod lint_metadata_macros;
