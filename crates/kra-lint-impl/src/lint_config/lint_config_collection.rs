@@ -2,8 +2,8 @@ use camino::{Utf8Path, Utf8PathBuf};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_config::LintConfig;
-use crate::lint_error::LintError;
+use crate::lint_config::lint_config::LintConfig;
+use crate::lint_config::lint_config_error::LintConfigError;
 use crate::lint_messages::LintMessages;
 use crate::lint_messages_collection::LintMessagesCollection;
 use crate::lint_pass::{LintPass, LintPassResult};
@@ -16,9 +16,9 @@ pub struct LintConfigCollection {
 }
 
 impl LintConfigCollection {
-    pub fn load_config(&mut self, lint_config_path: &Utf8Path) -> Result<(), LintError> {
+    pub fn load_config(&mut self, lint_config_path: &Utf8Path) -> Result<(), LintConfigError> {
         if !lint_config_path.is_file() {
-            return Err(LintError::ConfigNotFound { path: lint_config_path.to_owned() });
+            return Err(LintConfigError::ConfigNotFound { path: lint_config_path.to_owned() });
         }
 
         let lint_config_path = lint_config_path.canonicalize_utf8()?;
@@ -35,7 +35,7 @@ impl LintConfigCollection {
             for include_path in &lint_includes.paths {
                 if include_path.is_absolute() {
                     if !include_path.is_file() {
-                        return Err(LintError::ConfigIncludeNotFound {
+                        return Err(LintConfigError::ConfigIncludeNotFound {
                             path: include_path.to_owned(),
                             included_from: lint_config_path,
                         });
@@ -48,7 +48,7 @@ impl LintConfigCollection {
                         lint_config_path.parent().expect("Failed to get parent directory").join(include_path);
 
                     if !resolved_include_path.is_file() {
-                        return Err(LintError::ConfigIncludeNotFound {
+                        return Err(LintConfigError::ConfigIncludeNotFound {
                             path: resolved_include_path,
                             included_from: lint_config_path,
                         });

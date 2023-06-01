@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_error::LintError;
+use crate::lint_config::lint_config_error::LintConfigError;
 use crate::lint_messages::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{lint_pass_impl, meta_error};
@@ -86,28 +86,28 @@ impl LintPass for LintConfig {
 
 impl LintConfig {
     #[rustfmt::skip]
-    pub fn load_from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintError> {
+    pub fn load_from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintConfigError> {
         if !lint_config_path.is_file() {
-            return Err(LintError::ConfigNotFound { path: lint_config_path.to_owned()});
+            return Err(LintConfigError::ConfigNotFound { path: lint_config_path.to_owned()});
         }
 
         let reader = File::open(lint_config_path)
-            .map_err(|source| LintError::FailedToOpenConfig { path: lint_config_path.to_owned(), source })?;
+            .map_err(|source| LintConfigError::FailedToOpenConfig { path: lint_config_path.to_owned(), source })?;
 
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
             None | Some("toml") => {
                 // TODO: toml::from_reader (https://github.com/toml-rs/toml/pull/349)
                 toml::from_str(&std::io::read_to_string(reader)?)
-                    .map_err(|source| LintError::FailedToParseTomlConfig { path: lint_config_path.to_owned(), source })
+                    .map_err(|source| LintConfigError::FailedToParseTomlConfig { path: lint_config_path.to_owned(), source })
             }
             Some("json") => {
                 serde_json::from_reader(&reader)
-                    .map_err(|source| LintError::FailedToParseJsonConfig { path: lint_config_path.to_owned(), source })
+                    .map_err(|source| LintConfigError::FailedToParseJsonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("hjson") => {
                 // TODO: deser_hjson::from_reader (https://github.com/Canop/deser-hjson)
                 deser_hjson::from_str(&std::io::read_to_string(reader)?)
-                    .map_err(|source| LintError::FailedToParseHjsonConfig { path: lint_config_path.to_owned(), source })
+                    .map_err(|source| LintConfigError::FailedToParseHjsonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("ron") => {
                 let ron_options = ron::Options::default()
@@ -115,39 +115,39 @@ impl LintConfig {
 
                 ron_options
                     .from_reader(&reader)
-                    .map_err(|source| LintError::FailedToParseRonConfig { path: lint_config_path.to_owned(), source })
+                    .map_err(|source| LintConfigError::FailedToParseRonConfig { path: lint_config_path.to_owned(), source })
             }
             Some("yaml" | "yml") => {
                 serde_yaml::from_reader(&reader)
-                    .map_err(|source| LintError::FailedToParseYamlConfig { path: lint_config_path.to_owned(), source })
+                    .map_err(|source| LintConfigError::FailedToParseYamlConfig { path: lint_config_path.to_owned(), source })
             }
             Some("pickle") => {
                 let pickle_options = serde_pickle::DeOptions::default();
 
                 serde_pickle::from_reader(reader, pickle_options)
-                    .map_err(|source| LintError::FailedToParsePickleConfig { path: lint_config_path.to_owned(), source })
+                    .map_err(|source| LintConfigError::FailedToParsePickleConfig { path: lint_config_path.to_owned(), source })
             }
             Some(extension) => {
-                Err(LintError::UnknownConfigFormat { extension: extension.to_owned() })
+                Err(LintConfigError::UnknownConfigFormat { extension: extension.to_owned() })
             }
         }
     }
 
     #[rustfmt::skip]
-    pub fn save_to_path(&self, lint_config_path: &Utf8Path) -> Result<(), LintError> {
+    pub fn save_to_path(&self, lint_config_path: &Utf8Path) -> Result<(), LintConfigError> {
         let mut writer = File::create(lint_config_path)
-            .map_err(|source| LintError::FailedToCreateConfig { path: lint_config_path.to_owned(), source })?;
+            .map_err(|source| LintConfigError::FailedToCreateConfig { path: lint_config_path.to_owned(), source })?;
 
         match lint_config_path.extension().map(str::to_lowercase).as_deref() {
             None | Some("toml") => {
                 // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
                 let tmp_string = toml::ser::to_string_pretty(self)
-                    .map_err(LintError::FailedToSerializeTomlConfig)?;
+                    .map_err(LintConfigError::FailedToSerializeTomlConfig)?;
                 Ok(writer.write_all(tmp_string.as_bytes())?)
             },
             Some("json") => {
                 serde_json::to_writer_pretty(writer, self)
-                    .map_err(LintError::FailedToSerializeJsonConfig)
+                    .map_err(LintConfigError::FailedToSerializeJsonConfig)
             }
             Some("ron") => {
                 let ron_options = ron::Options::default()
@@ -155,20 +155,20 @@ impl LintConfig {
                 let ron_pretty_config = ron::ser::PrettyConfig::default();
 
                 ron_options.to_writer_pretty(writer, self, ron_pretty_config)
-                    .map_err(LintError::FailedToSerializeRonConfig)
+                    .map_err(LintConfigError::FailedToSerializeRonConfig)
             }
             Some("yaml" | "yml") => {
                 serde_yaml::to_writer(writer, self)
-                    .map_err(LintError::FailedToSerializeYamlConfig)
+                    .map_err(LintConfigError::FailedToSerializeYamlConfig)
             }
             Some("pickle") => {
                 let pickle_options = serde_pickle::SerOptions::default();
 
                 serde_pickle::to_writer(&mut writer, self, pickle_options)
-                    .map_err(LintError::FailedToSerializePickleConfig)
+                    .map_err(LintConfigError::FailedToSerializePickleConfig)
             }
             Some(extension) => {
-                Err(LintError::UnknownConfigFormat { extension: extension.to_owned() })
+                Err(LintConfigError::UnknownConfigFormat { extension: extension.to_owned() })
             }
         }
     }
