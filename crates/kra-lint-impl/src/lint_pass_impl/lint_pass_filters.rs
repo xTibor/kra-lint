@@ -4,7 +4,7 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_filterconfig::KraPixelizeFilterConfig;
 use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
 
-use crate::lint_fields::LintStringMatchExpression;
+use crate::lint_config_fields::StringMatchExpression;
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
@@ -12,7 +12,7 @@ use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassFilters {
-    filter_types: Option<LintStringMatchExpression>,
+    filter_types: Option<StringMatchExpression>,
     pixiv_mosaics: Option<bool>,
 }
 

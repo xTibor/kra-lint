@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_fields::LintStringMatchExpression;
+use crate::lint_config_fields::StringMatchExpression;
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_comment, meta_expected, meta_found, meta_missing_field};
@@ -10,9 +10,9 @@ use crate::{meta_comment, meta_expected, meta_found, meta_missing_field};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassCopyright {
-    copyright_line: Option<LintStringMatchExpression>,
-    copyright_disclaimer: Option<LintStringMatchExpression>,
-    studio_name: Option<LintStringMatchExpression>,
+    copyright_line: Option<StringMatchExpression>,
+    copyright_disclaimer: Option<StringMatchExpression>,
+    studio_name: Option<StringMatchExpression>,
     ensure_initial_author_exists: Option<bool>,
     ensure_author_exists: Option<bool>,
 }

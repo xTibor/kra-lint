@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintStringMatchExpression};
+use crate::lint_config_fields::{StringMatchExpression, ValueByLayerType, ValueByMaskType};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_expected, meta_found, meta_layer, meta_mask};
@@ -10,8 +10,8 @@ use crate::{meta_expected, meta_found, meta_layer, meta_mask};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassSurfaceNames {
-    layer_names: Option<LintLayerProperty<LintStringMatchExpression>>,
-    mask_names: Option<LintMaskProperty<LintStringMatchExpression>>,
+    layer_names: Option<ValueByLayerType<StringMatchExpression>>,
+    mask_names: Option<ValueByMaskType<StringMatchExpression>>,
 }
 
 impl LintPass for LintPassSurfaceNames {

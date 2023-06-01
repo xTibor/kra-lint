@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_fields::{LintLayerProperty, LintMaskProperty, LintNumberMatchExpression};
+use crate::lint_config_fields::{NumberMatchExpression, ValueByLayerType, ValueByMaskType};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_expected, meta_found, meta_layer, meta_mask};
@@ -10,11 +10,11 @@ use crate::{meta_expected, meta_found, meta_layer, meta_mask};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassAnimation {
-    animated_layers: Option<LintLayerProperty<bool>>,
-    animated_masks: Option<LintMaskProperty<bool>>,
-    framerate: Option<LintNumberMatchExpression<usize>>,
-    force_layer_pin: Option<LintLayerProperty<bool>>,
-    force_mask_pin: Option<LintMaskProperty<bool>>,
+    animated_layers: Option<ValueByLayerType<bool>>,
+    animated_masks: Option<ValueByMaskType<bool>>,
+    framerate: Option<NumberMatchExpression<usize>>,
+    force_layer_pin: Option<ValueByLayerType<bool>>,
+    force_mask_pin: Option<ValueByMaskType<bool>>,
     warn_onion_skin: Option<bool>,
 }
 

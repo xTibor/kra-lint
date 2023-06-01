@@ -6,7 +6,7 @@ use kra_parser::kra_maindoc::{KraMainDocMask, KraMaskType};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub(crate) enum LintMaskProperty<T> {
+pub(crate) enum ValueByMaskType<T> {
     All(Option<T>),
     ByType {
         transparency_masks: Option<T>,
@@ -17,12 +17,12 @@ pub(crate) enum LintMaskProperty<T> {
     },
 }
 
-impl<T> LintMaskProperty<T> {
+impl<T> ValueByMaskType<T> {
     #[rustfmt::skip]
     pub(crate) fn get<'a>(&'a self, mask: &KraMainDocMask) -> (&'a Option<T>, &str) {
         match *self {
-            LintMaskProperty::All(ref all_masks) => (all_masks, "mask"),
-            LintMaskProperty::ByType {
+            ValueByMaskType::All(ref all_masks) => (all_masks, "mask"),
+            ValueByMaskType::ByType {
                 ref transparency_masks,
                 ref filter_masks,
                 ref colorize_masks,

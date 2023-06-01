@@ -1,7 +1,7 @@
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_pass::LintPassError;
 use crate::lint_output::LintMessages;
+use crate::lint_pass::LintPassError;
 
 pub(crate) type LintPassResult = Result<(), LintPassError>;
 

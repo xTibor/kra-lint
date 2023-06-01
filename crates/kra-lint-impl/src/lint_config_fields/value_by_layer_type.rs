@@ -6,7 +6,7 @@ use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub(crate) enum LintLayerProperty<T> {
+pub(crate) enum ValueByLayerType<T> {
     All(Option<T>),
     ByType {
         paint_layers:  Option<T>,
@@ -19,12 +19,12 @@ pub(crate) enum LintLayerProperty<T> {
     },
 }
 
-impl<T> LintLayerProperty<T> {
+impl<T> ValueByLayerType<T> {
     #[rustfmt::skip]
     pub(crate) fn get<'a>(&'a self, layer: &KraMainDocLayer) -> (&'a Option<T>, &str) {
         match *self {
-            LintLayerProperty::All(ref all_layers) => (all_layers, "layer"),
-            LintLayerProperty::ByType {
+            ValueByLayerType::All(ref all_layers) => (all_layers, "layer"),
+            ValueByLayerType::ByType {
                 ref paint_layers,
                 ref group_layers,
                 ref clone_layers,

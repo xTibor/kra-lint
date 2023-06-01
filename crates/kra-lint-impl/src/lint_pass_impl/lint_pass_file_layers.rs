@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::{KraLayerType, KraScalingMethod};
 
-use crate::lint_fields::{LintGenericMatchExpression, LintStringMatchExpression};
+use crate::lint_config_fields::{GenericMatchExpression, StringMatchExpression};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_comment, meta_expected, meta_found, meta_layer};
@@ -12,9 +12,9 @@ use crate::{meta_comment, meta_expected, meta_found, meta_layer};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassFileLayers {
-    file_formats: Option<LintStringMatchExpression>,
+    file_formats: Option<StringMatchExpression>,
     check_missing_files: Option<bool>,
-    scaling_method: Option<LintGenericMatchExpression<KraScalingMethod>>,
+    scaling_method: Option<GenericMatchExpression<KraScalingMethod>>,
 }
 
 impl LintPass for LintPassFileLayers {

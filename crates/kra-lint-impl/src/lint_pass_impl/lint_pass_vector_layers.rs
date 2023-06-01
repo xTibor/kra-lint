@@ -5,7 +5,7 @@ use svg::parser::Event;
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraLayerType;
 
-use crate::lint_fields::LintStringMatchExpression;
+use crate::lint_config_fields::StringMatchExpression;
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_bug, meta_expected, meta_found, meta_layer};
@@ -13,10 +13,10 @@ use crate::{meta_bug, meta_expected, meta_found, meta_layer};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassVectorLayers {
-    font_family: Option<LintStringMatchExpression>,
-    stroke_linecap: Option<LintStringMatchExpression>,
-    stroke_linejoin: Option<LintStringMatchExpression>,
-    placeholder_text: Option<LintStringMatchExpression>,
+    font_family: Option<StringMatchExpression>,
+    stroke_linecap: Option<StringMatchExpression>,
+    stroke_linejoin: Option<StringMatchExpression>,
+    placeholder_text: Option<StringMatchExpression>,
     warn_broken_text_gradients: Option<bool>,
 }
 

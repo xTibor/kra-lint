@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
-use crate::lint_fields::{LintLayerProperty, LintMaskProperty};
+use crate::lint_config_fields::{ValueByLayerType, ValueByMaskType};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_layer, meta_mask};
@@ -10,8 +10,8 @@ use crate::{meta_layer, meta_mask};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct LintPassHiddenSurface {
-    hidden_layers: LintLayerProperty<bool>,
-    hidden_masks: LintMaskProperty<bool>,
+    hidden_layers: ValueByLayerType<bool>,
+    hidden_masks: ValueByMaskType<bool>,
 }
 
 impl LintPass for LintPassHiddenSurface {

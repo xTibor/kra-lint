@@ -8,7 +8,7 @@ use kra_parser::kra_maindoc::{
     KraMaskType,
 };
 
-use crate::lint_fields::{LintGenericMatchExpression, LintNumberMatchExpression, LintStringMatchExpression};
+use crate::lint_config_fields::{GenericMatchExpression, NumberMatchExpression, StringMatchExpression};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
@@ -26,10 +26,10 @@ struct DocumentStructureMaskContainer (
 
 #[derive(Debug, Deserialize, Serialize)]
 struct DocumentStructureMask {
-    mask_name: Option<LintStringMatchExpression>,
-    mask_type: Option<LintGenericMatchExpression<KraMaskType>>,
-    mask_color: Option<LintGenericMatchExpression<KraColorLabel>>,
-    mask_count: Option<LintNumberMatchExpression<usize>>,
+    mask_name: Option<StringMatchExpression>,
+    mask_type: Option<GenericMatchExpression<KraMaskType>>,
+    mask_color: Option<GenericMatchExpression<KraColorLabel>>,
+    mask_count: Option<NumberMatchExpression<usize>>,
 }
 
 impl DocumentStructureMask {
@@ -66,10 +66,10 @@ struct DocumentStructureLayerContainer (
 
 #[derive(Debug, Deserialize, Serialize)]
 struct DocumentStructureLayer {
-    layer_name: Option<LintStringMatchExpression>,
-    layer_type: Option<LintGenericMatchExpression<KraLayerType>>,
-    layer_color: Option<LintGenericMatchExpression<KraColorLabel>>,
-    layer_count: Option<LintNumberMatchExpression<usize>>,
+    layer_name: Option<StringMatchExpression>,
+    layer_type: Option<GenericMatchExpression<KraLayerType>>,
+    layer_color: Option<GenericMatchExpression<KraColorLabel>>,
+    layer_count: Option<NumberMatchExpression<usize>>,
     layers: Option<DocumentStructureLayerContainer>,
     masks: Option<DocumentStructureMaskContainer>,
 }
@@ -117,7 +117,7 @@ impl LintPass for LintPassDocumentStructure {
                         .peeking_take_while(|kra_mask| lint_mask.matches(kra_mask))
                         .collect::<Vec<_>>();
 
-                    let mask_count = lint_mask.mask_count.as_ref().unwrap_or(&LintNumberMatchExpression::Value(1));
+                    let mask_count = lint_mask.mask_count.as_ref().unwrap_or(&NumberMatchExpression::Value(1));
 
                     if !mask_count.matches(&kra_matching_masks.len()) {
                         #[rustfmt::skip]
@@ -167,7 +167,7 @@ impl LintPass for LintPassDocumentStructure {
                         .peeking_take_while(|kra_layer| lint_layer.matches(kra_layer))
                         .collect::<Vec<_>>();
 
-                    let layer_count = lint_layer.layer_count.as_ref().unwrap_or(&LintNumberMatchExpression::Value(1));
+                    let layer_count = lint_layer.layer_count.as_ref().unwrap_or(&NumberMatchExpression::Value(1));
 
                     if layer_count.matches(&kra_matching_layers.len()) {
                         for kra_layer in kra_matching_layers {

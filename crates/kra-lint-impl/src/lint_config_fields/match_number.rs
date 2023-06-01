@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub(crate) enum LintNumberMatchExpression<T>
+pub(crate) enum NumberMatchExpression<T>
 where
     T: Display,
 {
@@ -30,91 +30,91 @@ where
         #[serde(rename = "between")]
         value: (T, T),
     },
-    BinaryOr(Vec<LintNumberMatchExpression<T>>),
+    BinaryOr(Vec<NumberMatchExpression<T>>),
     BinaryAnd {
         #[serde(rename = "and")]
-        expressions: Vec<LintNumberMatchExpression<T>>,
+        expressions: Vec<NumberMatchExpression<T>>,
     },
     BinaryNot {
         #[serde(rename = "not")]
-        expression: Box<LintNumberMatchExpression<T>>,
+        expression: Box<NumberMatchExpression<T>>,
     },
 }
 
-impl<T> LintNumberMatchExpression<T>
+impl<T> NumberMatchExpression<T>
 where
     T: PartialEq<T> + PartialOrd<T> + Display,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
         match self {
-            LintNumberMatchExpression::Value(value) => {
+            NumberMatchExpression::Value(value) => {
                 input == value
             }
-            LintNumberMatchExpression::LessThan { value } => {
+            NumberMatchExpression::LessThan { value } => {
                 input < value
             }
-            LintNumberMatchExpression::LessEquals { value } => {
+            NumberMatchExpression::LessEquals { value } => {
                 input <= value
             }
-            LintNumberMatchExpression::GreaterThan { value } => {
+            NumberMatchExpression::GreaterThan { value } => {
                 input > value
             }
-            LintNumberMatchExpression::GreaterEquals { value } => {
+            NumberMatchExpression::GreaterEquals { value } => {
                 input >= value
             }
-            LintNumberMatchExpression::Between { value: (value_low, value_high) } => {
+            NumberMatchExpression::Between { value: (value_low, value_high) } => {
                 (input >= value_low) && (input <= value_high)
             }
-            LintNumberMatchExpression::BinaryOr(expressions) => {
+            NumberMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
             }
-            LintNumberMatchExpression::BinaryAnd { expressions } => {
+            NumberMatchExpression::BinaryAnd { expressions } => {
                 expressions.iter().all(|expression| expression.matches(input))
             }
-            LintNumberMatchExpression::BinaryNot { expression } => {
+            NumberMatchExpression::BinaryNot { expression } => {
                 !expression.matches(input)
             }
         }
     }
 }
 
-impl<T> Display for LintNumberMatchExpression<T>
+impl<T> Display for NumberMatchExpression<T>
 where
     T: Display,
 {
     #[rustfmt::skip]
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            LintNumberMatchExpression::Value(value) => {
+            NumberMatchExpression::Value(value) => {
                 write!(f, "{}", value)
             }
-            LintNumberMatchExpression::LessThan { value } => {
+            NumberMatchExpression::LessThan { value } => {
                 write!(f, "less_than({})", value)
             }
-            LintNumberMatchExpression::LessEquals { value } => {
+            NumberMatchExpression::LessEquals { value } => {
                 write!(f, "less_equals({})", value)
             }
-            LintNumberMatchExpression::GreaterThan { value } => {
+            NumberMatchExpression::GreaterThan { value } => {
                 write!(f, "greater_than({})", value)
             }
-            LintNumberMatchExpression::GreaterEquals { value } => {
+            NumberMatchExpression::GreaterEquals { value } => {
                 write!(f, "greater_equals({})", value)
             }
-            LintNumberMatchExpression::Between { value: (value_low, value_high) } => {
+            NumberMatchExpression::Between { value: (value_low, value_high) } => {
                 write!(f, "between({}, {})", value_low, value_high)
             }
-            LintNumberMatchExpression::BinaryOr(expressions) => {
+            NumberMatchExpression::BinaryOr(expressions) => {
                 let param_list =
-                    expressions.iter().map(LintNumberMatchExpression::to_string).collect::<Vec<_>>().join(", ");
+                    expressions.iter().map(NumberMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "[{}]", param_list)
             }
-            LintNumberMatchExpression::BinaryAnd { expressions } => {
+            NumberMatchExpression::BinaryAnd { expressions } => {
                 let param_list =
-                    expressions.iter().map(LintNumberMatchExpression::to_string).collect::<Vec<_>>().join(", ");
+                    expressions.iter().map(NumberMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "and({})", param_list)
             }
-            LintNumberMatchExpression::BinaryNot { expression } => {
+            NumberMatchExpression::BinaryNot { expression } => {
                 write!(f, "not({})", expression)
             }
         }

@@ -5,66 +5,66 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(untagged)]
-pub(crate) enum LintGenericMatchExpression<T>
+pub(crate) enum GenericMatchExpression<T>
 where
     T: Display,
 {
     Value(T),
-    BinaryOr(Vec<LintGenericMatchExpression<T>>),
+    BinaryOr(Vec<GenericMatchExpression<T>>),
     BinaryAnd {
         #[serde(rename = "and")]
-        expressions: Vec<LintGenericMatchExpression<T>>,
+        expressions: Vec<GenericMatchExpression<T>>,
     },
     BinaryNot {
         #[serde(rename = "not")]
-        expression: Box<LintGenericMatchExpression<T>>,
+        expression: Box<GenericMatchExpression<T>>,
     },
 }
 
-impl<T> LintGenericMatchExpression<T>
+impl<T> GenericMatchExpression<T>
 where
     T: PartialEq<T> + Display,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
         match self {
-            LintGenericMatchExpression::Value(value) => {
+            GenericMatchExpression::Value(value) => {
                 input == value
             }
-            LintGenericMatchExpression::BinaryOr(expressions) => {
+            GenericMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
             }
-            LintGenericMatchExpression::BinaryAnd { expressions } => {
+            GenericMatchExpression::BinaryAnd { expressions } => {
                 expressions.iter().all(|expression| expression.matches(input))
             }
-            LintGenericMatchExpression::BinaryNot { expression } => {
+            GenericMatchExpression::BinaryNot { expression } => {
                 !expression.matches(input)
             }
         }
     }
 }
 
-impl<T> Display for LintGenericMatchExpression<T>
+impl<T> Display for GenericMatchExpression<T>
 where
     T: Display,
 {
     #[rustfmt::skip]
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
-            LintGenericMatchExpression::Value(value) => {
+            GenericMatchExpression::Value(value) => {
                 write!(f, "{}", value)
             }
-            LintGenericMatchExpression::BinaryOr(expressions) => {
+            GenericMatchExpression::BinaryOr(expressions) => {
                 let param_list =
-                    expressions.iter().map(LintGenericMatchExpression::to_string).collect::<Vec<_>>().join(", ");
+                    expressions.iter().map(GenericMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "[{}]", param_list)
             }
-            LintGenericMatchExpression::BinaryAnd { expressions } => {
+            GenericMatchExpression::BinaryAnd { expressions } => {
                 let param_list =
-                    expressions.iter().map(LintGenericMatchExpression::to_string).collect::<Vec<_>>().join(", ");
+                    expressions.iter().map(GenericMatchExpression::to_string).collect::<Vec<_>>().join(", ");
                 write!(f, "and({})", param_list)
             }
-            LintGenericMatchExpression::BinaryNot { expression } => {
+            GenericMatchExpression::BinaryNot { expression } => {
                 write!(f, "not({})", expression)
             }
         }
