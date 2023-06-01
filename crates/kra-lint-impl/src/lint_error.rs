@@ -3,7 +3,7 @@ use std::io;
 use derive_more::{Display, Error, From};
 
 use crate::lint_config::lint_config_error::LintConfigError;
-use crate::lint_output::lint_output_error::LintOutputError;
+use crate::lint_output::LintOutputError;
 
 #[rustfmt::skip]
 #[non_exhaustive]

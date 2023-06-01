@@ -6,7 +6,7 @@ use kra_parser::kra_maindoc::KraLayerType;
 
 use ziparchive_ext::ZipArchiveExt;
 
-use crate::lint_output::lint_messages::LintMessages;
+use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
 use crate::{meta_bug, meta_comment, meta_layer};
 

@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-use crate::lint_output::lint_metadata::LintMetadata;
+use crate::lint_output::LintMetadata;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

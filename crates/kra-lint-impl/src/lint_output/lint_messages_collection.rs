@@ -5,9 +5,7 @@ use itertools::Itertools;
 use serde::Serialize;
 use unicode_width::UnicodeWidthStr;
 
-use crate::lint_output::lint_messages::{LintMessages, LintMessagesEntry};
-use crate::lint_output::lint_output_format::LintOutputFormat;
-use crate::lint_output::lint_output_error::LintOutputError;
+use crate::lint_output::{LintMessages, LintMessagesEntry, LintOutputError, LintOutputFormat};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
