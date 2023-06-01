@@ -9,3 +9,5 @@ pub use lint_messages_collection::{LintMessagesCollection, LintMessagesCollectio
 pub use lint_metadata::LintMetadata;
 pub use lint_output_error::LintOutputError;
 pub use lint_output_format::LintOutputFormat;
+
+pub(crate) use lint_metadata::macros;

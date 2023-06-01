@@ -6,9 +6,9 @@ use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_maindoc::KraLayerType;
 
 use crate::lint_config_fields::StringMatchExpression;
+use crate::lint_output::macros::{meta_bug, meta_expected, meta_found, meta_layer};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::{meta_bug, meta_expected, meta_found, meta_layer};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

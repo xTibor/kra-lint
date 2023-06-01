@@ -2,9 +2,9 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 
+use crate::lint_output::macros::meta_comment;
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::meta_comment;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

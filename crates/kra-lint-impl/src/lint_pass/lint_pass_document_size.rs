@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_config_fields::NumberMatchExpression;
+use crate::lint_output::macros::{meta_comment, meta_expected, meta_found};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::{meta_comment, meta_expected, meta_found};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

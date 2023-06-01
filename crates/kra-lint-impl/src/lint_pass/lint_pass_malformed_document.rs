@@ -6,9 +6,9 @@ use kra_parser::kra_maindoc::KraLayerType;
 
 use ziparchive_ext::ZipArchiveExt;
 
+use crate::lint_output::macros::{meta_bug, meta_comment, meta_layer};
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::{meta_bug, meta_comment, meta_layer};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

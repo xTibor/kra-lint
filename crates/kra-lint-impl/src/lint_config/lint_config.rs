@@ -7,9 +7,9 @@ use serde::{Deserialize, Serialize};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_config::LintConfigError;
+use crate::lint_output::macros::meta_error;
 use crate::lint_output::LintMessages;
-use crate::lint_pass::{LintPass, LintPassResult};
-use crate::{lint_pass, meta_error};
+use crate::lint_pass::{self, LintPass, LintPassResult};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

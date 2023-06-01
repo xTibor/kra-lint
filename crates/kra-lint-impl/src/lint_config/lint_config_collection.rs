@@ -3,9 +3,9 @@ use camino::{Utf8Path, Utf8PathBuf};
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_config::{LintConfig, LintConfigError};
+use crate::lint_output::macros::meta_error;
 use crate::lint_output::{LintMessages, LintMessagesCollection};
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::meta_error;
 
 #[derive(Default)]
 pub struct LintConfigCollection {
