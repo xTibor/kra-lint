@@ -1,3 +1,5 @@
+#![allow(clippy::module_inception)]
+
 mod lint_config;
 mod lint_config_fields;
 mod lint_output;
