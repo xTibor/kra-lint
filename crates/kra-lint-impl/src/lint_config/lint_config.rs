@@ -9,7 +9,7 @@ use kra_parser::kra_archive::KraArchive;
 use crate::lint_config::LintConfigError;
 use crate::lint_output::LintMessages;
 use crate::lint_pass::{LintPass, LintPassResult};
-use crate::{lint_pass_impl, meta_error};
+use crate::{lint_pass, meta_error};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -23,27 +23,27 @@ pub(crate) struct LintIncludes {
 pub struct LintConfig {
     pub(crate) includes:      Option<LintIncludes>,
 
-    animation:                Option<lint_pass_impl::lint_pass_animation               ::LintPassAnimation             >,
-    colorize_mask:            Option<lint_pass_impl::lint_pass_colorize_mask           ::LintPassColorizeMask          >,
-    colorspace:               Option<lint_pass_impl::lint_pass_colorspace              ::LintPassColorspace            >,
-    copyright:                Option<lint_pass_impl::lint_pass_copyright               ::LintPassCopyright             >,
-    document_name:            Option<lint_pass_impl::lint_pass_document_name           ::LintPassDocumentName          >,
-    document_size:            Option<lint_pass_impl::lint_pass_document_size           ::LintPassDocumentSize          >,
-    document_structure:       Option<lint_pass_impl::lint_pass_document_structure      ::LintPassDocumentStructure     >,
-    file_layers:              Option<lint_pass_impl::lint_pass_file_layers             ::LintPassFileLayers            >,
-    file_name:                Option<lint_pass_impl::lint_pass_file_name               ::LintPassFileName              >,
-    filters:                  Option<lint_pass_impl::lint_pass_filters                 ::LintPassFilters               >,
-    hidden_surface:           Option<lint_pass_impl::lint_pass_hidden_surface          ::LintPassHiddenSurface         >,
-    layer_styles:             Option<lint_pass_impl::lint_pass_layer_styles            ::LintPassLayerStyles           >,
-    malformed_document:       Option<lint_pass_impl::lint_pass_malformed_document      ::LintPassMalformedDocument     >,
-    non_default_blending:     Option<lint_pass_impl::lint_pass_non_default_blending    ::LintPassNonDefaultBlending    >,
-    prohibit_compositions:    Option<lint_pass_impl::lint_pass_prohibit_compositions   ::LintPassProhibitCompositions  >,
-    prohibit_custom_palettes: Option<lint_pass_impl::lint_pass_prohibit_custom_palettes::LintPassProhibitCustomPalettes>,
-    prohibit_kseexpr:         Option<lint_pass_impl::lint_pass_prohibit_kseexpr        ::LintPassProhibitKSeExpr       >,
-    software_version:         Option<lint_pass_impl::lint_pass_software_version        ::LintPassSoftwareVersion       >,
-    surface_names:            Option<lint_pass_impl::lint_pass_surface_names           ::LintPassSurfaceNames          >,
-    surface_type:             Option<lint_pass_impl::lint_pass_surface_type            ::LintPassSurfaceType           >,
-    vector_layers:            Option<lint_pass_impl::lint_pass_vector_layers           ::LintPassVectorLayers          >,
+    animation:                Option<lint_pass::lint_pass_animation               ::LintPassAnimation             >,
+    colorize_mask:            Option<lint_pass::lint_pass_colorize_mask           ::LintPassColorizeMask          >,
+    colorspace:               Option<lint_pass::lint_pass_colorspace              ::LintPassColorspace            >,
+    copyright:                Option<lint_pass::lint_pass_copyright               ::LintPassCopyright             >,
+    document_name:            Option<lint_pass::lint_pass_document_name           ::LintPassDocumentName          >,
+    document_size:            Option<lint_pass::lint_pass_document_size           ::LintPassDocumentSize          >,
+    document_structure:       Option<lint_pass::lint_pass_document_structure      ::LintPassDocumentStructure     >,
+    file_layers:              Option<lint_pass::lint_pass_file_layers             ::LintPassFileLayers            >,
+    file_name:                Option<lint_pass::lint_pass_file_name               ::LintPassFileName              >,
+    filters:                  Option<lint_pass::lint_pass_filters                 ::LintPassFilters               >,
+    hidden_surface:           Option<lint_pass::lint_pass_hidden_surface          ::LintPassHiddenSurface         >,
+    layer_styles:             Option<lint_pass::lint_pass_layer_styles            ::LintPassLayerStyles           >,
+    malformed_document:       Option<lint_pass::lint_pass_malformed_document      ::LintPassMalformedDocument     >,
+    non_default_blending:     Option<lint_pass::lint_pass_non_default_blending    ::LintPassNonDefaultBlending    >,
+    prohibit_compositions:    Option<lint_pass::lint_pass_prohibit_compositions   ::LintPassProhibitCompositions  >,
+    prohibit_custom_palettes: Option<lint_pass::lint_pass_prohibit_custom_palettes::LintPassProhibitCustomPalettes>,
+    prohibit_kseexpr:         Option<lint_pass::lint_pass_prohibit_kseexpr        ::LintPassProhibitKSeExpr       >,
+    software_version:         Option<lint_pass::lint_pass_software_version        ::LintPassSoftwareVersion       >,
+    surface_names:            Option<lint_pass::lint_pass_surface_names           ::LintPassSurfaceNames          >,
+    surface_type:             Option<lint_pass::lint_pass_surface_type            ::LintPassSurfaceType           >,
+    vector_layers:            Option<lint_pass::lint_pass_vector_layers           ::LintPassVectorLayers          >,
 }
 
 impl LintPass for LintConfig {
