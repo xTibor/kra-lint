@@ -2,7 +2,6 @@ use std::io;
 
 use derive_more::{Display, Error, From};
 
-#[rustfmt::skip]
 #[non_exhaustive]
 #[derive(Debug, Display, Error, From)]
 pub enum LintPassError {
