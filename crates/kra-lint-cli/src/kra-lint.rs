@@ -1,3 +1,4 @@
+use std::io::IsTerminal;
 use std::process::ExitCode;
 
 use camino::Utf8PathBuf;
@@ -60,10 +61,16 @@ fn main() -> ExitCode {
         lint_config_collection
     };
 
+    let lint_output_format = {
+        let default_output_format =
+            if std::io::stdout().is_terminal() { LintOutputFormat::PlainText } else { LintOutputFormat::Json };
+
+        args.output_format.unwrap_or(default_output_format)
+    };
+
     let lint_message_collection = lint_config_collection.lint_paths(&args.paths);
 
-    let output_format = args.output_format.unwrap_or(LintOutputFormat::PlainText);
-    lint_message_collection.write_output(&mut std::io::stdout(), output_format).expect("Failed to write output");
+    lint_message_collection.write_output(&mut std::io::stdout(), lint_output_format).expect("Failed to write output");
 
     if lint_message_collection.is_empty() {
         ExitCode::SUCCESS
