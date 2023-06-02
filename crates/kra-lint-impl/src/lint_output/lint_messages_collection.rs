@@ -31,6 +31,10 @@ impl LintMessagesCollection {
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
+
+    pub fn message_count(&self) -> usize {
+        self.0.iter().map(|entry| entry.messages.message_count()).sum()
+    }
 }
 
 impl LintMessagesCollection {
@@ -51,6 +55,12 @@ impl LintMessagesCollection {
                 }
                 writer.write_all(b"\n")?;
             }
+        }
+
+        match self.message_count() {
+            0 => writer.write_all(format!("kra-lint: No issues found\n").as_bytes())?,
+            1 => writer.write_all(format!("kra-lint: One issue found\n").as_bytes())?,
+            n => writer.write_all(format!("kra-lint: {} issues found\n", n).as_bytes())?,
         }
 
         Ok(())

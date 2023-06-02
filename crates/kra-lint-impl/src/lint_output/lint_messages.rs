@@ -33,6 +33,10 @@ impl LintMessages {
         self.0.is_empty()
     }
 
+    pub fn message_count(&self) -> usize {
+        self.0.len()
+    }
+
     pub(crate) fn sort_and_dedup(&mut self) {
         self.0.sort();
         self.0.dedup();
