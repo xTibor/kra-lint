@@ -58,8 +58,8 @@ impl LintMessagesCollection {
         }
 
         match self.message_count() {
-            0 => writer.write_all(format!("kra-lint: No issues found\n").as_bytes())?,
-            1 => writer.write_all(format!("kra-lint: One issue found\n").as_bytes())?,
+            0 => writer.write_all("kra-lint: No issues found\n".as_bytes())?,
+            1 => writer.write_all("kra-lint: One issue found\n".as_bytes())?,
             n => writer.write_all(format!("kra-lint: {} issues found\n", n).as_bytes())?,
         }
 

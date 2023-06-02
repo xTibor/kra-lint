@@ -109,8 +109,7 @@ impl LintPass for LintPassMalformedDocument {
                 let mut uuid_todo: Vec<&String> = vec![uuid_root];
                 let mut uuid_done: Vec<&String> = vec![];
 
-                while !uuid_todo.is_empty() {
-                    let current_uuid = uuid_todo.pop().unwrap();
+                while let Some(current_uuid) = uuid_todo.pop() {
                     uuid_done.push(current_uuid);
 
                     let referencing_uuid = kra_archive
