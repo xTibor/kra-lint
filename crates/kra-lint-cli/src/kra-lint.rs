@@ -1,3 +1,6 @@
+#![feature(error_iter)]
+
+use std::error::Error;
 use std::io::IsTerminal;
 use std::process::ExitCode;
 
@@ -22,17 +25,26 @@ struct Args {
 }
 
 fn main() -> ExitCode {
-    let args = Args::parse();
+    match main_inner() {
+        Ok(exit_code) => exit_code,
+        Err(err) => {
+            for source in err.sources() {
+                eprintln!("kra-lint: {}", source);
+            }
+            ExitCode::FAILURE
+        }
+    }
+}
+
+fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
+    let args = Args::try_parse()?;
 
     let lint_config_collection = {
         let mut lint_config_collection = LintConfigCollection::default();
         let mut config_paths = args.config_paths.clone();
 
         if config_paths.is_empty() {
-            let search_root: Utf8PathBuf = std::env::current_dir()
-                .expect("Failed to get current directory")
-                .try_into()
-                .expect("Failed to convert path to UTF-8");
+            let search_root: Utf8PathBuf = std::env::current_dir()?.try_into()?;
 
             for search_directory in search_root.ancestors() {
                 let default_config_path = search_directory.to_owned().join(".kra-lint");
@@ -46,15 +58,11 @@ fn main() -> ExitCode {
 
         if config_paths.is_empty() {
             eprintln!("kra-lint: No config files were found");
-            return ExitCode::FAILURE;
+            return Ok(ExitCode::FAILURE);
         } else {
             for lint_config_path in config_paths {
                 eprintln!("kra-lint: Using config file \"{}\"", lint_config_path);
-
-                if let Err(err) = lint_config_collection.load_config(&lint_config_path) {
-                    eprintln!("kra-lint: {}", err);
-                    return ExitCode::FAILURE;
-                }
+                lint_config_collection.load_config(&lint_config_path)?
             }
         }
 
@@ -70,11 +78,11 @@ fn main() -> ExitCode {
 
     let lint_message_collection = lint_config_collection.lint_paths(&args.paths);
 
-    lint_message_collection.write_output(&mut std::io::stdout(), lint_output_format).expect("Failed to write output");
+    lint_message_collection.write_output(&mut std::io::stdout(), lint_output_format)?;
 
     if lint_message_collection.is_empty() {
-        ExitCode::SUCCESS
+        Ok(ExitCode::SUCCESS)
     } else {
-        ExitCode::FAILURE
+        Ok(ExitCode::FAILURE)
     }
 }

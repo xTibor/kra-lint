@@ -1,3 +1,6 @@
+#![feature(error_iter)]
+
+use std::error::Error;
 use std::process::ExitCode;
 
 use camino::Utf8PathBuf;
@@ -15,10 +18,22 @@ struct Args {
 }
 
 fn main() -> ExitCode {
-    let args = Args::parse();
+    match main_inner() {
+        Ok(exit_code) => exit_code,
+        Err(err) => {
+            for source in err.sources() {
+                eprintln!("kra-lint-convert: {}", source);
+            }
+            ExitCode::FAILURE
+        }
+    }
+}
 
-    let lint_config = LintConfig::load_from_path(&args.source_config).expect("Failed to load source config file");
-    lint_config.save_to_path(&args.destination_config).expect("Failed to save destination config file");
+fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
+    let args = Args::try_parse()?;
 
-    ExitCode::SUCCESS
+    let lint_config = LintConfig::load_from_path(&args.source_config)?;
+    lint_config.save_to_path(&args.destination_config)?;
+
+    Ok(ExitCode::SUCCESS)
 }
