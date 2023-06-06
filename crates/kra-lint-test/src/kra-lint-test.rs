@@ -23,16 +23,18 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         let expected_stdout = std::fs::read_to_string("expected.stdout")?;
         let expected_stderr = std::fs::read_to_string("expected.stderr")?;
+        let expected_status = std::fs::read_to_string("expected.status")?;
 
         let current_stdout = std::str::from_utf8(&kra_lint_output.stdout)?;
         let current_stderr = std::str::from_utf8(&kra_lint_output.stderr)?;
+        let current_status = format!("{}\n", kra_lint_output.status.to_string());
 
         let diff_buffers = |name, expected, current| {
             println!("{}", name);
             for diff in diff::lines(expected, current) {
                 match diff {
-                    DiffResult::Left(l) => println!("-{}", l),
-                    DiffResult::Right(r) => println!("+{}", r),
+                    DiffResult::Left(line) => println!("-{}", line),
+                    DiffResult::Right(line) => println!("+{}", line),
                     _ => {}
                 }
             }
@@ -44,6 +46,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!();
         diff_buffers("STDOUT", &expected_stdout, current_stdout);
         diff_buffers("STDERR", &expected_stderr, current_stderr);
+        diff_buffers("STATUS", &expected_status, &current_status);
     }
 
     Ok(())
