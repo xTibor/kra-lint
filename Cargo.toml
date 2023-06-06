@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/kra-lint-cli",
     "crates/kra-lint-impl",
+    "crates/kra-lint-test",
     "crates/kra-parser",
     "crates/ziparchive-ext",
 ]

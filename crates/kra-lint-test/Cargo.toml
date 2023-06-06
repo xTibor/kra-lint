@@ -1,0 +1,15 @@
+[package]
+name = "kra-lint-test"
+version = "0.1.0"
+authors = ["Nagy Tibor <xnagytibor@protonmail.com>"]
+license = "MIT"
+edition = "2021"
+rust-version = "1.70"
+
+[[bin]]
+name = "kra-lint-test"
+path = "src/kra-lint-test.rs"
+
+[dependencies]
+diff = "0.1.13"
+glob = "0.3.1"

@@ -1,0 +1,4 @@
+pass_01.kra: Prohibited use of KSeExpr
+             | Layer: "Fill Layer 1"
+
+kra-lint: One issue found
