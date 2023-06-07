@@ -6,4 +6,5 @@ members = [
     "crates/kra-lint-test",
     "crates/kra-parser",
     "crates/ziparchive-ext",
+    "crates/camino-ext",
 ]

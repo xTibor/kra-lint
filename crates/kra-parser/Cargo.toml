@@ -7,6 +7,7 @@ edition = "2021"
 rust-version = "1.70"
 
 [dependencies]
+camino-ext = { path = "../camino-ext/" }
 ziparchive-ext = { path = "../ziparchive-ext/" }
 
 camino = { version = "1.1.4", features = ["serde1"] }

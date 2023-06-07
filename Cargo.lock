@@ -72,6 +72,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "camino-ext"
+version = "0.1.0"
+dependencies = [
+ "camino",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -287,6 +294,7 @@ version = "0.1.0"
 dependencies = [
  "base16ct",
  "camino",
+ "camino-ext",
  "derive_more",
  "deser-hjson",
  "itertools",
@@ -321,6 +329,7 @@ name = "kra-parser"
 version = "0.1.0"
 dependencies = [
  "camino",
+ "camino-ext",
  "derive_more",
  "serde",
  "strong-xml",
