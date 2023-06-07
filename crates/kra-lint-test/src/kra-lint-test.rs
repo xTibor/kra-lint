@@ -29,7 +29,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         let current_stderr = String::from_utf8(kra_lint_output.stderr)?;
         let current_status = format!("{}\n", kra_lint_output.status.to_string());
 
-        let diff_buffers = |name, expected, current| {
+        for (name, expected, current) in &[
+            ("STDOUT", &expected_stdout, &current_stdout),
+            ("STDERR", &expected_stderr, &current_stderr),
+            ("STATUS", &expected_status, &current_status),
+        ] {
             let diff_lines = diff::lines(expected, current)
                 .iter()
                 .filter_map(|diff_result| match diff_result {
@@ -46,11 +50,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 }
                 println!();
             }
-        };
-
-        diff_buffers("STDOUT", &expected_stdout, &current_stdout);
-        diff_buffers("STDERR", &expected_stderr, &current_stderr);
-        diff_buffers("STATUS", &expected_status, &current_status);
+        }
     }
 
     Ok(())
