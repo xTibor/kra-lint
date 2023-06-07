@@ -3,7 +3,6 @@ use std::fs::File;
 use std::io;
 
 use camino::{Utf8Path, Utf8PathBuf};
-use camino_ext::Utf8PathExt;
 use strong_xml::XmlRead;
 use zip::ZipArchive;
 
@@ -21,28 +20,27 @@ pub struct KraArchive {
 
 impl KraArchive {
     pub fn from_path(path: &Utf8Path) -> Result<Self, KraError> {
-        let zip_file =
-            File::open(path).map_err(|source| KraError::ArchiveCannotOpen { path: path.strip_cwd_prefix(), source })?;
+        let zip_file = File::open(path).map_err(|source| KraError::ArchiveCannotOpen { path: path.into(), source })?;
 
         let mut zip_archive = zip::ZipArchive::new(zip_file)
-            .map_err(|source| KraError::ArchiveCannotRead { path: path.strip_cwd_prefix(), source })?;
+            .map_err(|source| KraError::ArchiveCannotRead { path: path.into(), source })?;
 
         macro_rules! kra_xml {
             ($xml_type:ident, $xml_path:expr) => {{
                 let file = zip_archive.by_name($xml_path).map_err(|source| KraError::XmlNotFound {
-                    path: path.strip_cwd_prefix(),
+                    path: path.into(),
                     xml_path: $xml_path.to_owned(),
                     source,
                 })?;
 
                 let data = io::read_to_string(file).map_err(|source| KraError::XmlCannotRead {
-                    path: path.strip_cwd_prefix(),
+                    path: path.into(),
                     xml_path: $xml_path.to_owned(),
                     source,
                 })?;
 
                 $xml_type::from_str(&data).map_err(|source| KraError::XmlCannotParse {
-                    path: path.strip_cwd_prefix(),
+                    path: path.into(),
                     xml_path: $xml_path.to_owned(),
                     source,
                 })?

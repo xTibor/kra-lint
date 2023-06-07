@@ -1,6 +1,6 @@
 use std::io;
 
-use camino::Utf8PathBuf;
+use camino_ext::FormattedPathBuf;
 use derive_more::{Display, Error, From};
 use strong_xml::XmlError;
 use zip::result::ZipError;
@@ -11,33 +11,33 @@ use zip::result::ZipError;
 pub enum KraError {
     #[display(fmt = "Cannot open KRA document \"{path:}\"")]
     ArchiveCannotOpen {
-        path: Utf8PathBuf,
+        path: FormattedPathBuf,
         source: io::Error,
     },
 
     #[display(fmt = "Cannot read KRA document \"{path:}\"")]
     ArchiveCannotRead {
-        path: Utf8PathBuf,
+        path: FormattedPathBuf,
         source: ZipError,
     },
 
     #[display(fmt = "Cannot find '{xml_path:}' in '{path:}'")]
     XmlNotFound {
-        path: Utf8PathBuf,
+        path: FormattedPathBuf,
         xml_path: String,
         source: ZipError,
     },
 
     #[display(fmt = "Cannot read '{xml_path:}' in '{path:}'")]
     XmlCannotRead {
-        path: Utf8PathBuf,
+        path: FormattedPathBuf,
         xml_path: String,
         source: io::Error,
     },
 
     #[display(fmt = "Cannot parse '{xml_path:}' in '{path:}'")]
     XmlCannotParse {
-        path: Utf8PathBuf,
+        path: FormattedPathBuf,
         xml_path: String,
         source: XmlError,
     },

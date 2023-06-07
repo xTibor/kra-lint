@@ -1,6 +1,5 @@
 use camino::{Utf8Path, Utf8PathBuf};
 
-use camino_ext::Utf8PathExt;
 use kra_parser::kra_archive::KraArchive;
 
 use crate::lint_config::{LintConfig, LintConfigError};
@@ -17,7 +16,7 @@ pub struct LintConfigCollection {
 impl LintConfigCollection {
     pub fn load_config(&mut self, lint_config_path: &Utf8Path) -> Result<(), LintConfigError> {
         if !lint_config_path.is_file() {
-            return Err(LintConfigError::ConfigNotFound { path: lint_config_path.strip_cwd_prefix() });
+            return Err(LintConfigError::ConfigNotFound { path: lint_config_path.into() });
         }
 
         let lint_config_path = lint_config_path.canonicalize_utf8()?;
@@ -35,8 +34,8 @@ impl LintConfigCollection {
                 if include_path.is_absolute() {
                     if !include_path.is_file() {
                         return Err(LintConfigError::ConfigIncludeNotFound {
-                            path: include_path.strip_cwd_prefix(),
-                            included_from: lint_config_path.strip_cwd_prefix(),
+                            path: include_path.into(),
+                            included_from: lint_config_path.into(),
                         });
                     }
 
@@ -48,8 +47,8 @@ impl LintConfigCollection {
 
                     if !resolved_include_path.is_file() {
                         return Err(LintConfigError::ConfigIncludeNotFound {
-                            path: resolved_include_path.strip_cwd_prefix(),
-                            included_from: lint_config_path.strip_cwd_prefix(),
+                            path: resolved_include_path.into(),
+                            included_from: lint_config_path.into(),
                         });
                     }
 
