@@ -128,7 +128,7 @@ impl LintConfig {
                     .map_err(|source| LintConfigError::FailedToParsePickleConfig { path: lint_config_path.into(), source })
             }
             Some(extension) => {
-                Err(LintConfigError::UnknownConfigFormat { extension: extension.to_owned() })
+                Err(LintConfigError::UnknownConfigFormat { path: lint_config_path.into(), extension: extension.to_owned() })
             }
         }
     }
@@ -168,7 +168,7 @@ impl LintConfig {
                     .map_err(LintConfigError::FailedToSerializePickleConfig)
             }
             Some(extension) => {
-                Err(LintConfigError::UnknownConfigFormat { extension: extension.to_owned() })
+                Err(LintConfigError::UnknownConfigFormat { path: lint_config_path.into(), extension: extension.to_owned() })
             }
         }
     }

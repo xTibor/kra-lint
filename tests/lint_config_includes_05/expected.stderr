@@ -1,2 +1,2 @@
 kra-lint: Using config file ".kra-lint"
-kra-lint: Unknown config format "xyz"
+kra-lint: Unknown config format "xyz" of config file "unknown-format.xyz"

@@ -7,9 +7,9 @@ use derive_more::{Display, Error, From};
 #[non_exhaustive]
 #[derive(Debug, Display, Error, From)]
 pub enum LintConfigError {
-    #[display(fmt = "Unknown config format \"{extension:}\"")]
+    #[display(fmt = "Unknown config format \"{extension:}\" of config file \"{path:}\"")]
     UnknownConfigFormat {
-        #[error(not(source))]
+        path: FormattedPathBuf,
         extension: String,
     },
 
