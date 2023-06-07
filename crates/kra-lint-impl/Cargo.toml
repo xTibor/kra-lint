@@ -7,9 +7,10 @@ edition = "2021"
 rust-version = "1.70"
 
 [dependencies]
-camino-ext = { path = "../camino-ext/" }
 kra-parser = { path = "../kra-parser/" }
-ziparchive-ext = { path = "../ziparchive-ext/" }
+
+camino-ext = { path = "../../crates-ext/camino-ext/" }
+ziparchive-ext = { path = "../../crates-ext/ziparchive-ext/" }
 
 camino = { version = "1.1.4", features = ["serde1"] }
 derive_more = { version = "0.99.17", default-features = false, features = ["into_iterator", "display", "error", "from"] }
