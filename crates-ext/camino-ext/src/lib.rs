@@ -23,20 +23,8 @@ impl FormattedPathBuf {
     }
 }
 
-impl From<&Utf8Path> for FormattedPathBuf {
-    fn from(path: &Utf8Path) -> Self {
-        FormattedPathBuf(path.to_path_buf())
-    }
-}
-
-impl From<&Utf8PathBuf> for FormattedPathBuf {
-    fn from(path: &Utf8PathBuf) -> Self {
-        FormattedPathBuf(path.to_owned())
-    }
-}
-
-impl From<Utf8PathBuf> for FormattedPathBuf {
-    fn from(path: Utf8PathBuf) -> Self {
-        FormattedPathBuf(path)
+impl<P: AsRef<Utf8Path>> From<P> for FormattedPathBuf {
+    fn from(path: P) -> Self {
+        FormattedPathBuf(path.as_ref().to_path_buf())
     }
 }
