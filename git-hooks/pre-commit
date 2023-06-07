@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if cargo run --bin kra-lint-test --quiet ; then
+    exit 0
+else
+    echo "git: commit aborted"
+    exit 1
+fi
