@@ -1,0 +1,4 @@
+[includes]
+paths = [
+    "case-insensitive-ext.TOML",
+]

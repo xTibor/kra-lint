@@ -1,0 +1,8 @@
+kra-lint: Using config file ".kra-lint"
+kra-lint: Failed to parse TOML config file "invalid.toml"
+kra-lint: TOML parse error at line 1, column 9
+  |
+1 | invalid TOML file
+  |         ^
+expected `.`, `=`
+

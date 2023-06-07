@@ -1,0 +1,4 @@
+[includes]
+paths = [
+    "invalid.toml",
+]
