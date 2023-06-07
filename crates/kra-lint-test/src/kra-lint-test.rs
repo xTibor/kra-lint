@@ -1,12 +1,28 @@
+#![feature(error_iter)]
+
 use std::error::Error;
-use std::process::Command;
+use std::process::{Command, ExitCode};
 
 use diff::Result as DiffResult;
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> ExitCode {
+    match main_inner() {
+        Ok(exit_code) => exit_code,
+        Err(err) => {
+            for source in err.sources() {
+                eprintln!("kra-lint-test: {}", source);
+            }
+            ExitCode::FAILURE
+        }
+    }
+}
+
+fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
     let test_directories = glob::glob("tests/*/")?
         .map(|glob_res| glob_res.map(|path_buf| path_buf.canonicalize()))
         .collect::<Result<Result<Vec<_>, _>, _>>()??;
+
+    let mut diff_found = false;
 
     for test_directory in test_directories {
         std::env::set_current_dir(&test_directory)?;
@@ -44,6 +60,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .collect::<Vec<_>>();
 
             if !diff_lines.is_empty() {
+                diff_found = true;
+
                 println!("[{}] {}", name, test_directory.file_name().unwrap().to_str().unwrap());
                 for diff_line in diff_lines {
                     println!("{}", diff_line);
@@ -53,5 +71,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    Ok(())
+    if diff_found {
+        Ok(ExitCode::FAILURE)
+    } else {
+        Ok(ExitCode::SUCCESS)
+    }
 }
