@@ -74,7 +74,9 @@ fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
         let test_name = test_directory.file_name()
             .ok_or(TestError::ExtractTestName { test_directory: test_directory.clone() })?;
 
-        let input_documents = glob::glob("*.kr[az]")?.collect::<Result<Vec<_>, _>>()?;
+        let input_documents = glob::glob("*.kr[az]")?
+            .map(|glob_res| glob_res.map(Utf8PathBuf::try_from))
+            .collect::<Result<Result<Vec<Utf8PathBuf>, _>, _>>()??;
 
         let kra_lint_output = Command::new("cargo")
             .args(["run", "--bin", "kra-lint", "--quiet"])
