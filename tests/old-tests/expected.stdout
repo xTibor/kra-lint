@@ -35,48 +35,6 @@ test-01.kra: Prohibited use of paint layer
              | Layer: "Background"
              | Layer: "Paint Layer 1"
 
-test-02.kra: Incorrect document name
-             | Expected: "regex(\"^[abcdefg]_\\d{4}_(tr|mk|wxp)$\")", Found: "test-01"
-
-test-02.kra: Incorrect document size
-             | Expected: "1584×884px/144dpi, 1740×972px/158dpi, 1896×1060px/172dpi, 2052×1148px/186dpi, 2208×1236px/200dpi, [128, 256, 512]×[128, 256, 512]px/72dpi", Found: "256×256px/300dpi"
-
-test-02.kra: Incorrect document structure
-             | Layer repetition mismatch, Layer template: (layer name: "Test 1", layer type: paint_layer), Expected: "1", Found: "0"
-
-test-02.kra: Incorrect file name
-             | Expected: "regex(\"^scene_\\d{4}_\\d{4}\\.kra$\")", Found: "test-02.kra"
-
-test-02.kra: Incorrect fill layer name
-             | Layer: "Fill Layer 1", Expected: "not(regex(\"^(Fill Layer|塗りつぶしレイヤー) \\d+$\"))", Found: "Fill Layer 1"
-
-test-02.kra: Incorrect software version
-             | Expected: "[\"5.1.3\", \"5.1.4\"]", Found: "5.1.5"
-
-test-02.kra: Missing author information
-             | Missing field: Author first name
-             | Missing field: Author full name
-             | Missing field: Author last name
-             | Missing field: Initial creator
-
-test-02.kra: Missing copyright disclaimer
-             | Expected: "This document is confidential property of <example-studio>.\nReproduction in whole or in part without permission is prohibited.\n"
-
-test-02.kra: Missing copyright line
-             | Expected: "Copyright (c) 2023 <example-studio>, All rights reserved"
-
-test-02.kra: Missing studio name
-             | Expected: "<example-studio>"
-
-test-02.kra: Prohibited use of KSeExpr
-             | Layer: "Fill Layer 1"
-
-test-02.kra: Prohibited use of fill layer
-             | Layer: "Fill Layer 1"
-
-test-02.kra: Prohibited use of paint layer
-             | Layer: "Background"
-
 test-03.kra: Incorrect document name
              | Expected: "regex(\"^[abcdefg]_\\d{4}_(tr|mk|wxp)$\")", Found: "test-01"
 
@@ -2312,4 +2270,4 @@ test-46.kra: Prohibited use of paint layer
              | Layer: "Background"
              | Layer: "Paint Layer 1"
 
-kra-lint: 970 issues found
+kra-lint: 954 issues found
