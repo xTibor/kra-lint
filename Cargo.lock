@@ -310,6 +310,8 @@ dependencies = [
 name = "kra-lint-test"
 version = "0.1.0"
 dependencies = [
+ "camino",
+ "derive_more",
  "diff",
  "glob",
 ]
