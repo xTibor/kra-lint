@@ -92,6 +92,8 @@ impl LintPass for LintPassAnimation {
                     #[allow(clippy::collapsible_if)]
                     if *layer_opt == Some(true) {
                         if layer.keyframes.is_some() && !layer.in_timeline {
+                            // Bug: Pinning/unpinning layers do not set the modified flag on the document.
+                            //   Cannot save layer pinning changes by themselves without other unrelated changes.
                             #[rustfmt::skip]
                             lint_messages.push(
                                 format!("Unpinned animated {}", layer_display),
