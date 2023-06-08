@@ -1,28 +1,28 @@
-sub_pass_1.kra: Prohibited use of animated layer
-                | Layer: "Paint Layer 1"
+sub_pass_01.kra: Prohibited use of animated layer
+                 | Layer: "Paint Layer 1"
 
-sub_pass_2.kra: Prohibited use of animated mask
-                | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
+sub_pass_02.kra: Prohibited use of animated mask
+                 | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
 
-sub_pass_3.kra: Incorrect animation framerate
-                | Expected: "24fps", Found: "60fps"
+sub_pass_03.kra: Incorrect animation framerate
+                 | Expected: "24fps", Found: "60fps"
 
-sub_pass_4.kra: Prohibited use of animated layer
-                | Layer: "Paint Layer 1"
+sub_pass_04.kra: Prohibited use of animated layer
+                 | Layer: "Paint Layer 1"
 
-sub_pass_4.kra: Unpinned animated layer
-                | Layer: "Paint Layer 1"
+sub_pass_04.kra: Unpinned animated layer
+                 | Layer: "Paint Layer 1"
 
-sub_pass_5.kra: Prohibited use of animated mask
-                | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
+sub_pass_05.kra: Prohibited use of animated mask
+                 | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
 
-sub_pass_5.kra: Unpinned animated mask
-                | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
+sub_pass_05.kra: Unpinned animated mask
+                 | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
 
-sub_pass_6.kra: Active onion skins leading to false document previews
-                | Layer: "Paint Layer 1"
+sub_pass_06.kra: Active onion skins leading to false document previews
+                 | Layer: "Paint Layer 1"
 
-sub_pass_6.kra: Prohibited use of animated layer
-                | Layer: "Paint Layer 1"
+sub_pass_06.kra: Prohibited use of animated layer
+                 | Layer: "Paint Layer 1"
 
 kra-lint: 9 issues found
