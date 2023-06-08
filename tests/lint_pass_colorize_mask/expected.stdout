@@ -1,0 +1,7 @@
+sub_pass_1.kra: Active key stroke edit modes on colorize masks leading to false document previews
+                | Layer: "Paint Layer 1", Mask: "Colorize Mask 1"
+
+sub_pass_2.kra: Disabled coloring on colorize mask
+                | Layer: "Paint Layer 1", Mask: "Colorize Mask 1"
+
+kra-lint: 2 issues found
