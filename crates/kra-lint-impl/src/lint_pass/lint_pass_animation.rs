@@ -114,6 +114,8 @@ impl LintPass for LintPassAnimation {
                     #[allow(clippy::collapsible_if)]
                     if *mask_opt == Some(true) {
                         if mask.keyframes.is_some() && (mask.in_timeline != Some(true)) {
+                            // Bug: Pinning/unpinning masks do not set the modified flag on the document.
+                            //   Cannot save mask pinning changes by themselves without other unrelated changes.
                             #[rustfmt::skip]
                             lint_messages.push(
                                 format!("Unpinned animated {}", mask_display),
