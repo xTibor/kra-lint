@@ -1,0 +1,7 @@
+[animation]
+framerate = 24
+animated_layers = false
+animated_masks = false
+force_layer_pin = true
+force_mask_pin = true
+warn_onion_skin = true
