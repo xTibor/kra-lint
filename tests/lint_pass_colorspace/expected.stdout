@@ -1,0 +1,23 @@
+sub_pass_01.kra: Incorrect document color space
+                 | Expected: "RGBA", Found: "RGBA16"
+
+sub_pass_02.kra: Incorrect layer color space
+                 | Layer: "Paint Layer 1", Expected: "RGBA", Found: "RGBA16"
+
+sub_pass_03.kra: Incorrect mask color space
+                 | Layer: "Background", Mask: "Colorize Mask 1", Expected: "RGBA", Found: "RGBA16"
+
+sub_pass_04.kra: Incorrect document color profile
+                 | Expected: "sRGB-elle-V2-srgbtrc.icc", Found: "sRGB-elle-V2-g10.icc"
+                 | Profile checksum mismatch
+
+sub_pass_05.kra: Incorrect layer color profile
+                 | Layer: "Paint Layer 1", Profile checksum mismatch
+
+sub_pass_06.kra: Incorrect colorize mask color profile
+                 | Layer: "Background", Mask: "Colorize Mask 1", Profile checksum mismatch
+
+sub_pass_07.kra: Incorrect document color profile
+                 | Profile checksum mismatch
+
+kra-lint: 8 issues found

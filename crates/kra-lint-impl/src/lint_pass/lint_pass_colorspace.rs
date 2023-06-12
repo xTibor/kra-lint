@@ -146,7 +146,7 @@ impl LintPass for LintPassColorspace {
             }
         }
 
-        // Sub-pass #6
+        // Sub-pass #7
         {
             if let Some(profile_checksum) = self.profile_checksum.as_ref() {
                 let document_color_profile = kra_archive.main_doc.image.color_profile(kra_archive)?;
