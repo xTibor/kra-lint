@@ -1,0 +1,13 @@
+[copyright]
+copyright_line = "Copyright (c) 2023 <example-studio>, All rights reserved"
+copyright_disclaimer = """
+This document is confidential property of <example-studio>.
+Reproduction in whole or in part without permission is prohibited.
+"""
+studio_name = "<example-studio>"
+ensure_author_exists = true
+
+# Bug: Initial author field is always set to "Unknown", even when an active
+#  author profile present. Expected initial author fields have been manually
+#  inserted into the test documents.
+ensure_initial_author_exists = true

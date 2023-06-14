@@ -76,6 +76,8 @@ impl LintPass for LintPassCopyright {
             if self.ensure_initial_author_exists == Some(true) {
                 let kra_initial_creator = &kra_archive.document_info.about.initial_creator;
 
+                // Bug: Initial author field is always set to "Unknown", even when an active
+                //  author profile present.
                 if kra_initial_creator.is_empty() || (kra_initial_creator == "Unknown") {
                     #[rustfmt::skip]
                     lint_messages.push(

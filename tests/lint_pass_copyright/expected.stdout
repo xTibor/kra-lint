@@ -1,0 +1,37 @@
+sub_pass_01_01.kra: Missing copyright line
+                    | Expected: "Copyright (c) 2023 <example-studio>, All rights reserved"
+
+sub_pass_01_02.kra: Incorrect copyright line
+                    | Expected: "Copyright (c) 2023 <example-studio>, All rights reserved", Found: "Copyright (c) 2022 <other-studio>, All rights reserved"
+
+sub_pass_02_01.kra: Missing copyright disclaimer
+                    | Expected: "This document is confidential property of <example-studio>.\nReproduction in whole or in part without permission is prohibited.\n"
+
+sub_pass_02_02.kra: Incorrect copyright disclaimer
+                    | Expected: "This document is confidential property of <example-studio>.\nReproduction in whole or in part without permission is prohibited.\n", Found: "Some incorrect copyright disclaimer.\n"
+
+sub_pass_03.kra: Missing author information
+                 | Missing field: Initial creator
+
+sub_pass_04_01.kra: Missing author information
+                    | Missing field: Author full name
+
+sub_pass_04_02.kra: Missing author information
+                    | Missing field: Author first name
+
+sub_pass_04_03.kra: Missing author information
+                    | Missing field: Author last name
+
+sub_pass_04_04.kra: Inconsistent author information
+                    | First name: "GivenNameOne", Full name: "GivenNameTwo FamilyName"
+
+sub_pass_04_05.kra: Inconsistent author information
+                    | Last name: "FamilyNameOne", Full name: "GivenName FamilyNameTwo"
+
+sub_pass_05_01.kra: Missing studio name
+                    | Expected: "<example-studio>"
+
+sub_pass_05_02.kra: Incorrect studio name
+                    | Expected: "<example-studio>", Found: "<other-studio>"
+
+kra-lint: 12 issues found
