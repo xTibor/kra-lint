@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
@@ -19,6 +17,22 @@ struct LintPassDocumentSizeEntry {
     resolution: Option<NumberMatchExpression<f64>>,
 }
 
+impl LintPassDocumentSizeEntry {
+    fn matches(&self, kra_document_width: usize, kra_document_height: usize, kra_document_resolution: f64) -> bool {
+        // TODO: Option::is_none_or()
+        self.width.as_ref().map_or(true, |m| m.matches(&kra_document_width))
+            && self.height.as_ref().map_or(true, |m| m.matches(&kra_document_height))
+            && self.resolution.as_ref().map_or(true, |m| m.matches(&kra_document_resolution))
+    }
+
+    fn message_fmt(&self) -> String {
+        fn format_field<T: std::fmt::Display>(field: &Option<NumberMatchExpression<T>>) -> String {
+            field.as_ref().map(NumberMatchExpression::to_string).unwrap_or("(any)".to_owned())
+        }
+        format!("{}×{}px/{}dpi", format_field(&self.width), format_field(&self.height), format_field(&self.resolution))
+    }
+}
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -35,28 +49,16 @@ impl LintPass for LintPassDocumentSize {
             let kra_document_height = kra_archive.main_doc.image.height;
             let kra_document_resolution = kra_archive.main_doc.image.x_res;
 
-            let document_size_matches = self.document_sizes.iter().any(|size_entry| {
-                // TODO: Option::is_none_or()
-                size_entry.width.as_ref().map_or(true, |m| m.matches(&kra_document_width))
-                    && size_entry.height.as_ref().map_or(true, |m| m.matches(&kra_document_height))
-                    && size_entry.resolution.as_ref().map_or(true, |m| m.matches(&kra_document_resolution))
-            });
+            let document_size_matches = self
+                .document_sizes
+                .iter()
+                .any(|size_entry| size_entry.matches(kra_document_width, kra_document_height, kra_document_resolution));
 
             if !document_size_matches {
                 let document_size_list = self
                     .document_sizes
                     .iter()
-                    .map(|size_entry| {
-                        fn format_size_entry_field<T: Display>(field: &Option<NumberMatchExpression<T>>) -> String {
-                            field.as_ref().map(NumberMatchExpression::to_string).unwrap_or("(any)".to_owned())
-                        }
-                        format!(
-                            "{}×{}px/{}dpi",
-                            format_size_entry_field(&size_entry.width),
-                            format_size_entry_field(&size_entry.height),
-                            format_size_entry_field(&size_entry.resolution)
-                        )
-                    })
+                    .map(LintPassDocumentSizeEntry::message_fmt)
                     .collect::<Vec<_>>()
                     .join(", ");
 
