@@ -115,7 +115,7 @@ This document is confidential property of <example-studio>.
 Reproduction in whole or in part without permission is prohibited.
 """
 studio_name = "<example-studio>"
-ensure_initial_author_exists = true
+initial_author = { not = "Unknown" }
 ensure_author_exists = true
 
 [[document_structure.layers]]

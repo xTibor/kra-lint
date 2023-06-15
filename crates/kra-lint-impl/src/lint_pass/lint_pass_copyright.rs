@@ -13,7 +13,7 @@ pub(crate) struct LintPassCopyright {
     copyright_line: Option<StringMatchExpression>,
     copyright_disclaimer: Option<StringMatchExpression>,
     studio_name: Option<StringMatchExpression>,
-    ensure_initial_author_exists: Option<bool>,
+    initial_author: Option<StringMatchExpression>,
     ensure_author_exists: Option<bool>,
 }
 
@@ -73,17 +73,24 @@ impl LintPass for LintPassCopyright {
 
         // Sub-pass #3
         {
-            if self.ensure_initial_author_exists == Some(true) {
-                let kra_initial_creator = &kra_archive.document_info.about.initial_creator;
+            if let Some(initial_author) = self.initial_author.as_ref() {
+                let kra_initial_author = &kra_archive.document_info.about.initial_creator;
 
-                // Bug: Initial author field is always set to "Unknown", even when an active
-                //  author profile present.
-                if kra_initial_creator.is_empty() || (kra_initial_creator == "Unknown") {
+                if kra_initial_author.is_empty() {
                     #[rustfmt::skip]
                     lint_messages.push(
                         "Missing author information",
                         &[
                             meta_missing_field!("Initial creator"),
+                        ],
+                    );
+                } else if !initial_author.matches(kra_initial_author) {
+                    #[rustfmt::skip]
+                    lint_messages.push(
+                        "Incorrect initial author",
+                        &[
+                            meta_expected!(initial_author),
+                            meta_found!(kra_initial_author),
                         ],
                     );
                 }

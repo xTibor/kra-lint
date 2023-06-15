@@ -10,4 +10,4 @@ ensure_author_exists = true
 # Bug: Initial author field is always set to "Unknown", even when an active
 #  author profile present. Expected initial author fields have been manually
 #  inserted into the test documents.
-ensure_initial_author_exists = true
+initial_author = { not = ["Unknown", "不明"] }

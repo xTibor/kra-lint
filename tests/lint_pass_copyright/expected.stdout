@@ -10,8 +10,14 @@ sub_pass_02_01.kra: Missing copyright disclaimer
 sub_pass_02_02.kra: Incorrect copyright disclaimer
                     | Expected: "This document is confidential property of <example-studio>.\nReproduction in whole or in part without permission is prohibited.\n", Found: "Some incorrect copyright disclaimer.\n"
 
-sub_pass_03.kra: Missing author information
-                 | Missing field: Initial creator
+sub_pass_03_01.kra: Missing author information
+                    | Missing field: Initial creator
+
+sub_pass_03_02.kra: Incorrect initial author
+                    | Expected: "not([\"Unknown\", \"不明\"])", Found: "Unknown"
+
+sub_pass_03_03.kra: Incorrect initial author
+                    | Expected: "not([\"Unknown\", \"不明\"])", Found: "不明"
 
 sub_pass_04_01.kra: Missing author information
                     | Missing field: Author full name
@@ -34,4 +40,4 @@ sub_pass_05_01.kra: Missing studio name
 sub_pass_05_02.kra: Incorrect studio name
                     | Expected: "<example-studio>", Found: "<other-studio>"
 
-kra-lint: 12 issues found
+kra-lint: 14 issues found
