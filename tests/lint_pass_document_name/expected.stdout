@@ -1,0 +1,7 @@
+sub_pass_01.kra: Missing document name
+                 | Expected: "regex(\"^[abcdefg]_\\d{4}_(tr|mk|wxp)$\")"
+
+sub_pass_02.kra: Incorrect document name
+                 | Expected: "regex(\"^[abcdefg]_\\d{4}_(tr|mk|wxp)$\")", Found: "x_1234_abcd"
+
+kra-lint: 2 issues found

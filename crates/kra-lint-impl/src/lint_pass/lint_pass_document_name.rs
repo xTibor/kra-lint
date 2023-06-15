@@ -17,7 +17,7 @@ impl LintPass for LintPassDocumentName {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
-            let kra_document_name = &kra_archive.main_doc.image.name;
+            let kra_document_name = &kra_archive.document_info.about.title;
 
             if kra_document_name.is_empty() {
                 #[rustfmt::skip]

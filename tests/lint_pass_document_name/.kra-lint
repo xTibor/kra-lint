@@ -1,0 +1,2 @@
+[document_name]
+document_name = { regex = '^[abcdefg]_\d{4}_(tr|mk|wxp)$' }
