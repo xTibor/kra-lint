@@ -15,21 +15,38 @@ struct LintPassDocumentSizeEntry {
     width: Option<NumberMatchExpression<usize>>,
     height: Option<NumberMatchExpression<usize>>,
     resolution: Option<NumberMatchExpression<f64>>,
+    rotation: Option<bool>,
 }
 
 impl LintPassDocumentSizeEntry {
     fn matches(&self, kra_document_width: usize, kra_document_height: usize, kra_document_resolution: f64) -> bool {
         // TODO: Option::is_none_or()
-        self.width.as_ref().map_or(true, |m| m.matches(&kra_document_width))
-            && self.height.as_ref().map_or(true, |m| m.matches(&kra_document_height))
-            && self.resolution.as_ref().map_or(true, |m| m.matches(&kra_document_resolution))
+        let normal_orientation_matches = self.width.as_ref().map_or(true, |m| m.matches(&kra_document_width))
+            && self.height.as_ref().map_or(true, |m| m.matches(&kra_document_height));
+
+        let rotated_orientation_matches = self.width.as_ref().map_or(true, |m| m.matches(&kra_document_height))
+            && self.height.as_ref().map_or(true, |m| m.matches(&kra_document_width));
+
+        let resolution_matches = self.resolution.as_ref().map_or(true, |m| m.matches(&kra_document_resolution));
+
+        if self.rotation == Some(true) {
+            (normal_orientation_matches || rotated_orientation_matches) && resolution_matches
+        } else {
+            normal_orientation_matches && resolution_matches
+        }
     }
 
     fn message_fmt(&self) -> String {
         fn format_field<T: std::fmt::Display>(field: &Option<NumberMatchExpression<T>>) -> String {
             field.as_ref().map(NumberMatchExpression::to_string).unwrap_or("(any)".to_owned())
         }
-        format!("{}×{}px/{}dpi", format_field(&self.width), format_field(&self.height), format_field(&self.resolution))
+        format!(
+            "{}×{}px/{}dpi{}",
+            format_field(&self.width),
+            format_field(&self.height),
+            format_field(&self.resolution),
+            if self.rotation == Some(true) { " (rotatable)" } else { "" }
+        )
     }
 }
 

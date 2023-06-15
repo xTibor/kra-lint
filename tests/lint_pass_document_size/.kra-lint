@@ -1,0 +1,12 @@
+[document_size]
+document_sizes = [
+    { width = 1584, height =  884, resolution = 144.0, rotation = true },
+    { width = 1740, height =  972, resolution = 158.0, rotation = true },
+    { width = 1896, height = 1060, resolution = 172.0, rotation = true },
+    { width = 2052, height = 1148, resolution = 186.0, rotation = true },
+    { width = 2208, height = 1236, resolution = 200.0, rotation = true },
+
+    { width = [128, 256, 512], height = [128, 256, 512] },
+]
+
+# TODO: sub_pass_02.kra
