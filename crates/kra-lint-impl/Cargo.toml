@@ -10,6 +10,7 @@ rust-version = "1.70"
 kra-parser = { path = "../kra-parser/" }
 
 camino-ext = { path = "../../crates-ext/camino-ext/" }
+std-ext = { path = "../../crates-ext/std-ext/" }
 ziparchive-ext = { path = "../../crates-ext/ziparchive-ext/" }
 
 camino = { version = "1.1.4", features = ["serde1"] }

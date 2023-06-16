@@ -7,6 +7,7 @@ use kra_parser::kra_maindoc::{
     KraColorLabel, KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMainDocMaskContainer,
     KraMaskType,
 };
+use std_ext::OptionExt;
 
 use crate::lint_config_fields::{GenericMatchExpression, NumberMatchExpression, StringMatchExpression};
 use crate::lint_output::lint_metadata_macros::{meta_comment, meta_expected, meta_found, meta_layer, meta_mask};
@@ -35,10 +36,9 @@ struct DocumentStructureMask {
 impl DocumentStructureMask {
     #[rustfmt::skip]
     fn matches(&self, kra_mask: &KraMainDocMask) -> bool {
-        // TODO: Option::is_none_or()
-        self.mask_name.as_ref().map_or(true, |m| m.matches(&kra_mask.name))
-            && self.mask_type.as_ref().map_or(true, |m| m.matches(&kra_mask.mask_type))
-            && self.mask_color.as_ref().map_or(true, |m| {
+        self.mask_name.as_ref().is_none_or(|m| m.matches(&kra_mask.name))
+            && self.mask_type.as_ref().is_none_or(|m| m.matches(&kra_mask.mask_type))
+            && self.mask_color.as_ref().is_none_or(|m| {
                 kra_mask.color_label.as_ref().is_some_and(|color_label| m.matches(color_label))
             })
     }
@@ -76,10 +76,9 @@ struct DocumentStructureLayer {
 
 impl DocumentStructureLayer {
     fn matches(&self, kra_layer: &KraMainDocLayer) -> bool {
-        // TODO: Option::is_none_or()
-        self.layer_name.as_ref().map_or(true, |m| m.matches(&kra_layer.name))
-            && self.layer_type.as_ref().map_or(true, |m| m.matches(&kra_layer.layer_type))
-            && self.layer_color.as_ref().map_or(true, |m| m.matches(&kra_layer.color_label))
+        self.layer_name.as_ref().is_none_or(|m| m.matches(&kra_layer.name))
+            && self.layer_type.as_ref().is_none_or(|m| m.matches(&kra_layer.layer_type))
+            && self.layer_color.as_ref().is_none_or(|m| m.matches(&kra_layer.color_label))
     }
 
     fn message_fmt(&self) -> String {

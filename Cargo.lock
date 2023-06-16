@@ -306,6 +306,7 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "sha2",
+ "std-ext",
  "strum",
  "svg",
  "toml",
@@ -535,6 +536,10 @@ dependencies = [
  "cpufeatures",
  "digest",
 ]
+
+[[package]]
+name = "std-ext"
+version = "0.1.0"
 
 [[package]]
 name = "strong-xml"

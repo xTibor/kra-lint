@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
+use std_ext::OptionExt;
 
 use crate::lint_config_fields::NumberMatchExpression;
 use crate::lint_output::lint_metadata_macros::{meta_comment, meta_expected, meta_found};
@@ -20,14 +21,13 @@ struct LintPassDocumentSizeEntry {
 
 impl LintPassDocumentSizeEntry {
     fn matches(&self, kra_document_width: usize, kra_document_height: usize, kra_document_resolution: f64) -> bool {
-        // TODO: Option::is_none_or()
-        let normal_orientation_matches = self.width.as_ref().map_or(true, |m| m.matches(&kra_document_width))
-            && self.height.as_ref().map_or(true, |m| m.matches(&kra_document_height));
+        let normal_orientation_matches = self.width.as_ref().is_none_or(|m| m.matches(&kra_document_width))
+            && self.height.as_ref().is_none_or(|m| m.matches(&kra_document_height));
 
-        let rotated_orientation_matches = self.width.as_ref().map_or(true, |m| m.matches(&kra_document_height))
-            && self.height.as_ref().map_or(true, |m| m.matches(&kra_document_width));
+        let rotated_orientation_matches = self.width.as_ref().is_none_or(|m| m.matches(&kra_document_height))
+            && self.height.as_ref().is_none_or(|m| m.matches(&kra_document_width));
 
-        let resolution_matches = self.resolution.as_ref().map_or(true, |m| m.matches(&kra_document_resolution));
+        let resolution_matches = self.resolution.as_ref().is_none_or(|m| m.matches(&kra_document_resolution));
 
         if self.rotation == Some(true) {
             (normal_orientation_matches || rotated_orientation_matches) && resolution_matches
