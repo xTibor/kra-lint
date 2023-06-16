@@ -1,0 +1,52 @@
+[[document_structure.layers]]
+layer_name = "Layer colors"
+layer_type = "group_layer"
+
+    [[document_structure.layers.layers]]
+    layer_name = "None"
+    layer_type = "paint_layer"
+    layer_color = "none"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Blue"
+    layer_type = "paint_layer"
+    layer_color = "blue"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Green"
+    layer_type = "paint_layer"
+    layer_color = "green"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Yellow"
+    layer_type = "paint_layer"
+    layer_color = "yellow"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Orange"
+    layer_type = "paint_layer"
+    layer_color = "orange"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Brown"
+    layer_type = "paint_layer"
+    layer_color = "brown"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Red"
+    layer_type = "paint_layer"
+    layer_color = "red"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Purple"
+    layer_type = "paint_layer"
+    layer_color = "purple"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Black"
+    layer_type = "paint_layer"
+    layer_color = "black"
+
+[[document_structure.layers]]
+layer_name = "Background"
+layer_type = ["paint_layer"]

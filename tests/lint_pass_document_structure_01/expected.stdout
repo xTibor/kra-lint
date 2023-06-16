@@ -1,0 +1,22 @@
+sub_pass_01_01.kra: Incorrect document structure
+                    | Mask repetition mismatch, Mask template: (mask name: "Mask 1", mask type: [filter_mask, transparency_mask]), Expected: "greater_equals(1)", Found: "0"
+
+sub_pass_01_02.kra: Incorrect document structure
+                    | Extra mask, Mask: "Mask 2"
+
+sub_pass_01_03.kra: Incorrect document structure
+                    | Layer repetition mismatch, Layer template: (layer name: "Test 2", layer type: paint_layer), Expected: "3", Found: "2"
+
+sub_pass_01_04.kra: Incorrect document structure
+                    | Layer repetition mismatch, Layer template: (layer name: "Test 2", layer type: paint_layer), Expected: "3", Found: "4"
+
+sub_pass_01_05.kra: Incorrect document structure
+                    | Extra layer, Layer: "Test 4"
+
+sub_pass_01_06.kra: Incorrect document structure
+                    | Extra layer, Layer: "Test 4"
+
+sub_pass_01_07.kra: Incorrect document structure
+                    | Extra layer, Layer: "Test 4"
+
+kra-lint: 7 issues found

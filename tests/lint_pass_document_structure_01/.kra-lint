@@ -1,0 +1,30 @@
+[[document_structure.layers]]
+layer_name = "Test 1"
+layer_type = "paint_layer"
+
+    [[document_structure.layers.masks]]
+    mask_name = "Mask 1"
+    mask_type = ["filter_mask", "transparency_mask"]
+    mask_count = { greater_equals = 1 }
+
+[[document_structure.layers]]
+layer_name = "Group 1"
+layer_type = "group_layer"
+
+    [[document_structure.layers.layers]]
+    layer_name = "Test 2"
+    layer_type = "paint_layer"
+    layer_count = 3
+
+[[document_structure.layers]]
+layer_name = "Group 2"
+layer_type = "group_layer"
+layer_count = 2
+
+    [[document_structure.layers.layers]]
+    layer_name = "Test 3"
+    layer_type = "paint_layer"
+
+[[document_structure.layers]]
+layer_name = "Background"
+layer_type = ["fill_layer", "paint_layer"]
