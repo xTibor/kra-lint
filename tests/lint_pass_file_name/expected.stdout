@@ -1,0 +1,4 @@
+sub_pass_01.kra: Incorrect file name
+                 | Expected: "regex(\"^lint_success.kr[az]$\")", Found: "sub_pass_01.kra"
+
+kra-lint: One issue found

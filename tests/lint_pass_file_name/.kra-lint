@@ -1,0 +1,2 @@
+[file_name]
+file_name = { regex = '^lint_success.kr[az]$' }
