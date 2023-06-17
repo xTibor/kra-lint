@@ -1,0 +1,3 @@
+[filters]
+filter_types = ["colortoalpha", "pixelize"]
+pixiv_mosaics = true

@@ -1,0 +1,22 @@
+sub_pass_01.kra: Incorrect filter layer type
+                 | Layer: "Filter Layer 2 (Gaussian Blur)", Expected: "[\"colortoalpha\", \"pixelize\"]", Found: "gaussian blur"
+
+sub_pass_02.kra: Incorrect filter mask type
+                 | Layer: "Paint Layer 1", Mask: "Filter Mask 1 (Gaussian Blur)", Expected: "[\"colortoalpha\", \"pixelize\"]", Found: "gaussian blur"
+
+sub_pass_03_01.kra: Incorrect Pixiv mosaics
+                    | Non-square filter layer mosaics, Layer: "Filter Layer 2 (Pixelize)", Expected: "4x4px", Found: "4x5px"
+
+sub_pass_03_02.kra: Incorrect Pixiv mosaics
+                    | Insufficient filter layer mosaic size, Layer: "Filter Layer 2 (Pixelize)", Expected: "4x4px", Found: "3x3px"
+
+sub_pass_03_03.kra: Incorrect Pixiv mosaics
+                    | Transparent mosaic filter layer, Layer: "Filter Layer 2 (Pixelize)"
+
+sub_pass_03_04.kra: Incorrect Pixiv mosaics
+                    | Non-square filter mask mosaics, Layer: "Paint Layer 1", Mask: "Filter Mask 1 (Pixelize)", Expected: "4x4px", Found: "4x5px"
+
+sub_pass_03_05.kra: Incorrect Pixiv mosaics
+                    | Insufficient filter mask mosaic size, Layer: "Paint Layer 1", Mask: "Filter Mask 1 (Pixelize)", Expected: "4x4px", Found: "3x3px"
+
+kra-lint: 7 issues found
