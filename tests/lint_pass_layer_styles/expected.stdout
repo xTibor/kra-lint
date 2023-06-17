@@ -1,0 +1,4 @@
+sub_pass_01.kra: Prohibited layer styles
+                 | Layer: "Paint Layer 1"
+
+kra-lint: One issue found
