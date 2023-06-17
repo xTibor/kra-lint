@@ -1,0 +1,4 @@
+[file_layers]
+file_formats = ["kra", "tga"]
+check_missing_files = true
+scaling_method = "none"

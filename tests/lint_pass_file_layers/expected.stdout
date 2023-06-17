@@ -1,0 +1,13 @@
+sub_pass_01_01.kra: Incorrect file layer source image format
+                    | Layer: "File Layer 1", Expected: "[\"kra\", \"tga\"]", Found: "png"
+
+sub_pass_01_02.kra: File layer source image has no file extension
+                    | Layer: "File Layer 1", Expected: "[\"kra\", \"tga\"]"
+
+sub_pass_02.kra: Missing file layer source image
+                 | Layer: "File Layer 1", Source: "does-not-exist.tga"
+
+sub_pass_03.kra: Incorrect file layer scaling method
+                 | Layer: "File Layer 1", Expected: "none", Found: "scale_to_image"
+
+kra-lint: 4 issues found
