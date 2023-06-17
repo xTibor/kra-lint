@@ -1,0 +1,7 @@
+sub_pass_01.kra: Prohibited hidden layer
+                 | Layer: "Paint Layer 1"
+
+sub_pass_02.kra: Prohibited hidden mask
+                 | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
+
+kra-lint: 2 issues found

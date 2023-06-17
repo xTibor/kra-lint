@@ -1,0 +1,3 @@
+[hidden_surface]
+hidden_layers = false
+hidden_masks = false
