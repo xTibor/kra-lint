@@ -1,0 +1,19 @@
+sub_pass_01.kra: Non-default layer transparency
+                 | Layer: "Paint Layer 1", Expected: "100%", Found: "50%"
+
+sub_pass_02_01.kra: Non-default layer blending mode
+                    | Layer: "Filter Layer 2 (Pixelize)", Expected: "copy", Found: "normal"
+
+sub_pass_02_02.kra: Non-default layer blending mode
+                    | Layer: "Paint Layer 1", Expected: "normal", Found: "overlay"
+
+sub_pass_03.kra: Non-default mask blending mode
+                 | Layer: "Paint Layer 1", Mask: "Colorize Mask 1", Expected: "behind", Found: "normal"
+
+sub_pass_04.kra: Non-default set of active channels
+                 | Layer: "Paint Layer 1", Expected: "1111", Found: "1001"
+
+sub_pass_05.kra: Non-default channel lock flags
+                 | Layer: "Paint Layer 1", Expected: "1111", Found: "1110"
+
+kra-lint: 6 issues found
