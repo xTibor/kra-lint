@@ -1,0 +1,14 @@
+[vector_layers]
+font_family = { not = { regex = '^Noto Sans CJK (SC|TC)$' } }
+stroke_linecap = "round"
+stroke_linejoin = "round"
+placeholder_text = [
+    { regex    = '(?i)XXX'                               },
+    { regex    = '(?i)TO[\s_-]*DO'                       },
+    { regex    = '(?i)FIX[\s_-]*ME'                      },
+    { regex    = '(?i)REPLACE[\s_-]*ME'                  },
+    { regex    = '(?i)LOREM\s*IPSUM(\s*DOLOR(\s*SIT)?)?' },
+    { regex    = '(?i)(QWERT[YZ]|ASDF|[ZY]XCV)'          },
+    { contains = '123456'                                },
+]
+warn_broken_text_gradients = true

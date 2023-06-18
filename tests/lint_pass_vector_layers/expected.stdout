@@ -1,0 +1,19 @@
+sub_pass_01.kra: Prohibited font family on vector layer
+                 | Layer: "Vector Layer 1", Expected: "not(regex(\"^Noto Sans CJK (SC|TC)$\"))", Found: "Noto Sans CJK SC"
+                 | Layer: "Vector Layer 1", Expected: "not(regex(\"^Noto Sans CJK (SC|TC)$\"))", Found: "Noto Sans CJK TC"
+
+sub_pass_02.kra: Prohibited stroke line cap on vector layer
+                 | Layer: "Vector Layer 1", Expected: "round", Found: "square"
+
+sub_pass_03.kra: Prohibited stroke line join on vector layer
+                 | Layer: "Vector Layer 1", Expected: "round", Found: "bevel"
+
+sub_pass_04.kra: Prohibited placeholder text on vector layer
+                 | Layer: "Vector Layer 1", Found: "FIXME something"
+                 | Layer: "Vector Layer 1", Found: "LOREM IPSUM"
+                 | Layer: "Vector Layer 1", Found: "TODO something"
+
+sub_pass_05.kra: Broken text gradient fill on vector layer
+                 | Layer: "Vector Layer 1", Bug 430774
+
+kra-lint: 8 issues found
