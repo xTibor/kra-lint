@@ -1,0 +1,39 @@
+sub_pass_01.kra: Malformed document
+                 | Unescaped documentinfo.xml <abstract> tag, Bug 446376
+
+sub_pass_02.kra: Malformed document
+                 | Missing document color profile
+                 | Missing layer color profile, Layer: "Background"
+                 | Missing layer color profile, Layer: "Paint Layer 1"
+                 | Path traversal vulnerability, Bug 429925
+
+sub_pass_03_01.kra: Malformed document
+                    | Missing clone layer target layer, Layer: "Clone Layer 1", Bug 414699
+
+sub_pass_03_02.kra: Malformed document
+                    | Missing clone layer target field, Layer: "Clone Layer 1"
+
+sub_pass_04.kra: Malformed document
+                 | Compositions path traversal vulnerability
+
+sub_pass_05_01.kra: Malformed document
+                    | Clone layer loop, Layer: "Clone Layer 2"
+
+sub_pass_05_02.kra: Malformed document
+                    | Clone layer loop, Layer: "Clone Layer 1"
+                    | Clone layer loop, Layer: "Clone Layer 2"
+                    | Clone layer loop, Layer: "Clone Layer 3"
+
+sub_pass_06_01.kra: Malformed document
+                    | KRA archive without required preview image
+
+sub_pass_06_02.krz: Malformed document
+                    | KRZ archive with extraneous preview image
+
+sub_pass_07.kra: Malformed document
+                 | Missing layer color profile, Layer: "Background"
+
+sub_pass_08.kra: Malformed document
+                 | Missing document color profile
+
+kra-lint: 16 issues found
