@@ -59,7 +59,7 @@ pub struct KraMainDocImage {
     pub composition_container: Option<KraMainDocCompositionContainer>,
 
     #[xml(child = "animation")]
-    pub animation: KraMainDocAnimation,
+    pub animation: Option<KraMainDocAnimation>,
 }
 
 #[rustfmt::skip]

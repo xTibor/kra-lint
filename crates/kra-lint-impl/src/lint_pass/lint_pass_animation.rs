@@ -68,17 +68,19 @@ impl LintPass for LintPassAnimation {
         // Sub-pass #3
         {
             if let Some(framerate) = self.framerate.as_ref() {
-                let kra_framerate = kra_archive.main_doc.image.animation.framerate.value;
+                if let Some(kra_animation) = kra_archive.main_doc.image.animation.as_ref() {
+                    let kra_framerate = kra_animation.framerate.value;
 
-                if !framerate.matches(&kra_framerate) {
-                    #[rustfmt::skip]
-                    lint_messages.push(
-                        "Incorrect animation framerate",
-                        &[
-                            meta_expected!(format!("{}fps", framerate)),
-                            meta_found!(format!("{}fps", kra_framerate)),
-                        ],
-                    );
+                    if !framerate.matches(&kra_framerate) {
+                        #[rustfmt::skip]
+                        lint_messages.push(
+                            "Incorrect animation framerate",
+                            &[
+                                meta_expected!(format!("{}fps", framerate)),
+                                meta_found!(format!("{}fps", kra_framerate)),
+                            ],
+                        );
+                    }
                 }
             }
         }
