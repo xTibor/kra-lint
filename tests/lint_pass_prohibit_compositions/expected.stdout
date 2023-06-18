@@ -1,0 +1,5 @@
+sub_pass_01.kra: Prohibited use of compositions
+                 | Composition name: "001"
+                 | Composition name: "002"
+
+kra-lint: 2 issues found
