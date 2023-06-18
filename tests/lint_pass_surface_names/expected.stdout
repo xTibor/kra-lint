@@ -1,0 +1,37 @@
+sub_pass_01.kra: Incorrect clone layer name
+                 | Layer: "Clone Layer 3", Expected: "not(regex(\"^(Clone Layer|クローンレイヤー) \\d+$\"))", Found: "Clone Layer 3"
+
+sub_pass_01.kra: Incorrect file layer name
+                 | Layer: "File Layer 7", Expected: "not(regex(\"^(File Layer|ファイル参照レイヤー) \\d+$\"))", Found: "File Layer 7"
+
+sub_pass_01.kra: Incorrect fill layer name
+                 | Layer: "Fill Layer 6", Expected: "not(regex(\"^(Fill Layer|塗りつぶしレイヤー) \\d+$\"))", Found: "Fill Layer 6"
+
+sub_pass_01.kra: Incorrect filter layer name
+                 | Layer: "Filter Layer 5 (Pixelize)", Expected: "not(regex(\"^(Filter Layer|フィルタレイヤー) \\d+ \\(.*\\)$\"))", Found: "Filter Layer 5 (Pixelize)"
+
+sub_pass_01.kra: Incorrect group layer name
+                 | Layer: "Group 2", Expected: "not(regex(\"^(Group|グループ化) \\d+$\"))", Found: "Group 2"
+
+sub_pass_01.kra: Incorrect paint layer name
+                 | Layer: "Paint Layer 1", Expected: "not(regex(\"^(Paint Layer|ペイントレイヤー) \\d+$\"))", Found: "Paint Layer 1"
+
+sub_pass_01.kra: Incorrect vector layer name
+                 | Layer: "Vector Layer 4", Expected: "not(regex(\"^(Vector Layer|ベクターレイヤー) \\d+$\"))", Found: "Vector Layer 4"
+
+sub_pass_02.kra: Incorrect colorize mask name
+                 | Layer: "Test 1", Mask: "Colorize Mask 3", Expected: "not(regex(\"^(Colorize Mask|自動塗り分けマスク) \\d+$\"))", Found: "Colorize Mask 3"
+
+sub_pass_02.kra: Incorrect filter mask name
+                 | Layer: "Test 1", Mask: "Filter Mask 2 (Pixelize)", Expected: "not(regex(\"^(Filter Mask|フィルタマスク) \\d+ \\(.*\\)$\"))", Found: "Filter Mask 2 (Pixelize)"
+
+sub_pass_02.kra: Incorrect local selection name
+                 | Layer: "Test 1", Mask: "Selection 5", Expected: "not(regex(\"^(Selection|選択) \\d+$\"))", Found: "Selection 5"
+
+sub_pass_02.kra: Incorrect transform mask name
+                 | Layer: "Test 1", Mask: "Transform Mask 4", Expected: "not(regex(\"^(Transform Mask|変形マスク) \\d+$\"))", Found: "Transform Mask 4"
+
+sub_pass_02.kra: Incorrect transparency mask name
+                 | Layer: "Test 1", Mask: "Transparency Mask 1", Expected: "not(regex(\"^(Transparency Mask|透過マスク) \\d+$\"))", Found: "Transparency Mask 1"
+
+kra-lint: 12 issues found
