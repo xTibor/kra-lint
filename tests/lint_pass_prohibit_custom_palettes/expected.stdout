@@ -1,0 +1,4 @@
+sub_pass_01.kra: Prohibited use of custom palettes
+                 | Palette: "Test"
+
+kra-lint: One issue found
