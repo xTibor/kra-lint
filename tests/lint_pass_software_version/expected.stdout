@@ -1,0 +1,10 @@
+sub_pass_01.kra: Incorrect software name
+                 | Expected: "not(\"kra-writer\")", Found: "kra-writer"
+
+sub_pass_02.kra: Incorrect software version
+                 | Expected: "[\"5.1.4\", \"5.1.5\"]", Found: "5.1.3"
+
+sub_pass_03.kra: Incorrect document syntax version
+                 | Expected: "2.0", Found: "3.0"
+
+kra-lint: 3 issues found

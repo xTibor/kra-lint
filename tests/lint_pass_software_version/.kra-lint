@@ -1,0 +1,4 @@
+[software_version]
+software_name = { not = "kra-writer" }
+software_version = ["5.1.4", "5.1.5"]
+syntax_version = "2.0"
