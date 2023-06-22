@@ -1,0 +1,40 @@
+sub_pass_01.kra: Prohibited use of clone layer
+                 | Layer: "Clone Layer 3"
+
+sub_pass_01.kra: Prohibited use of file layer
+                 | Layer: "File Layer 7"
+
+sub_pass_01.kra: Prohibited use of fill layer
+                 | Layer: "Fill Layer 6"
+
+sub_pass_01.kra: Prohibited use of filter layer
+                 | Layer: "Filter Layer 5 (Pixelize)"
+
+sub_pass_01.kra: Prohibited use of group layer
+                 | Layer: "Group 2"
+
+sub_pass_01.kra: Prohibited use of paint layer
+                 | Layer: "Paint Layer 1"
+
+sub_pass_01.kra: Prohibited use of vector layer
+                 | Layer: "Vector Layer 4"
+
+sub_pass_02.kra: Prohibited use of colorize mask
+                 | Layer: "Paint Layer 1", Mask: "Colorize Mask 3"
+
+sub_pass_02.kra: Prohibited use of filter mask
+                 | Layer: "Paint Layer 1", Mask: "Filter Mask 2 (Pixelize)"
+
+sub_pass_02.kra: Prohibited use of local selection
+                 | Layer: "Paint Layer 1", Mask: "Selection 5"
+
+sub_pass_02.kra: Prohibited use of paint layer
+                 | Layer: "Paint Layer 1"
+
+sub_pass_02.kra: Prohibited use of transform mask
+                 | Layer: "Paint Layer 1", Mask: "Transform Mask 4"
+
+sub_pass_02.kra: Prohibited use of transparency mask
+                 | Layer: "Paint Layer 1", Mask: "Transparency Mask 1"
+
+kra-lint: 13 issues found

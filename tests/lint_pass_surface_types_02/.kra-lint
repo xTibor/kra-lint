@@ -1,0 +1,16 @@
+[surface_type]
+    [surface_type.layer_types]
+    paint_layers = false
+    group_layers = false
+    clone_layers = false
+    vector_layers = false
+    filter_layers = false
+    fill_layers = false
+    file_layers = false
+
+    [surface_type.mask_types]
+    transparency_masks = false
+    filter_masks = false
+    colorize_masks = false
+    transform_masks = false
+    local_selections = false
