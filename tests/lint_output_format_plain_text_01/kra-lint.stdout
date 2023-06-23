@@ -1,0 +1,7 @@
+sub_pass_01_01.kra: Incorrect document name
+                    | Expected: "not(contains(\"Test\"))", Found: "Test"
+
+sub_pass_01_02.kra: Incorrect document size
+                    | Expected: "256×256px/(any)dpi", Found: "128×128px/300dpi"
+
+kra-lint: 2 issues found

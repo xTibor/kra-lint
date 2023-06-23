@@ -1,0 +1,7 @@
+[document_name]
+document_name = { not = { contains = "Test" } }
+
+[document_size]
+document_sizes = [
+    { width = 256, height = 256 },
+]
