@@ -2,8 +2,7 @@
 
 use std::error::Error;
 use std::process::{Command, ExitCode};
-use std::string::FromUtf8Error;
-use std::{env, fs, io};
+use std::{env, fs, io, str};
 
 use camino::Utf8PathBuf;
 use derive_more::{Display, Error};
@@ -39,18 +38,6 @@ enum TestError {
     ExpectedStatus {
         test_name: String,
         source: io::Error,
-    },
-
-    #[display(fmt = "Failed to parse kra-lint standard output ({test_name:})")]
-    CurrentStdout {
-        test_name: String,
-        source: FromUtf8Error
-    },
-
-    #[display(fmt = "Failed to parse kra-lint standard error ({test_name:})")]
-    CurrentStderr {
-        test_name: String,
-        source: FromUtf8Error
     },
 }
 
@@ -97,45 +84,56 @@ fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
             .args(input_documents)
             .output()?;
 
-        let expected_stdout = fs::read_to_string("kra-lint.stdout")
+        let expected_stdout = fs::read("kra-lint.stdout")
             .map_err(|source| TestError::ExpectedStdout { test_name: test_name.to_owned(), source })?;
 
-        let expected_stderr = fs::read_to_string("kra-lint.stderr")
+        let expected_stderr = fs::read("kra-lint.stderr")
             .map_err(|source| TestError::ExpectedStderr { test_name: test_name.to_owned(), source })?;
 
-        let expected_status = fs::read_to_string("kra-lint.status")
+        let expected_status = fs::read("kra-lint.status")
             .map_err(|source| TestError::ExpectedStatus { test_name: test_name.to_owned(), source })?;
 
-        let current_stdout = String::from_utf8(kra_lint_output.stdout)
-            .map_err(|source| TestError::CurrentStdout { test_name: test_name.to_owned(), source })?;
+        let current_stdout = kra_lint_output.stdout;
 
-        let current_stderr = String::from_utf8(kra_lint_output.stderr)
-            .map_err(|source| TestError::CurrentStderr { test_name: test_name.to_owned(), source })?;
+        let current_stderr = kra_lint_output.stderr;
 
-        let current_status = format!("{}\n", kra_lint_output.status.to_string());
+        let current_status = format!("{}\n", kra_lint_output.status.to_string()).as_bytes().to_owned();
 
         for (name, expected, current) in &[
             ("STDOUT", &expected_stdout, &current_stdout),
             ("STDERR", &expected_stderr, &current_stderr),
             ("STATUS", &expected_status, &current_status),
         ] {
-            let diff_lines = diff::lines(expected, current)
-                .iter()
-                .filter_map(|diff_result| match diff_result {
-                    DiffResult::Left(line) => Some(format!("-{}", line)),
-                    DiffResult::Right(line) => Some(format!("+{}", line)),
-                    DiffResult::Both(_, _) => None,
-                })
-                .collect::<Vec<_>>();
+            match (str::from_utf8(expected), str::from_utf8(current)) {
+                (Ok(expected), Ok(current)) => {
+                    let diff_lines = diff::lines(expected, current)
+                        .iter()
+                        .filter_map(|diff_result| match diff_result {
+                            DiffResult::Left(line) => Some(format!("-{}", line)),
+                            DiffResult::Right(line) => Some(format!("+{}", line)),
+                            DiffResult::Both(_, _) => None,
+                        })
+                        .collect::<Vec<_>>();
 
-            if !diff_lines.is_empty() {
-                diff_found = true;
+                    if !diff_lines.is_empty() {
+                        diff_found = true;
 
-                println!("[{}] {}", name, test_name);
-                for diff_line in diff_lines {
-                    println!("{}", diff_line);
+                        println!("[{}] {}", name, test_name);
+                        for diff_line in diff_lines {
+                            println!("{}", diff_line);
+                        }
+                        println!();
+                    }
                 }
-                println!();
+                _ => {
+                    if current != expected {
+                        diff_found = true;
+
+                        println!("[{}] {}", name, test_name);
+                        println!("Binary mismatch");
+                        println!();
+                    }
+                }
             }
         }
     }
