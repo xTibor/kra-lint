@@ -17,6 +17,12 @@ enum TestError {
         test_directory: Utf8PathBuf,
     },
 
+    #[display(fmt = "Failed to read input arguments ({test_name:})")]
+    InputArgs {
+        test_name: String,
+        source: io::Error,
+    },
+
     #[display(fmt = "Failed to read expected standard output ({test_name:})")]
     ExpectedStdout {
         test_name: String,
@@ -74,6 +80,12 @@ fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
         let test_name = test_directory.file_name()
             .ok_or(TestError::ExtractTestName { test_directory: test_directory.clone() })?;
 
+        let input_args = fs::read_to_string("kra-lint.args")
+            .map_err(|source| TestError::InputArgs { test_name: test_name.to_owned(), source })?
+            .split_ascii_whitespace()
+            .map(String::from)
+            .collect::<Vec<_>>();
+
         let input_documents = glob::glob("*.kr[az]")?
             .map(|glob_res| glob_res.map(Utf8PathBuf::try_from))
             .collect::<Result<Result<Vec<Utf8PathBuf>, _>, _>>()??;
@@ -81,18 +93,17 @@ fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
         let kra_lint_output = Command::new("cargo")
             .args(["run", "--bin", "kra-lint", "--quiet"])
             .args(["--"])
-            .args(["-C", ".kra-lint"])
-            .args(["-F", "plain-text"])
+            .args(input_args)
             .args(input_documents)
             .output()?;
 
-        let expected_stdout = fs::read_to_string("expected.stdout")
+        let expected_stdout = fs::read_to_string("kra-lint.stdout")
             .map_err(|source| TestError::ExpectedStdout { test_name: test_name.to_owned(), source })?;
 
-        let expected_stderr = fs::read_to_string("expected.stderr")
+        let expected_stderr = fs::read_to_string("kra-lint.stderr")
             .map_err(|source| TestError::ExpectedStderr { test_name: test_name.to_owned(), source })?;
 
-        let expected_status = fs::read_to_string("expected.status")
+        let expected_status = fs::read_to_string("kra-lint.status")
             .map_err(|source| TestError::ExpectedStatus { test_name: test_name.to_owned(), source })?;
 
         let current_stdout = String::from_utf8(kra_lint_output.stdout)
