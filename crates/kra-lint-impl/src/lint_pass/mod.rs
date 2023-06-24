@@ -14,6 +14,7 @@ pub(crate) mod lint_pass_document_size;
 pub(crate) mod lint_pass_document_structure;
 pub(crate) mod lint_pass_file_layers;
 pub(crate) mod lint_pass_file_name;
+pub(crate) mod lint_pass_file_permissions;
 pub(crate) mod lint_pass_filters;
 pub(crate) mod lint_pass_hidden_surface;
 pub(crate) mod lint_pass_layer_styles;

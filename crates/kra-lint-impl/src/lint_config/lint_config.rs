@@ -32,6 +32,7 @@ pub struct LintConfig {
     document_structure:       Option<lint_pass::lint_pass_document_structure      ::LintPassDocumentStructure     >,
     file_layers:              Option<lint_pass::lint_pass_file_layers             ::LintPassFileLayers            >,
     file_name:                Option<lint_pass::lint_pass_file_name               ::LintPassFileName              >,
+    file_permissions:         Option<lint_pass::lint_pass_file_permissions        ::LintPassFilePermissions       >,
     filters:                  Option<lint_pass::lint_pass_filters                 ::LintPassFilters               >,
     hidden_surface:           Option<lint_pass::lint_pass_hidden_surface          ::LintPassHiddenSurface         >,
     layer_styles:             Option<lint_pass::lint_pass_layer_styles            ::LintPassLayerStyles           >,
@@ -67,6 +68,7 @@ impl LintPass for LintConfig {
         lint_pass!(document_structure);
         lint_pass!(file_layers);
         lint_pass!(file_name);
+        lint_pass!(file_permissions);
         lint_pass!(filters);
         lint_pass!(hidden_surface);
         lint_pass!(layer_styles);

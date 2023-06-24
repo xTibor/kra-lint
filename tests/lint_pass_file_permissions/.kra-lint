@@ -1,0 +1,2 @@
+[file_permissions]
+unix_permissions = { regex = '^(r[w-]-){3}$' }
