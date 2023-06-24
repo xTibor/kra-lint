@@ -1,7 +1,8 @@
+use std::os::unix::fs::MetadataExt;
+
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use std_ext::MetadataExt;
 
 use crate::lint_config_fields::StringMatchExpression;
 use crate::lint_output::lint_metadata_macros::{meta_expected, meta_found};
@@ -18,7 +19,7 @@ impl LintPass for LintPassFilePermissions {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1 - TODO: Unix only
         {
-            let kra_file_permissions = kra_archive.zip_path.metadata()?.mode_symbolic();
+            let kra_file_permissions = unix_mode::to_string(kra_archive.zip_path.metadata()?.mode());
 
             if !self.unix_permissions.matches(&kra_file_permissions) {
                 #[rustfmt::skip]
