@@ -1,4 +1,7 @@
 sub_pass_01.kra: Incorrect document size
                  | Expected: "1584×884px/144dpi (rotatable), 1740×972px/158dpi (rotatable), 1896×1060px/172dpi (rotatable), 2052×1148px/186dpi (rotatable), 2208×1236px/200dpi (rotatable), [128, 256, 512]×[128, 256, 512]px/(any)dpi", Found: "300×200px/300dpi"
 
-kra-lint: One issue found
+sub_pass_02.kra: Inconsistent horizontal and vertical document resolution
+                 | Horizontal: 200dpi, Vertical: 300dpi
+
+kra-lint: 2 issues found

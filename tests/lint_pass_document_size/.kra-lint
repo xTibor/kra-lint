@@ -8,5 +8,3 @@ document_sizes = [
 
     { width = [128, 256, 512], height = [128, 256, 512] },
 ]
-
-# TODO: sub_pass_02.kra
