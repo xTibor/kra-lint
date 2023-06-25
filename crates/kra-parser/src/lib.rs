@@ -5,3 +5,4 @@ pub mod kra_filterconfig;
 pub mod kra_filterparams;
 pub mod kra_maindoc;
 pub mod kra_utils;
+pub mod kra_xml_fields;

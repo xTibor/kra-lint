@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 use strong_xml::XmlRead;
 use strum::{Display, EnumString};
 
+use crate::kra_xml_fields::{KraXmlTimeRange, KraXmlValue};
+
 #[derive(Debug, XmlRead)]
 #[xml(tag = "DOC")]
 pub struct KraMainDoc {
@@ -172,14 +174,13 @@ pub struct KraMainDocLayer {
 #[xml(tag = "animation")]
 pub struct KraMainDocAnimation {
     #[xml(child = "framerate")]
-    pub framerate: KraMainDocAnimationFramerate,
-}
+    pub framerate: KraXmlValue<usize>,
 
-#[derive(Debug, XmlRead)]
-#[xml(tag = "framerate")]
-pub struct KraMainDocAnimationFramerate {
-    #[xml(attr = "value")]
-    pub value: usize,
+    #[xml(child = "range")]
+    pub range: KraXmlTimeRange<usize>,
+
+    #[xml(child = "currentTime")]
+    pub current_time: KraXmlValue<usize>,
 }
 
 #[rustfmt::skip]
