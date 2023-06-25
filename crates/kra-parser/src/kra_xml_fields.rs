@@ -18,6 +18,12 @@ pub struct KraXmlTimeRange<T> {
     pub to: T,
 }
 
+#[derive(Debug)]
+pub struct KraXmlPoint<T> {
+    pub x: T,
+    pub y: T,
+}
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 struct ParsedXmlTag {
@@ -74,7 +80,7 @@ where
                 value: xml_tag.attribute::<T>("value")?,
             })
         } else {
-            Err(strong_xml::XmlError::UnexpectedEof)
+            Err(XmlError::UnexpectedEof)
         }
     }
 }
@@ -94,7 +100,27 @@ where
                 to: xml_tag.attribute::<T>("to")?,
             })
         } else {
-            Err(strong_xml::XmlError::UnexpectedEof)
+            Err(XmlError::UnexpectedEof)
+        }
+    }
+}
+
+#[rustfmt::skip]
+impl<T> XmlRead<'_> for KraXmlPoint<T>
+where
+    T: FromStr,
+    <T as FromStr>::Err: Debug + Error + Sync + Send + 'static,
+{
+    fn from_reader(reader: &mut XmlReader<'_>) -> XmlResult<Self> {
+        let xml_tag = ParsedXmlTag::from_reader(reader)?;
+
+        if xml_tag.attribute::<String>("type")? == "pointf" {
+            Ok(KraXmlPoint {
+                x: xml_tag.attribute::<T>("x")?,
+                y: xml_tag.attribute::<T>("y")?,
+            })
+        } else {
+            Err(XmlError::UnexpectedEof)
         }
     }
 }
