@@ -1,4 +1,4 @@
-sub_pass_01.kra: Incorrect file permissions
+sub_pass_01.kra: Incorrect UNIX file permissions
                  | Expected: "regex(\"^-(r[w-]-){3}$\")", Found: "-rwxrwxr-x"
 
 kra-lint: One issue found
