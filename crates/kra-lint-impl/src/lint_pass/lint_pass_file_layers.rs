@@ -57,16 +57,19 @@ impl LintPass for LintPassFileLayers {
                 for layer in kra_archive.all_layers_by_type(KraLayerType::FileLayer) {
                     if let Some(source) = layer.source.as_ref() {
                         // File layers store relative paths, path traversal is intentional here.
-                        let source_path =
-                            kra_archive.zip_path.parent().expect("Failed to get parent directory").join(source);
+                        let resolved_source_path = kra_archive
+                            .zip_path
+                            .parent()
+                            .expect("Failed to get document parent directory")
+                            .join(source);
 
-                        if !source_path.is_file() {
+                        if !resolved_source_path.is_file() {
                             #[rustfmt::skip]
                             lint_messages.push(
                                 "Missing file layer source image",
                                 &[
                                     meta_layer!(layer),
-                                    meta_comment!(format!("Source: \"{}\"", source)),
+                                    meta_comment!(format!("Source: \"{}\"", resolved_source_path)),
                                 ],
                             );
                         }
