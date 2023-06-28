@@ -1,0 +1,19 @@
+sub_pass_01.kra: Incorrect audio track
+                 | Required audio track not present
+
+sub_pass_02_01.kra: Incorrect audio track format
+                    | Expected: "[\"mp3\", \"flac\"]", Found: "ogg"
+
+sub_pass_02_02.kra: Audio track file has no file extension
+                    | Expected: "[\"mp3\", \"flac\"]"
+
+sub_pass_03.kra: Missing audio track file
+                 | Source: "does-not-exist.mp3"
+
+sub_pass_04_01.kra: Non default audio track volume
+                    | Muted audio track
+
+sub_pass_04_02.kra: Non default audio track volume
+                    | Expected: "50%", Found: "10%"
+
+kra-lint: 6 issues found

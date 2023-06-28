@@ -62,6 +62,9 @@ pub struct KraMainDocImage {
 
     #[xml(child = "animation")]
     pub animation: Option<KraMainDocAnimation>,
+
+    #[xml(child = "audio")]
+    pub audio: Option<KraMainDocAudio>,
 }
 
 #[rustfmt::skip]
@@ -181,6 +184,19 @@ pub struct KraMainDocAnimation {
 
     #[xml(child = "currentTime")]
     pub current_time: KraXmlValue<usize>,
+}
+
+#[derive(Debug, XmlRead)]
+#[xml(tag = "audio")]
+pub struct KraMainDocAudio {
+    #[xml(child = "masterChannelPath")]
+    pub master_channel_path: KraXmlValue<String>,
+
+    #[xml(child = "audioMuted")]
+    pub audio_muted: KraXmlValue<usize>,
+
+    #[xml(child = "audioVolume")]
+    pub audio_volume: KraXmlValue<f64>,
 }
 
 #[rustfmt::skip]

@@ -1,0 +1,5 @@
+[audio]
+audio_track_present = true
+file_formats = ["mp3", "flac"]
+check_missing_files = true
+default_volume = true
