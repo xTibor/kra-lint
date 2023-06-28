@@ -3,7 +3,7 @@ use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::{
+use kra_parser::kra_main_doc::{
     KraColorLabel, KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMainDocMaskContainer,
     KraMaskType,
 };

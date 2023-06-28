@@ -6,8 +6,8 @@ use ziparchive_ext::ZipArchiveExt;
 
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
-use crate::kra_filterparams::KraFilterParamsContainer;
-use crate::kra_maindoc::{
+use crate::kra_filter_params::KraFilterParamsContainer;
+use crate::kra_main_doc::{
     KraLayerType, KraMainDocImage, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType,
 };
 

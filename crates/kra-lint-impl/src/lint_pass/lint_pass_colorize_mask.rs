@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::KraMaskType;
+use kra_parser::kra_main_doc::KraMaskType;
 
 use crate::lint_output::lint_metadata_macros::{meta_layer, meta_mask};
 use crate::lint_output::LintMessages;

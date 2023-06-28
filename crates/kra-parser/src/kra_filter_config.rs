@@ -1,5 +1,5 @@
 use crate::kra_error::KraError;
-use crate::kra_filterparams::KraFilterParamsContainer;
+use crate::kra_filter_params::KraFilterParamsContainer;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

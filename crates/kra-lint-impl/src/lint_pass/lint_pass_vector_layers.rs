@@ -3,7 +3,7 @@ use svg::node::element::tag::Type;
 use svg::parser::Event;
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::KraLayerType;
+use kra_parser::kra_main_doc::KraLayerType;
 
 use crate::lint_config_fields::StringMatchExpression;
 use crate::lint_output::lint_metadata_macros::{meta_bug, meta_expected, meta_found, meta_layer};

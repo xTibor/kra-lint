@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
 use kra_parser::kra_error::KraError;
-use kra_parser::kra_maindoc::KraLayerType;
+use kra_parser::kra_main_doc::KraLayerType;
 
 use ziparchive_ext::ZipArchiveExt;
 

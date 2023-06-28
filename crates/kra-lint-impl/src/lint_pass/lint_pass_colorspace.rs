@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
-use kra_parser::kra_maindoc::{KraLayerType, KraMaskType};
+use kra_parser::kra_main_doc::{KraLayerType, KraMaskType};
 
 use sha2::{Digest, Sha256};
 

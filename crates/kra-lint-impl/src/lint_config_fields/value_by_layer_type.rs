@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use kra_parser::kra_maindoc::{KraLayerType, KraMainDocLayer};
+use kra_parser::kra_main_doc::{KraLayerType, KraMainDocLayer};
 
 #[rustfmt::skip]
 #[derive(Debug, Deserialize, Serialize)]
