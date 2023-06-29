@@ -51,24 +51,15 @@ impl LintPass for LintPassAudioTrack {
                 //   Cannot save audio track changes by themselves without other document changes.
                 if let Some(kra_audio_track) = kra_archive.main_doc.image.audio.as_ref() {
                     let kra_audio_path: &str = kra_audio_track.master_channel_path.value.as_ref();
+                    let kra_audio_ext = Utf8Path::new(&kra_audio_path).extension().unwrap_or("");
 
-                    if let Some(source_ext) = Utf8Path::new(&kra_audio_path).extension() {
-                        if !file_formats.matches(source_ext) {
-                            #[rustfmt::skip]
-                            lint_messages.push(
-                                "Incorrect audio track format",
-                                &[
-                                    meta_expected!(file_formats),
-                                    meta_found!(source_ext),
-                                ],
-                            );
-                        }
-                    } else {
+                    if !file_formats.matches(kra_audio_ext) {
                         #[rustfmt::skip]
                         lint_messages.push(
-                            "Audio track file has no file extension",
+                            "Incorrect audio track format",
                             &[
                                 meta_expected!(file_formats),
+                                meta_found!(kra_audio_ext),
                             ],
                         );
                     }

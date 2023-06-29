@@ -24,25 +24,16 @@ impl LintPass for LintPassFileLayers {
             if let Some(file_formats) = self.file_formats.as_ref() {
                 for layer in kra_archive.all_layers_by_type(KraLayerType::FileLayer) {
                     if let Some(source) = layer.source.as_ref() {
-                        if let Some(source_ext) = Utf8Path::new(source).extension() {
-                            if !file_formats.matches(source_ext) {
-                                #[rustfmt::skip]
-                                lint_messages.push(
-                                    "Incorrect file layer source image format",
-                                    &[
-                                        meta_layer!(layer),
-                                        meta_expected!(file_formats),
-                                        meta_found!(source_ext),
-                                    ],
-                                );
-                            }
-                        } else {
+                        let source_ext = Utf8Path::new(source).extension().unwrap_or("");
+
+                        if !file_formats.matches(source_ext) {
                             #[rustfmt::skip]
                             lint_messages.push(
-                                "File layer source image has no file extension",
+                                "Incorrect file layer source image format",
                                 &[
                                     meta_layer!(layer),
                                     meta_expected!(file_formats),
+                                    meta_found!(source_ext),
                                 ],
                             );
                         }

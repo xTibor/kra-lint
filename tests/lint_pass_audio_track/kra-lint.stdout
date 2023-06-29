@@ -4,8 +4,8 @@ sub_pass_01.kra: Incorrect audio track
 sub_pass_02_01.kra: Incorrect audio track format
                     | Expected: "[\"mp3\", \"flac\"]", Found: "ogg"
 
-sub_pass_02_02.kra: Audio track file has no file extension
-                    | Expected: "[\"mp3\", \"flac\"]"
+sub_pass_02_02.kra: Incorrect audio track format
+                    | Expected: "[\"mp3\", \"flac\"]", Found: ""
 
 sub_pass_03.kra: Missing audio track file
                  | Source: "does-not-exist.mp3"

@@ -1,8 +1,8 @@
 sub_pass_01_01.kra: Incorrect file layer source image format
                     | Layer: "File Layer 1", Expected: "[\"kra\", \"tga\"]", Found: "png"
 
-sub_pass_01_02.kra: File layer source image has no file extension
-                    | Layer: "File Layer 1", Expected: "[\"kra\", \"tga\"]"
+sub_pass_01_02.kra: Incorrect file layer source image format
+                    | Layer: "File Layer 1", Expected: "[\"kra\", \"tga\"]", Found: ""
 
 sub_pass_02.kra: Missing file layer source image
                  | Layer: "File Layer 1", Source: "does-not-exist.tga"
