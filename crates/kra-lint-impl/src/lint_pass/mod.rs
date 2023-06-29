@@ -6,7 +6,7 @@ pub(crate) use lint_pass::{LintPass, LintPassResult};
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 pub(crate) mod lint_pass_animation;
-pub(crate) mod lint_pass_audio;
+pub(crate) mod lint_pass_audio_track;
 pub(crate) mod lint_pass_colorize_mask;
 pub(crate) mod lint_pass_colorspace;
 pub(crate) mod lint_pass_copyright;

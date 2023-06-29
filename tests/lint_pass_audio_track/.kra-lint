@@ -1,4 +1,4 @@
-[audio]
+[audio_track]
 audio_track_present = true
 file_formats = ["mp3", "flac"]
 check_missing_files = true
