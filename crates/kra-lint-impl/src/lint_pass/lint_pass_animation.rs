@@ -15,7 +15,7 @@ pub(crate) struct LintPassAnimation {
     animated_layers: Option<ValueByLayerType<bool>>,
     animated_masks: Option<ValueByMaskType<bool>>,
     framerate: Option<NumberMatchExpression<usize>>,
-    frame_frequency: Option<NumberMatchExpression<usize>>,
+    frame_delta: Option<NumberMatchExpression<usize>>,
     force_layer_pin: Option<ValueByLayerType<bool>>,
     force_mask_pin: Option<ValueByMaskType<bool>>,
     warn_onion_skin: Option<bool>,
@@ -154,26 +154,26 @@ impl LintPass for LintPassAnimation {
 
         // Sub-pass #7
         {
-            if let Some(frame_frequency) = self.frame_frequency.as_ref() {
+            if let Some(frame_delta) = self.frame_delta.as_ref() {
                 for layer in kra_archive.all_layers_by_type(KraLayerType::PaintLayer) {
                     if let Some(kra_keyframes) = layer.keyframes(kra_archive)? {
-                        for channel in kra_keyframes {
-                            if channel.name == "content" {
-                                let keyframe_times =
-                                    channel.keyframes.iter().map(|keyframe| keyframe.time).collect::<Vec<_>>();
+                        for kra_channel in kra_keyframes {
+                            if kra_channel.name == "content" {
+                                let kra_keyframe_times =
+                                    kra_channel.keyframes.iter().map(|keyframe| keyframe.time).collect::<Vec<_>>();
 
-                                let keyframe_deltas =
-                                    keyframe_times.iter().tuple_windows().map(|(a, b)| b - a).collect::<Vec<_>>();
+                                let kra_keyframe_deltas =
+                                    kra_keyframe_times.iter().tuple_windows().map(|(a, b)| b - a).collect::<Vec<_>>();
 
-                                for keyframe_delta in keyframe_deltas {
-                                    if !frame_frequency.matches(&keyframe_delta) {
+                                for kra_keyframe_delta in kra_keyframe_deltas {
+                                    if !frame_delta.matches(&kra_keyframe_delta) {
                                         #[rustfmt::skip]
                                         lint_messages.push(
-                                            "Incorrect paint layer frame frequency",
+                                            "Incorrect paint layer frame delta",
                                             &[
                                                 meta_layer!(layer),
-                                                meta_expected!(frame_frequency),
-                                                meta_found!(keyframe_delta),
+                                                meta_expected!(frame_delta),
+                                                meta_found!(kra_keyframe_delta),
                                             ],
                                         );
                                     }
