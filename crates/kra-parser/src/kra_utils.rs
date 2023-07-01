@@ -7,6 +7,7 @@ use ziparchive_ext::ZipArchiveExt;
 use crate::kra_archive::KraArchive;
 use crate::kra_error::KraError;
 use crate::kra_filter_params::KraFilterParamsContainer;
+use crate::kra_keyframes::KraKeyframesDocument;
 use crate::kra_main_doc::{
     KraLayerType, KraMainDocImage, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMaskType,
 };
@@ -127,6 +128,25 @@ impl KraMainDocLayer {
         let filter_params = self.filter_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
         T::try_from(filter_params)
     }
+
+    pub fn keyframes(&self, kra_archive: &KraArchive) -> Result<Option<KraKeyframesDocument>, KraError> {
+        if let Some(keyframes_xml_filename) = self.keyframes.as_ref() {
+            let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+            let keyframes_xml_path = format!(
+                "{document_name:}/layers/{keyframes_xml_filename:}",
+                document_name = kra_archive.main_doc.image.name,
+            );
+
+            Ok(zip_archive
+                .read_to_string(&keyframes_xml_path)?
+                .as_deref()
+                .map(KraKeyframesDocument::from_str)
+                .transpose()?)
+        } else {
+            Ok(None)
+        }
+    }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -168,6 +188,25 @@ impl KraMainDocMask {
     {
         let filter_params = self.filter_params(kra_archive)?.ok_or(KraError::FilterConfigNotFound)?;
         T::try_from(filter_params)
+    }
+
+    pub fn keyframes(&self, kra_archive: &KraArchive) -> Result<Option<KraKeyframesDocument>, KraError> {
+        if let Some(keyframes_xml_filename) = self.keyframes.as_ref() {
+            let mut zip_archive = kra_archive.zip_archive.borrow_mut();
+
+            let keyframes_xml_path = format!(
+                "{document_name:}/layers/{keyframes_xml_filename:}",
+                document_name = kra_archive.main_doc.image.name,
+            );
+
+            Ok(zip_archive
+                .read_to_string(&keyframes_xml_path)?
+                .as_deref()
+                .map(KraKeyframesDocument::from_str)
+                .transpose()?)
+        } else {
+            Ok(None)
+        }
     }
 }
 

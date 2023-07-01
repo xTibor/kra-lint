@@ -1,6 +1,8 @@
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_main_doc::KraLayerType;
 
 use crate::lint_config_fields::{NumberMatchExpression, ValueByLayerType, ValueByMaskType};
 use crate::lint_output::lint_metadata_macros::{meta_expected, meta_found, meta_layer, meta_mask};
@@ -13,6 +15,7 @@ pub(crate) struct LintPassAnimation {
     animated_layers: Option<ValueByLayerType<bool>>,
     animated_masks: Option<ValueByMaskType<bool>>,
     framerate: Option<NumberMatchExpression<usize>>,
+    frame_frequency: Option<NumberMatchExpression<usize>>,
     force_layer_pin: Option<ValueByLayerType<bool>>,
     force_mask_pin: Option<ValueByMaskType<bool>>,
     warn_onion_skin: Option<bool>,
@@ -145,6 +148,39 @@ impl LintPass for LintPassAnimation {
                             meta_layer!(layer),
                         ],
                     );
+                }
+            }
+        }
+
+        // Sub-pass #7
+        {
+            if let Some(frame_frequency) = self.frame_frequency.as_ref() {
+                for layer in kra_archive.all_layers_by_type(KraLayerType::PaintLayer) {
+                    if let Some(kra_keyframes) = layer.keyframes(kra_archive)? {
+                        for channel in kra_keyframes {
+                            if channel.name == "content" {
+                                let keyframe_times =
+                                    channel.keyframes.iter().map(|keyframe| keyframe.time).collect::<Vec<_>>();
+
+                                let keyframe_deltas =
+                                    keyframe_times.iter().tuple_windows().map(|(a, b)| b - a).collect::<Vec<_>>();
+
+                                for keyframe_delta in keyframe_deltas {
+                                    if !frame_frequency.matches(&keyframe_delta) {
+                                        #[rustfmt::skip]
+                                        lint_messages.push(
+                                            "Incorrect paint layer frame frequency",
+                                            &[
+                                                meta_layer!(layer),
+                                                meta_expected!(frame_frequency),
+                                                meta_found!(keyframe_delta),
+                                            ],
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

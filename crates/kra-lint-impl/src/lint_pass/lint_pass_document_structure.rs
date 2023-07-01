@@ -3,9 +3,9 @@ use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use kra_parser::kra_archive::KraArchive;
+use kra_parser::kra_color_label::KraColorLabel;
 use kra_parser::kra_main_doc::{
-    KraColorLabel, KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMainDocMaskContainer,
-    KraMaskType,
+    KraLayerType, KraMainDocLayer, KraMainDocLayerContainer, KraMainDocMask, KraMainDocMaskContainer, KraMaskType,
 };
 use std_ext::OptionExt;
 

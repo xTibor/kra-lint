@@ -114,7 +114,7 @@ where
     fn from_reader(reader: &mut XmlReader<'_>) -> XmlResult<Self> {
         let xml_tag = ParsedXmlTag::from_reader(reader)?;
 
-        if xml_tag.attribute::<String>("type")? == "pointf" {
+        if ["point", "pointf"].contains(&xml_tag.attribute::<String>("type")?.as_str()) {
             Ok(KraXmlPoint {
                 x: xml_tag.attribute::<T>("x")?,
                 y: xml_tag.attribute::<T>("y")?,
