@@ -48,9 +48,7 @@ where
 
 impl<T> NumberMatchExpression<T>
 where
-    T: PartialEq<T> + PartialOrd<T> + Display + Default,
-    for<'a> &'a T: Rem<&'a T>,
-    for<'a> <&'a T as Rem<&'a T>>::Output: PartialEq<T>,
+    T: PartialEq<T> + PartialOrd<T> + Display + Default + Copy + Rem<Output = T>,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
@@ -74,7 +72,7 @@ where
                 (input >= value_low) && (input <= value_high)
             }
             NumberMatchExpression::MultipliesOf { value } => {
-                (input % value) == T::default()
+                (*input % *value) == T::default()
             }
             NumberMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
