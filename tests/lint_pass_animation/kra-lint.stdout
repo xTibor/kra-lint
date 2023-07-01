@@ -26,7 +26,7 @@ sub_pass_06.kra: Prohibited use of animated layer
                  | Layer: "Paint Layer 1"
 
 sub_pass_07_01.kra: Incorrect paint layer frame frequency
-                    | Layer: "Paint Layer 1", Expected: "2", Found: "1"
+                    | Layer: "Paint Layer 1", Expected: "multiplies_of(2)", Found: "1"
 
 sub_pass_07_01.kra: Prohibited use of animated layer
                     | Layer: "Paint Layer 1"
@@ -35,7 +35,7 @@ sub_pass_07_02.kra: Prohibited use of animated layer
                     | Layer: "Paint Layer 1"
 
 sub_pass_07_03.kra: Incorrect paint layer frame frequency
-                    | Layer: "Paint Layer 1", Expected: "2", Found: "3"
+                    | Layer: "Paint Layer 1", Expected: "multiplies_of(2)", Found: "3"
 
 sub_pass_07_03.kra: Prohibited use of animated layer
                     | Layer: "Paint Layer 1"

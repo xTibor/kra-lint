@@ -1,6 +1,6 @@
 [animation]
 framerate = 24
-frame_frequency = 2
+frame_frequency = { multiplies_of = 2 }
 animated_layers = false
 animated_masks = false
 force_layer_pin = true

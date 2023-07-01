@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter, Result};
+use std::ops::Rem;
 
 use serde::{Deserialize, Serialize};
 
@@ -30,6 +31,10 @@ where
         #[serde(rename = "between")]
         value: (T, T),
     },
+    MultipliesOf {
+        #[serde(rename = "multiplies_of")]
+        value: T,
+    },
     BinaryOr(Vec<NumberMatchExpression<T>>),
     BinaryAnd {
         #[serde(rename = "and")]
@@ -43,7 +48,9 @@ where
 
 impl<T> NumberMatchExpression<T>
 where
-    T: PartialEq<T> + PartialOrd<T> + Display,
+    T: PartialEq<T> + PartialOrd<T> + Display + Default,
+    for<'a> &'a T: Rem<&'a T>,
+    for<'a> <&'a T as Rem<&'a T>>::Output: PartialEq<T>,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
@@ -65,6 +72,9 @@ where
             }
             NumberMatchExpression::Between { value: (value_low, value_high) } => {
                 (input >= value_low) && (input <= value_high)
+            }
+            NumberMatchExpression::MultipliesOf { value } => {
+                (input % value) == T::default()
             }
             NumberMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
@@ -103,6 +113,9 @@ where
             }
             NumberMatchExpression::Between { value: (value_low, value_high) } => {
                 write!(f, "between({}, {})", value_low, value_high)
+            }
+            NumberMatchExpression::MultipliesOf { value } => {
+                write!(f, "multiplies_of({})", value)
             }
             NumberMatchExpression::BinaryOr(expressions) => {
                 let param_list =
