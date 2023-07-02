@@ -1,11 +1,11 @@
 [package]
-name = "kra-lint-cli"
-version = "0.1.0"
-authors = ["Nagy Tibor <xnagytibor@protonmail.com>"]
-license = "MIT"
-edition = "2021"
-rust-version = "1.70"
-default-run = "kra-lint"
+name         = "kra-lint-cli"
+default-run  = "kra-lint"
+version      = { workspace = true }
+authors      = { workspace = true }
+license      = { workspace = true }
+edition      = { workspace = true }
+rust-version = { workspace = true }
 
 [[bin]]
 name = "kra-lint"
