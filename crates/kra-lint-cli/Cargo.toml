@@ -24,4 +24,4 @@ kra-lint-impl = { workspace = true }
 camino = { workspace = true }
 
 # private dependencies
-clap = { version = "4.2.4", features = ["std", "help", "usage", "derive", "env"], default-features = false }
+clap = { version = "4.3.10", features = ["std", "help", "usage", "derive", "env"], default-features = false }
