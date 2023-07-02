@@ -7,8 +7,9 @@ edition = "2021"
 rust-version = "1.70"
 
 [dependencies]
-camino-ext = { path = "../../crates-ext/camino-ext/" }
-ziparchive-ext = { path = "../../crates-ext/ziparchive-ext/" }
+# kra-lint private extension crates
+camino-ext     = { workspace = true }
+ziparchive-ext = { workspace = true }
 
 camino = { version = "1.1.4", features = ["serde1"] }
 derive_more = { version = "0.99.17", default-features = false, features = ["into_iterator", "display", "error", "from"] }

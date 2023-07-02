@@ -16,9 +16,9 @@ name = "kra-lint-convert"
 path = "src/kra-lint-convert.rs"
 
 [dependencies]
-kra-parser = { path = "../kra-parser/" }
-kra-lint-impl = { path = "../kra-lint-impl/" }
+# kra-lint library crates
+kra-parser    = { workspace = true }
+kra-lint-impl = { workspace = true }
 
 camino = { version = "1.1.4", features = ["serde1"] }
 clap = { version = "4.2.4", default-features = false, features = ["std", "help", "usage", "derive", "env"] }
-

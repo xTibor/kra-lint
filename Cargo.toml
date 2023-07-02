@@ -1,12 +1,26 @@
 [workspace]
 resolver = "2"
 members = [
+    # kra-lint binary crates
     "crates/kra-lint-cli",
-    "crates/kra-lint-impl",
     "crates/kra-lint-test",
+
+    # kra-lint library crates
+    "crates/kra-lint-impl",
     "crates/kra-parser",
 
+    # kra-lint private extension crates
     "crates-ext/camino-ext",
     "crates-ext/std-ext",
     "crates-ext/ziparchive-ext",
 ]
+
+[workspace.dependencies]
+# kra-lint library crates
+kra-lint-impl  = { path = "crates/kra-lint-impl"      }
+kra-parser     = { path = "crates/kra-parser"         }
+
+# kra-lint private extension crates
+camino-ext     = { path = "crates-ext/camino-ext"     }
+std-ext        = { path = "crates-ext/std-ext"        }
+ziparchive-ext = { path = "crates-ext/ziparchive-ext" }

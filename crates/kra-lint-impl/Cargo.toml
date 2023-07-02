@@ -7,11 +7,13 @@ edition = "2021"
 rust-version = "1.70"
 
 [dependencies]
-kra-parser = { path = "../kra-parser/" }
+# kra-lint library crates
+kra-parser     = { workspace = true }
 
-camino-ext = { path = "../../crates-ext/camino-ext/" }
-std-ext = { path = "../../crates-ext/std-ext/" }
-ziparchive-ext = { path = "../../crates-ext/ziparchive-ext/" }
+# kra-lint private extension crates
+camino-ext     = { workspace = true }
+std-ext        = { workspace = true }
+ziparchive-ext = { workspace = true }
 
 camino = { version = "1.1.4", features = ["serde1"] }
 derive_more = { version = "0.99.17", default-features = false, features = ["into_iterator", "display", "error", "from"] }
