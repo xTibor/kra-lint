@@ -304,6 +304,7 @@ dependencies = [
  "deser-hjson",
  "itertools",
  "kra-parser",
+ "num-traits",
  "regex",
  "ron",
  "serde",

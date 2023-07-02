@@ -24,6 +24,7 @@ strum       = { workspace = true }
 zip         = { workspace = true }
 
 # private dependencies - general
+num-traits    = { version = "0.2.15" }
 regex         = { version = "1.8.4"  }
 svg           = { version = "0.13.1" }
 unicode-width = { version = "0.1.10" }

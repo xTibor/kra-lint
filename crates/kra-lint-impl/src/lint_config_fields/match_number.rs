@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter, Result};
-use std::ops::Rem;
+use std::ops::{Div, Rem};
 
+use num_traits::{One, Zero};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -35,6 +36,10 @@ where
         #[serde(rename = "multiplies_of")]
         value: T,
     },
+    PowersOf {
+        #[serde(rename = "powers_of")]
+        value: T,
+    },
     BinaryOr(Vec<NumberMatchExpression<T>>),
     BinaryAnd {
         #[serde(rename = "and")]
@@ -48,7 +53,7 @@ where
 
 impl<T> NumberMatchExpression<T>
 where
-    T: PartialEq<T> + PartialOrd<T> + Display + Default + Copy + Rem<Output = T>,
+    T: PartialEq<T> + PartialOrd<T> + Display + Default + Copy + Rem<Output = T> + Div<Output = T> + Zero + One,
 {
     #[rustfmt::skip]
     pub(crate) fn matches(&self, input: &T) -> bool {
@@ -72,7 +77,16 @@ where
                 (input >= value_low) && (input <= value_high)
             }
             NumberMatchExpression::MultipliesOf { value } => {
-                (*input % *value) == T::default()
+                (*input % *value) == T::zero()
+            }
+            NumberMatchExpression::PowersOf { value } => {
+                let mut input = *input;
+
+                while input % *value == T::zero() {
+                    input = input / *value;
+                }
+
+                input == T::one()
             }
             NumberMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
@@ -114,6 +128,9 @@ where
             }
             NumberMatchExpression::MultipliesOf { value } => {
                 write!(f, "multiplies_of({})", value)
+            }
+            NumberMatchExpression::PowersOf { value } => {
+                write!(f, "powers_of({})", value)
             }
             NumberMatchExpression::BinaryOr(expressions) => {
                 let param_list =
