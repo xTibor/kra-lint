@@ -20,5 +20,8 @@ path = "src/kra-lint-convert.rs"
 kra-parser    = { workspace = true }
 kra-lint-impl = { workspace = true }
 
-camino = { version = "1.1.4", features = ["serde1"] }
-clap = { version = "4.2.4", default-features = false, features = ["std", "help", "usage", "derive", "env"] }
+# common workspace dependencies
+camino = { workspace = true }
+
+# private dependencies
+clap = { version = "4.2.4", features = ["std", "help", "usage", "derive", "env"], default-features = false }
