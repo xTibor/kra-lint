@@ -15,24 +15,24 @@ use crate::lint_pass::{LintPass, LintPassResult};
 struct LintPassDocumentSizeEntry {
     width: Option<NumberMatchExpression<usize>>,
     height: Option<NumberMatchExpression<usize>>,
+    aspect_ratio: Option<NumberMatchExpression<f64>>,
     resolution: Option<NumberMatchExpression<f64>>,
     rotation: Option<bool>,
 }
 
 impl LintPassDocumentSizeEntry {
-    fn matches(&self, kra_document_width: usize, kra_document_height: usize, kra_document_resolution: f64) -> bool {
-        let normal_orientation_matches = self.width.as_ref().is_none_or(|m| m.matches(&kra_document_width))
-            && self.height.as_ref().is_none_or(|m| m.matches(&kra_document_height));
-
-        let rotated_orientation_matches = self.width.as_ref().is_none_or(|m| m.matches(&kra_document_height))
-            && self.height.as_ref().is_none_or(|m| m.matches(&kra_document_width));
-
-        let resolution_matches = self.resolution.as_ref().is_none_or(|m| m.matches(&kra_document_resolution));
+    fn matches(&self, kra_width: usize, kra_height: usize, kra_resolution: f64) -> bool {
+        let matches_inner = |kra_width: usize, kra_height: usize, kra_resolution: f64| -> bool {
+            self.width.as_ref().is_none_or(|m| m.matches(&kra_width))
+                && self.height.as_ref().is_none_or(|m| m.matches(&kra_height))
+                && self.aspect_ratio.as_ref().is_none_or(|m| m.matches(&(kra_width as f64 / kra_height as f64)))
+                && self.resolution.as_ref().is_none_or(|m| m.matches(&kra_resolution))
+        };
 
         if self.rotation == Some(true) {
-            (normal_orientation_matches || rotated_orientation_matches) && resolution_matches
+            matches_inner(kra_width, kra_height, kra_resolution) || matches_inner(kra_height, kra_width, kra_resolution)
         } else {
-            normal_orientation_matches && resolution_matches
+            matches_inner(kra_width, kra_height, kra_resolution)
         }
     }
 
@@ -40,11 +40,21 @@ impl LintPassDocumentSizeEntry {
         fn format_field<T: std::fmt::Display>(field: &Option<NumberMatchExpression<T>>) -> String {
             field.as_ref().map(NumberMatchExpression::to_string).unwrap_or("(any)".to_owned())
         }
+
+        fn format_aspect_ratio(aspect_ratio: &Option<NumberMatchExpression<f64>>) -> String {
+            if let Some(aspect_ratio) = aspect_ratio {
+                format!(" (aspect ratio: {})", aspect_ratio)
+            } else {
+                "".to_owned()
+            }
+        }
+
         format!(
-            "{}×{}px/{}dpi{}",
+            "{}×{}px/{}dpi{}{}",
             format_field(&self.width),
             format_field(&self.height),
             format_field(&self.resolution),
+            format_aspect_ratio(&self.aspect_ratio),
             if self.rotation == Some(true) { " (rotatable)" } else { "" }
         )
     }
@@ -62,14 +72,12 @@ impl LintPass for LintPassDocumentSize {
     fn lint(&self, kra_archive: &KraArchive, lint_messages: &mut LintMessages) -> LintPassResult {
         // Sub-pass #1
         {
-            let kra_document_width = kra_archive.main_doc.image.width;
-            let kra_document_height = kra_archive.main_doc.image.height;
-            let kra_document_resolution = kra_archive.main_doc.image.x_res;
+            let kra_width = kra_archive.main_doc.image.width;
+            let kra_height = kra_archive.main_doc.image.height;
+            let kra_resolution = kra_archive.main_doc.image.x_res;
 
-            let document_size_matches = self
-                .document_sizes
-                .iter()
-                .any(|size_entry| size_entry.matches(kra_document_width, kra_document_height, kra_document_resolution));
+            let document_size_matches =
+                self.document_sizes.iter().any(|size_entry| size_entry.matches(kra_width, kra_height, kra_resolution));
 
             if !document_size_matches {
                 let document_size_list = self
@@ -84,7 +92,7 @@ impl LintPass for LintPassDocumentSize {
                     "Incorrect document size",
                     &[
                         meta_expected!(document_size_list),
-                        meta_found!(format!("{}×{}px/{}dpi", kra_document_width, kra_document_height, kra_document_resolution)),
+                        meta_found!(format!("{}×{}px/{}dpi", kra_width, kra_height, kra_resolution)),
                     ],
                 );
             }
