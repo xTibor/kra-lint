@@ -7,4 +7,5 @@ document_sizes = [
     { width = 2208, height = 1236, resolution = 200.0, rotation = true },
 
     { width = [128, 256, 512], height = [128, 256, 512] },
+    { width = [640, 800], aspect_ratio = [{ ratio = [4, 3] }, { ratio = [16, 9] }] },
 ]

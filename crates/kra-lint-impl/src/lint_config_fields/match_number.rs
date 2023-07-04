@@ -40,6 +40,10 @@ where
         #[serde(rename = "powers_of")]
         value: T,
     },
+    Ratio {
+        #[serde(rename = "ratio")]
+        value: (T, T),
+    },
     BinaryOr(Vec<NumberMatchExpression<T>>),
     BinaryAnd {
         #[serde(rename = "and")]
@@ -88,6 +92,9 @@ where
 
                 input == T::one()
             }
+            NumberMatchExpression::Ratio { value: (antecedent, consequent) } => {
+                *input == (*antecedent / *consequent)
+            }
             NumberMatchExpression::BinaryOr(expressions) => {
                 expressions.iter().any(|expression| expression.matches(input))
             }
@@ -131,6 +138,9 @@ where
             }
             NumberMatchExpression::PowersOf { value } => {
                 write!(f, "powers_of({})", value)
+            }
+            NumberMatchExpression::Ratio { value: (antecedent, consequent) } => {
+                write!(f, "ratio({}, {})", antecedent, consequent)
             }
             NumberMatchExpression::BinaryOr(expressions) => {
                 let param_list =
