@@ -41,3 +41,4 @@ deser-hjson  = { version = "1.2.0"  }
 ron          = { version = "0.8.0"  }
 serde_yaml   = { version = "0.9.22" }
 serde-pickle = { version = "1.1.1"  }
+serde_gura   = { version = "0.1.5"  }

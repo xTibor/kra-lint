@@ -1,0 +1,10 @@
+# Include test file
+
+includes:
+    # Test circular includes
+    paths: [
+        "kra-lint-07.gura",
+        ".kra-lint",
+    ]
+
+prohibit_kseexpr: empty

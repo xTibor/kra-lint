@@ -18,4 +18,7 @@ pub enum LintOutputFormat {
 
     #[strum(serialize = "pickle")]
     Pickle,
+
+    #[strum(serialize = "gura")]
+    Gura,
 }

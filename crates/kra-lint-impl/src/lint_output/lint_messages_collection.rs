@@ -90,6 +90,12 @@ impl LintMessagesCollection {
                 serde_pickle::to_writer(writer, self, pickle_options)
                     .map_err(LintOutputError::FailedToSerializePickleOutput)
             },
+            LintOutputFormat::Gura => {
+                // TODO: serde_gura::to_writer (https://github.com/gura-conf/serde-gura)
+                let tmp_string = serde_gura::to_string(self)
+                    .map_err(LintOutputError::FailedToSerializeGuraOutput)?;
+                Ok(writer.write_all(tmp_string.as_bytes())?)
+            },
         }
     }
 }

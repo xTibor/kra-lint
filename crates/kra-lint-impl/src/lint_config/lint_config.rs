@@ -131,6 +131,11 @@ impl LintConfig {
                 serde_pickle::from_reader(reader, pickle_options)
                     .map_err(|source| LintConfigError::FailedToParsePickleConfig { path: lint_config_path.into(), source })
             }
+            Some("gura" | "ura") => {
+                // TODO: serde_gura::from_reader (https://github.com/gura-conf/serde-gura)
+                serde_gura::from_str(&std::io::read_to_string(reader)?)
+                    .map_err(|source| LintConfigError::FailedToParseGuraConfig { path: lint_config_path.into(), source })
+            }
             Some(extension) => {
                 Err(LintConfigError::UnknownConfigFormat { path: lint_config_path.into(), extension: extension.to_owned() })
             }
@@ -171,6 +176,12 @@ impl LintConfig {
                 serde_pickle::to_writer(&mut writer, self, pickle_options)
                     .map_err(LintConfigError::FailedToSerializePickleConfig)
             }
+            Some("gura" | "ura") => {
+                // TODO: serde_gura::to_writer (https://github.com/gura-conf/serde-gura)
+                let tmp_string = serde_gura::to_string(self)
+                    .map_err(LintConfigError::FailedToSerializeGuraConfig)?;
+                Ok(writer.write_all(tmp_string.as_bytes())?)
+            },
             Some(extension) => {
                 Err(LintConfigError::UnknownConfigFormat { path: lint_config_path.into(), extension: extension.to_owned() })
             }

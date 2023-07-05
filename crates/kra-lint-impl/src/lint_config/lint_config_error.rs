@@ -73,6 +73,12 @@ pub enum LintConfigError {
         source: serde_pickle::Error,
     },
 
+    #[display(fmt = "Failed to parse Gura config file \"{path:}\"")]
+    FailedToParseGuraConfig {
+        path: FormattedPathBuf,
+        source: serde_gura::Error,
+    },
+
     #[display(fmt = "Failed to serialize TOML config")]
     FailedToSerializeTomlConfig(toml::ser::Error),
 
@@ -87,6 +93,9 @@ pub enum LintConfigError {
 
     #[display(fmt = "Failed to serialize Pickle config")]
     FailedToSerializePickleConfig(serde_pickle::Error),
+
+    #[display(fmt = "Failed to serialize Gura config")]
+    FailedToSerializeGuraConfig(serde_gura::Error),
 
     #[from]
     IoError(io::Error),

@@ -6,5 +6,6 @@ paths = [
     "kra-lint-04.ron",
     "kra-lint-05.yaml",
     "kra-lint-06.pickle",
+    "kra-lint-07.gura",
     "test-subfolder/kra-lint.toml",
 ]

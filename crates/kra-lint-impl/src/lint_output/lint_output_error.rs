@@ -20,6 +20,9 @@ pub enum LintOutputError {
     #[display(fmt = "Failed to serialize Pickle output")]
     FailedToSerializePickleOutput(serde_pickle::Error),
 
+    #[display(fmt = "Failed to serialize Gura output")]
+    FailedToSerializeGuraOutput(serde_gura::Error),
+
     #[from]
     IoError(io::Error),
 }
