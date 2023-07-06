@@ -98,29 +98,31 @@ impl LintConfig {
         let reader = File::open(lint_config_path)
             .map_err(|source| LintConfigError::FailedToOpenConfig { path: lint_config_path.into(), source })?;
 
-        match lint_config_path.extension().map(str::to_lowercase).as_deref() {
+        let lint_config_extension = lint_config_path.extension().unwrap_or("toml").to_lowercase();
+
+        match lint_config_extension.as_str() {
             #[cfg(feature = "config-toml")]
-            None | Some("toml") => {
+            "toml" => {
                 // TODO: toml::from_reader (https://github.com/toml-rs/toml/pull/349)
                 toml::from_str(&std::io::read_to_string(reader)?)
                     .map_err(|source| LintConfigError::FailedToParseTomlConfig { path: lint_config_path.into(), source })
             }
 
             #[cfg(feature = "config-json")]
-            Some("json") => {
+            "json" => {
                 serde_json::from_reader(&reader)
                     .map_err(|source| LintConfigError::FailedToParseJsonConfig { path: lint_config_path.into(), source })
             }
 
             #[cfg(feature = "config-hjson")]
-            Some("hjson") => {
+            "hjson" => {
                 // TODO: deser_hjson::from_reader (https://github.com/Canop/deser-hjson)
                 deser_hjson::from_str(&std::io::read_to_string(reader)?)
                     .map_err(|source| LintConfigError::FailedToParseHjsonConfig { path: lint_config_path.into(), source })
             }
 
             #[cfg(feature = "config-ron")]
-            Some("ron") => {
+            "ron" => {
                 let ron_options = ron::Options::default()
                     .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
 
@@ -130,13 +132,13 @@ impl LintConfig {
             }
 
             #[cfg(feature = "config-yaml")]
-            Some("yaml" | "yml") => {
+            "yaml" | "yml" => {
                 serde_yaml::from_reader(&reader)
                     .map_err(|source| LintConfigError::FailedToParseYamlConfig { path: lint_config_path.into(), source })
             }
 
             #[cfg(feature = "config-pickle")]
-            Some("pickle") => {
+            "pickle" => {
                 let pickle_options = serde_pickle::DeOptions::default();
 
                 serde_pickle::from_reader(reader, pickle_options)
@@ -144,13 +146,13 @@ impl LintConfig {
             }
 
             #[cfg(feature = "config-gura")]
-            Some("gura" | "ura") => {
+            "gura" | "ura" => {
                 // TODO: serde_gura::from_reader (https://github.com/gura-conf/serde-gura)
                 serde_gura::from_str(&std::io::read_to_string(reader)?)
                     .map_err(|source| LintConfigError::FailedToParseGuraConfig { path: lint_config_path.into(), source })
             }
 
-            Some(extension) => {
+            extension => {
                 Err(LintConfigError::UnknownConfigFormat { path: lint_config_path.into(), extension: extension.to_owned() })
             }
         }
@@ -161,9 +163,11 @@ impl LintConfig {
         let mut writer = File::create(lint_config_path)
             .map_err(|source| LintConfigError::FailedToCreateConfig { path: lint_config_path.into(), source })?;
 
-        match lint_config_path.extension().map(str::to_lowercase).as_deref() {
+        let lint_config_extension = lint_config_path.extension().unwrap_or("toml").to_lowercase();
+
+        match lint_config_extension.as_str() {
             #[cfg(feature = "config-toml")]
-            None | Some("toml") => {
+            "toml" => {
                 // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
                 let tmp_string = toml::ser::to_string_pretty(self)
                     .map_err(LintConfigError::FailedToSerializeTomlConfig)?;
@@ -171,13 +175,13 @@ impl LintConfig {
             }
 
             #[cfg(feature = "config-json")]
-            Some("json") => {
+            "json" => {
                 serde_json::to_writer_pretty(writer, self)
                     .map_err(LintConfigError::FailedToSerializeJsonConfig)
             }
 
             #[cfg(feature = "config-ron")]
-            Some("ron") => {
+            "ron" => {
                 let ron_options = ron::Options::default()
                     .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
                 let ron_pretty_config = ron::ser::PrettyConfig::default();
@@ -187,13 +191,13 @@ impl LintConfig {
             }
 
             #[cfg(feature = "config-yaml")]
-            Some("yaml" | "yml") => {
+            "yaml" | "yml" => {
                 serde_yaml::to_writer(writer, self)
                     .map_err(LintConfigError::FailedToSerializeYamlConfig)
             }
 
             #[cfg(feature = "config-pickle")]
-            Some("pickle") => {
+            "pickle" => {
                 let pickle_options = serde_pickle::SerOptions::default();
 
                 serde_pickle::to_writer(&mut writer, self, pickle_options)
@@ -201,14 +205,14 @@ impl LintConfig {
             }
 
             #[cfg(feature = "config-gura")]
-            Some("gura" | "ura") => {
+            "gura" | "ura" => {
                 // TODO: serde_gura::to_writer (https://github.com/gura-conf/serde-gura)
                 let tmp_string = serde_gura::to_string(self)
                     .map_err(LintConfigError::FailedToSerializeGuraConfig)?;
                 Ok(writer.write_all(tmp_string.as_bytes())?)
             }
 
-            Some(extension) => {
+            extension => {
                 Err(LintConfigError::UnknownConfigFormat { path: lint_config_path.into(), extension: extension.to_owned() })
             }
         }
