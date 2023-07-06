@@ -37,63 +37,76 @@ pub enum LintConfigError {
         source: io::Error,
     },
 
+    #[cfg(feature = "config-toml")]
     #[display(fmt = "Failed to parse TOML config file \"{path:}\"")]
     FailedToParseTomlConfig {
         path: FormattedPathBuf,
         source: toml::de::Error,
     },
 
+    #[cfg(feature = "config-json")]
     #[display(fmt = "Failed to parse JSON config file \"{path:}\"")]
     FailedToParseJsonConfig {
         path: FormattedPathBuf,
         source: serde_json::Error,
     },
 
+    #[cfg(feature = "config-hjson")]
     #[display(fmt = "Failed to parse Hjson config file \"{path:}\"")]
     FailedToParseHjsonConfig {
         path: FormattedPathBuf,
         source: deser_hjson::Error,
     },
 
+    #[cfg(feature = "config-ron")]
     #[display(fmt = "Failed to parse RON config file \"{path:}\"")]
     FailedToParseRonConfig {
         path: FormattedPathBuf,
         source: ron::error::SpannedError,
     },
 
+    #[cfg(feature = "config-yaml")]
     #[display(fmt = "Failed to parse YAML config file \"{path:}\"")]
     FailedToParseYamlConfig {
         path: FormattedPathBuf,
         source: serde_yaml::Error,
     },
 
+    #[cfg(feature = "config-pickle")]
     #[display(fmt = "Failed to parse Pickle config file \"{path:}\"")]
     FailedToParsePickleConfig {
         path: FormattedPathBuf,
         source: serde_pickle::Error,
     },
 
+    #[cfg(feature = "config-gura")]
     #[display(fmt = "Failed to parse Gura config file \"{path:}\"")]
     FailedToParseGuraConfig {
         path: FormattedPathBuf,
         source: serde_gura::Error,
     },
 
+    #[cfg(feature = "config-toml")]
     #[display(fmt = "Failed to serialize TOML config")]
     FailedToSerializeTomlConfig(toml::ser::Error),
 
+    #[cfg(feature = "config-json")]
     #[display(fmt = "Failed to serialize JSON config")]
     FailedToSerializeJsonConfig(serde_json::Error),
 
+    #[cfg(feature = "config-ron")]
     #[display(fmt = "Failed to serialize RON config")]
     FailedToSerializeRonConfig(ron::Error),
 
+    #[cfg(feature = "config-yaml")]
     #[display(fmt = "Failed to serialize YAML config")]
     FailedToSerializeYamlConfig(serde_yaml::Error),
 
+    #[cfg(feature = "config-pickle")]
     #[display(fmt = "Failed to serialize Pickle config")]
     FailedToSerializePickleConfig(serde_pickle::Error),
 
+    #[cfg(feature = "config-gura")]
     #[display(fmt = "Failed to serialize Gura config")]
     FailedToSerializeGuraConfig(serde_gura::Error),
 

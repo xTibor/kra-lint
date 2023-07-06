@@ -37,6 +37,7 @@ impl LintMessagesCollection {
     }
 }
 
+#[cfg(feature = "output-plaintext")]
 impl LintMessagesCollection {
     fn to_writer_plain_text<W>(&self, writer: &mut W) -> Result<(), LintOutputError>
     where
@@ -65,37 +66,50 @@ impl LintMessagesCollection {
 
         Ok(())
     }
+}
 
+impl LintMessagesCollection {
     #[rustfmt::skip]
     pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintOutputError> where W: Write {
         match output_format {
+            #[cfg(feature = "output-plaintext")]
             LintOutputFormat::PlainText => {
                 self.to_writer_plain_text(writer)
-            },
+            }
+
+            #[cfg(feature = "output-json")]
             LintOutputFormat::Json => {
                 serde_json::to_writer(writer, self)
                     .map_err(LintOutputError::FailedToSerializeJsonOutput)
             }
+
+            #[cfg(feature = "output-ron")]
             LintOutputFormat::Ron => {
                 ron::ser::to_writer(writer, self)
                     .map_err(LintOutputError::FailedToSerializeRonOutput)
-            },
+            }
+
+            #[cfg(feature = "output-yaml")]
             LintOutputFormat::Yaml => {
                 serde_yaml::to_writer(writer, self)
                     .map_err(LintOutputError::FailedToSerializeYamlOutput)
-            },
+            }
+
+            #[cfg(feature = "output-pickle")]
             LintOutputFormat::Pickle => {
                 let pickle_options = serde_pickle::SerOptions::default();
 
                 serde_pickle::to_writer(writer, self, pickle_options)
                     .map_err(LintOutputError::FailedToSerializePickleOutput)
-            },
+            }
+
+            #[cfg(feature = "output-gura")]
             LintOutputFormat::Gura => {
                 // TODO: serde_gura::to_writer (https://github.com/gura-conf/serde-gura)
                 let tmp_string = serde_gura::to_string(self)
                     .map_err(LintOutputError::FailedToSerializeGuraOutput)?;
                 Ok(writer.write_all(tmp_string.as_bytes())?)
-            },
+            }
         }
     }
 }
