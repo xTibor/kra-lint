@@ -2,11 +2,9 @@ use std::io::Write;
 
 use camino::{Utf8Path, Utf8PathBuf};
 use derive_more::IntoIterator;
-use itertools::Itertools;
 use serde::Serialize;
-use unicode_width::UnicodeWidthStr;
 
-use crate::lint_output::{LintMessages, LintMessagesEntry, LintOutputError, LintOutputFormat};
+use crate::lint_output::{LintMessages, LintOutputError, LintOutputFormat};
 
 #[derive(Default, Serialize)]
 pub struct LintMessagesCollectionEntry {
@@ -37,44 +35,13 @@ impl LintMessagesCollection {
     }
 }
 
-#[cfg(feature = "output-plaintext")]
-impl LintMessagesCollection {
-    fn to_writer_plain_text<W>(&self, writer: &mut W) -> Result<(), LintOutputError>
-    where
-        W: Write,
-    {
-        for LintMessagesCollectionEntry { path, messages } in self {
-            for (message_title, group) in
-                &messages.into_iter().group_by(|LintMessagesEntry { message_title, .. }| message_title)
-            {
-                let indent_size = path.to_string().width();
-                let indent_str = format!("{}  | ", " ".repeat(indent_size));
-
-                writer.write_all(format!("{}: {}\n", path, message_title).as_bytes())?;
-                for LintMessagesEntry { message_metadata, .. } in group {
-                    writer.write_all(format!("{}{}\n", indent_str, message_metadata.iter().join(", ")).as_bytes())?;
-                }
-                writer.write_all(b"\n")?;
-            }
-        }
-
-        match self.message_count() {
-            0 => writer.write_all("kra-lint: No issues found\n".as_bytes())?,
-            1 => writer.write_all("kra-lint: One issue found\n".as_bytes())?,
-            n => writer.write_all(format!("kra-lint: {} issues found\n", n).as_bytes())?,
-        }
-
-        Ok(())
-    }
-}
-
 impl LintMessagesCollection {
     #[rustfmt::skip]
     pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintOutputError> where W: Write {
         match output_format {
             #[cfg(feature = "output-plaintext")]
             LintOutputFormat::PlainText => {
-                self.to_writer_plain_text(writer)
+                crate::lint_output::lint_output_plaintext::to_writer(writer, self)
             }
 
             #[cfg(feature = "output-json")]

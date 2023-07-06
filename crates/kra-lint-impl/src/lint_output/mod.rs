@@ -11,3 +11,4 @@ pub use lint_output_error::LintOutputError;
 pub use lint_output_format::LintOutputFormat;
 
 pub(crate) mod lint_metadata_macros;
+pub(crate) mod lint_output_plaintext;
