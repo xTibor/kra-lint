@@ -36,6 +36,7 @@ impl LintMessagesCollection {
 }
 
 impl LintMessagesCollection {
+    #[allow(unused_variables)]
     #[rustfmt::skip]
     pub fn write_output<W>(&self, writer: &mut W, output_format: LintOutputFormat) -> Result<(), LintOutputError> where W: Write {
         match output_format {

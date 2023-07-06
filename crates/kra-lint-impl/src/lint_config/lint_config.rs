@@ -89,6 +89,7 @@ impl LintPass for LintConfig {
 }
 
 impl LintConfig {
+    #[allow(unused_variables)]
     #[rustfmt::skip]
     pub fn load_from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintConfigError> {
         if !lint_config_path.is_file() {
@@ -158,6 +159,7 @@ impl LintConfig {
         }
     }
 
+    #[allow(unused_variables, unused_mut)]
     #[rustfmt::skip]
     pub fn save_to_path(&self, lint_config_path: &Utf8Path) -> Result<(), LintConfigError> {
         let mut writer = File::create(lint_config_path)
