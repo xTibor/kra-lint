@@ -89,13 +89,13 @@ impl LintPass for LintConfig {
 }
 
 impl LintConfig {
-    #[allow(unused_variables)]
     #[rustfmt::skip]
     pub fn load_from_path(lint_config_path: &Utf8Path) -> Result<LintConfig, LintConfigError> {
         if !lint_config_path.is_file() {
             return Err(LintConfigError::ConfigNotFound { path: lint_config_path.into()});
         }
 
+        #[allow(unused_variables)]
         let reader = File::open(lint_config_path)
             .map_err(|source| LintConfigError::FailedToOpenConfig { path: lint_config_path.into(), source })?;
 
@@ -158,9 +158,9 @@ impl LintConfig {
         }
     }
 
-    #[allow(unused_variables, unused_mut)]
     #[rustfmt::skip]
     pub fn save_to_path(&self, lint_config_path: &Utf8Path) -> Result<(), LintConfigError> {
+        #[allow(unused_variables, unused_mut)]
         let mut writer = File::create(lint_config_path)
             .map_err(|source| LintConfigError::FailedToCreateConfig { path: lint_config_path.into(), source })?;
 
