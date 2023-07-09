@@ -111,7 +111,7 @@ impl LintConfig {
 
             #[cfg(feature = "config-json")]
             "json" => {
-                serde_json::from_reader(&reader)
+                serde_json::from_reader(reader)
                     .map_err(|source| LintConfigError::FailedToParseJsonConfig { path: lint_config_path.into(), source })
             }
 
@@ -127,13 +127,13 @@ impl LintConfig {
                     .with_default_extension(ron::extensions::Extensions::IMPLICIT_SOME);
 
                 ron_options
-                    .from_reader(&reader)
+                    .from_reader(reader)
                     .map_err(|source| LintConfigError::FailedToParseRonConfig { path: lint_config_path.into(), source })
             }
 
             #[cfg(feature = "config-yaml")]
             "yaml" | "yml" => {
-                serde_yaml::from_reader(&reader)
+                serde_yaml::from_reader(reader)
                     .map_err(|source| LintConfigError::FailedToParseYamlConfig { path: lint_config_path.into(), source })
             }
 
