@@ -117,8 +117,7 @@ impl LintConfig {
 
             #[cfg(feature = "config-hjson")]
             "hjson" => {
-                // TODO: deser_hjson::from_reader (https://github.com/Canop/deser-hjson)
-                deser_hjson::from_str(&std::io::read_to_string(reader)?)
+                deser_hjson::from_reader(reader)
                     .map_err(|source| LintConfigError::FailedToParseHjsonConfig { path: lint_config_path.into(), source })
             }
 
