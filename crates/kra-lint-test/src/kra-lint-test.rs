@@ -97,7 +97,7 @@ fn main_inner() -> Result<ExitCode, Box<dyn Error>> {
 
         let current_stderr = kra_lint_output.stderr;
 
-        let current_status = format!("{}\n", kra_lint_output.status.to_string()).as_bytes().to_owned();
+        let current_status = format!("{}\n", kra_lint_output.status).as_bytes().to_owned();
 
         for (name, expected, current) in &[
             ("STDOUT", &expected_stdout, &current_stdout),

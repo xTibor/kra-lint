@@ -109,7 +109,7 @@ impl LintPass for LintPassVectorLayers {
                         {
                             if let Some(svg_stroke_width) = svg_attributes.get("stroke-width") {
                                 // TODO: https://github.com/bodoni/svg/issues/70
-                                if let Ok(svg_stroke_width) = f64::from_str(&svg_stroke_width) {
+                                if let Ok(svg_stroke_width) = f64::from_str(svg_stroke_width) {
                                     if !stroke_width.matches(&svg_stroke_width) {
                                         #[rustfmt::skip]
                                         lint_messages.push(
