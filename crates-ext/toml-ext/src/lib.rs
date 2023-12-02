@@ -27,7 +27,7 @@ where
 pub fn to_writer<W, T>(mut writer: W, value: &T) -> Result<(), Error>
 where
     W: std::io::Write,
-    T: ?Sized + serde::Serialize,
+    T: serde::Serialize,
 {
     let tmp_string = toml::ser::to_string_pretty(value)?;
     Ok(writer.write_all(tmp_string.as_bytes())?)
