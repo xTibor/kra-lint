@@ -363,7 +363,7 @@ dependencies = [
  "std-ext",
  "strum",
  "svg",
- "toml",
+ "toml-ext",
  "unicode-width",
  "unix_mode",
  "zip",
@@ -698,6 +698,15 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "toml_edit",
+]
+
+[[package]]
+name = "toml-ext"
+version = "0.1.0"
+dependencies = [
+ "derive_more",
+ "serde",
+ "toml",
 ]
 
 [[package]]

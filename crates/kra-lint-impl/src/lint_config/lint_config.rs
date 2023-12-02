@@ -104,8 +104,7 @@ impl LintConfig {
         match lint_config_extension.as_str() {
             #[cfg(feature = "config-toml")]
             "toml" => {
-                // TODO: toml::from_reader (https://github.com/toml-rs/toml/pull/349)
-                toml::from_str(&std::io::read_to_string(reader)?)
+                toml_ext::from_reader(reader)
                     .map_err(|source| LintConfigError::FailedToParseTomlConfig { path: lint_config_path.into(), source })
             }
 
@@ -169,10 +168,8 @@ impl LintConfig {
         match lint_config_extension.as_str() {
             #[cfg(feature = "config-toml")]
             "toml" => {
-                // TODO: toml::to_writer (https://github.com/toml-rs/toml/pull/349)
-                let tmp_string = toml::ser::to_string_pretty(self)
-                    .map_err(LintConfigError::FailedToSerializeTomlConfig)?;
-                Ok(writer.write_all(tmp_string.as_bytes())?)
+                toml_ext::to_writer(writer, self)
+                    .map_err(LintConfigError::FailedToSerializeTomlConfig)
             }
 
             #[cfg(feature = "config-json")]

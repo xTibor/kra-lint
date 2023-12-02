@@ -1,3 +1,4 @@
 kra-lint: Using config file ".kra-lint"
-kra-lint: stream did not contain valid UTF-8
+kra-lint: Failed to parse TOML config file "corrupted.toml"
+kra-lint: TOML I/O error
 kra-lint: stream did not contain valid UTF-8

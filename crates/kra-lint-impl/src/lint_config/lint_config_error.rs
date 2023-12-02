@@ -41,7 +41,7 @@ pub enum LintConfigError {
     #[display(fmt = "Failed to parse TOML config file \"{path:}\"")]
     FailedToParseTomlConfig {
         path: FormattedPathBuf,
-        source: toml::de::Error,
+        source: toml_ext::Error,
     },
 
     #[cfg(feature = "config-json")]
@@ -88,7 +88,7 @@ pub enum LintConfigError {
 
     #[cfg(feature = "config-toml")]
     #[display(fmt = "Failed to serialize TOML config")]
-    FailedToSerializeTomlConfig(toml::ser::Error),
+    FailedToSerializeTomlConfig(toml_ext::Error),
 
     #[cfg(feature = "config-json")]
     #[display(fmt = "Failed to serialize JSON config")]

@@ -29,7 +29,7 @@ config-hjson  = ["dep:deser-hjson" ]
 config-json   = ["dep:serde_json"  ]
 config-pickle = ["dep:serde-pickle"]
 config-ron    = ["dep:ron"         ]
-config-toml   = ["dep:toml"        ]
+config-toml   = ["dep:toml-ext"    ]
 config-yaml   = ["dep:serde_yaml"  ]
 
 output-gura      = ["dep:serde_gura"   ]
@@ -73,7 +73,7 @@ serde_gura   = { version = "0.1.7",   optional = true }
 serde_json   = { version = "1.0.108", optional = true }
 serde_yaml   = { version = "0.9.27",  optional = true }
 serde-pickle = { version = "1.1.1",   optional = true }
-toml         = { version = "0.8.8",   optional = true }
+toml-ext     = { workspace = true,    optional = true }
 
 # private dependencies - plain-text output
 unicode-width = { version = "0.1.11", optional = true }
