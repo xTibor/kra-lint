@@ -257,6 +257,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "gura-ext"
+version = "0.1.0"
+dependencies = [
+ "derive_more",
+ "serde",
+ "serde_gura",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -349,6 +358,7 @@ dependencies = [
  "camino-ext",
  "derive_more",
  "deser-hjson",
+ "gura-ext",
  "itertools 0.12.0",
  "kra-parser",
  "num-traits",
@@ -356,7 +366,6 @@ dependencies = [
  "ron",
  "serde",
  "serde-pickle",
- "serde_gura",
  "serde_json",
  "serde_yaml",
  "sha2",

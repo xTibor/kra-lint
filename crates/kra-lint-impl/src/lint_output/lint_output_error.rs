@@ -23,7 +23,7 @@ pub enum LintOutputError {
 
     #[cfg(feature = "output-gura")]
     #[display(fmt = "Failed to serialize Gura output")]
-    FailedToSerializeGuraOutput(serde_gura::Error),
+    FailedToSerializeGuraOutput(gura_ext::Error),
 
     #[from]
     IoError(io::Error),

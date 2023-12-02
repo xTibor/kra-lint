@@ -83,7 +83,7 @@ pub enum LintConfigError {
     #[display(fmt = "Failed to parse Gura config file \"{path:}\"")]
     FailedToParseGuraConfig {
         path: FormattedPathBuf,
-        source: serde_gura::Error,
+        source: gura_ext::Error,
     },
 
     #[cfg(feature = "config-toml")]
@@ -108,7 +108,7 @@ pub enum LintConfigError {
 
     #[cfg(feature = "config-gura")]
     #[display(fmt = "Failed to serialize Gura config")]
-    FailedToSerializeGuraConfig(serde_gura::Error),
+    FailedToSerializeGuraConfig(gura_ext::Error),
 
     #[from]
     IoError(io::Error),

@@ -73,10 +73,8 @@ impl LintMessagesCollection {
 
             #[cfg(feature = "output-gura")]
             LintOutputFormat::Gura => {
-                // TODO: serde_gura::to_writer (https://github.com/gura-conf/serde-gura)
-                let tmp_string = serde_gura::to_string(self)
-                    .map_err(LintOutputError::FailedToSerializeGuraOutput)?;
-                Ok(writer.write_all(tmp_string.as_bytes())?)
+                gura_ext::to_writer(writer, self)
+                    .map_err(LintOutputError::FailedToSerializeGuraOutput)
             }
         }
     }

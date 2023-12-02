@@ -24,7 +24,7 @@ default = [
     "output-yaml",
 ]
 
-config-gura   = ["dep:serde_gura"  ]
+config-gura   = ["dep:gura-ext"    ]
 config-hjson  = ["dep:deser-hjson" ]
 config-json   = ["dep:serde_json"  ]
 config-pickle = ["dep:serde-pickle"]
@@ -32,7 +32,7 @@ config-ron    = ["dep:ron"         ]
 config-toml   = ["dep:toml-ext"    ]
 config-yaml   = ["dep:serde_yaml"  ]
 
-output-gura      = ["dep:serde_gura"   ]
+output-gura      = ["dep:gura-ext"     ]
 output-json      = ["dep:serde_json"   ]
 output-pickle    = ["dep:serde-pickle" ]
 output-plaintext = ["dep:unicode-width"]
@@ -69,7 +69,7 @@ sha2     = { version = "0.10.8" }
 # private dependencies - serde
 deser-hjson  = { version = "2.2.4",   optional = true }
 ron          = { version = "0.8.1",   optional = true }
-serde_gura   = { version = "0.1.7",   optional = true }
+gura-ext     = { workspace = true,    optional = true }
 serde_json   = { version = "1.0.108", optional = true }
 serde_yaml   = { version = "0.9.27",  optional = true }
 serde-pickle = { version = "1.1.1",   optional = true }

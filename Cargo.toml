@@ -18,6 +18,7 @@ members = [
 
     # kra-lint private extension crates
     "crates-ext/camino-ext",
+    "crates-ext/gura-ext",
     "crates-ext/std-ext",
     "crates-ext/toml-ext",
     "crates-ext/ziparchive-ext",
@@ -30,6 +31,7 @@ kra-parser     = { path = "crates/kra-parser"         }
 
 # kra-lint private extension crates
 camino-ext     = { path = "crates-ext/camino-ext"     }
+gura-ext       = { path = "crates-ext/gura-ext"       }
 std-ext        = { path = "crates-ext/std-ext"        }
 toml-ext       = { path = "crates-ext/toml-ext"       }
 ziparchive-ext = { path = "crates-ext/ziparchive-ext" }
@@ -38,7 +40,10 @@ ziparchive-ext = { path = "crates-ext/ziparchive-ext" }
 camino      = { version = "1.1.6",   features = ["serde1"] }
 derive_more = { version = "0.99.17", features = ["into_iterator", "display", "error", "from"], default-features = false }
 itertools   = { version = "0.12.0" }
-serde       = { version = "1.0.193", features = ["derive"] }
 strum       = { version = "0.25.0",  features = ["derive"] }
-toml        = { version = "0.8.8" }
 zip         = { version = "0.6.6",   features = ["deflate"], default-features = false }
+
+# serde workspace dependencies
+serde       = { version = "1.0.193", features = ["derive"] }
+toml        = { version = "0.8.8" }
+serde_gura  = { version = "0.1.7" }

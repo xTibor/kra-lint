@@ -1,5 +1,4 @@
 use std::fs::File;
-use std::io::Write;
 
 use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
@@ -146,8 +145,7 @@ impl LintConfig {
 
             #[cfg(feature = "config-gura")]
             "gura" | "ura" => {
-                // TODO: serde_gura::from_reader (https://github.com/gura-conf/serde-gura)
-                serde_gura::from_str(&std::io::read_to_string(reader)?)
+                gura_ext::from_reader(reader)
                     .map_err(|source| LintConfigError::FailedToParseGuraConfig { path: lint_config_path.into(), source })
             }
 
@@ -204,10 +202,8 @@ impl LintConfig {
 
             #[cfg(feature = "config-gura")]
             "gura" | "ura" => {
-                // TODO: serde_gura::to_writer (https://github.com/gura-conf/serde-gura)
-                let tmp_string = serde_gura::to_string(self)
-                    .map_err(LintConfigError::FailedToSerializeGuraConfig)?;
-                Ok(writer.write_all(tmp_string.as_bytes())?)
+                gura_ext::to_writer(writer, self)
+                    .map_err(LintConfigError::FailedToSerializeGuraConfig)
             }
 
             extension => {
